@@ -128,6 +128,7 @@
 </template>
 <script>
     import axios from 'axios'
+    import GoogleMap from "../components/GoogleMap";
 
     export default {
         data() {
