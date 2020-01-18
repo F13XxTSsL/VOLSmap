@@ -32,7 +32,6 @@ router.post("/partners", (req, res) => {
 
 //Delete Partner
 router.delete("/partners/:id", (req, res) => {
-    console.log(req.params)
     partner.destroy({
         where: {
             id_partner: req.params.id
@@ -48,7 +47,6 @@ router.delete("/partners/:id", (req, res) => {
 
 //Update Partner
 router.put("/partners/:id", (req, res) => {
-    console.log(req.body)
     if(!req.body.name) {
         res.status(400)
         res.json({

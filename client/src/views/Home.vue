@@ -1,17 +1,17 @@
 <template class="home">
-    <div>
-        <google-map/>
+    <div class="home__wrapper">
+        <Map/>
     </div>
 
 </template>
 
 <script>
-  import GoogleMap from "../components/GoogleMap";
+  import Map from "../components/Map";
 
 export default {
   name: 'Home',
   components: {
-    GoogleMap
+      Map
   }
 }
 </script>
