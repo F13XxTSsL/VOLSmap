@@ -25,7 +25,11 @@
         >
         </gmap-marker>
 
-        <gmap-polyline v-bind:path.sync="lineMarkers" v-bind:options="{ strokeColor:'#008000'}">
+        <gmap-polyline
+                :key="index"
+                v-for="(item, index) in lineMarkers"
+                v-bind:path.sync="item"
+                v-bind:options="{ strokeColor:'#008000'}">
         </gmap-polyline>
 
     </gmap-map>
@@ -71,23 +75,28 @@
                 axios.get(`http://localhost:3000/object/${item.id_object}`)
             },
             getLineObjects() {
-                axios.get('http://localhost:3000/line_objects').then(response => {
-                    this.initializeLine(response.data)
+                let coordinates = new Promise(function (resolve) {
+                    axios.get('http://localhost:3000/line_objects').then(response => {
+                        resolve(response.data)
+                    })
                 })
-            },
-            initializeLine(items) {
-                items.map(item => {
-                    let objMarker = {}
-                    objMarker = {item: item.coordinates.coordinates}
-                    this.lineMarkers = []
-                    for (let i in objMarker) {
-                        objMarker[i].forEach(item => {
-                            this.lineMarkers.push({lat: item[0], lng: item[1]})
+                coordinates.then(items => {
+                    let coords = []
+                    items.forEach(obj => {
+                        coords.push(obj.coordinates.coordinates)
+                    })
+                    coords.map(arr => {
+                        let coords2 = []
+                        arr.map(item => {
+                            coords2.push({lat: item[0], lng: item[1]})
                         })
-                    }
+                        this.returnArrMarker(coords2)
+                    })
                 })
-
             },
+            returnArrMarker(items) {
+                this.lineMarkers.push(items)
+            }
         }
     }
 </script>
