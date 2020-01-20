@@ -24,13 +24,20 @@
                 @click="getPointInfo(item)"
         >
         </gmap-marker>
-
-        <gmap-polyline
-                :key="index"
-                v-for="(item, index) in lineMarkers"
-                v-bind:path.sync="item"
-                v-bind:options="{ strokeColor:'#008000'}">
-        </gmap-polyline>
+        <div
+                :key="index[items]"
+                v-for="(items, index) in lineMarkers"
+        >
+            <gmap-polyline
+                    :key="item.id"
+                    v-for="item in items"
+                    v-bind:path.sync="item.position"
+                    v-bind:options="{ strokeColor:'#008000'}"
+                    :clickable="true"
+                    @click="getLineInfo(item)"
+            >
+            </gmap-polyline>
+        </div>
 
     </gmap-map>
 </template>
@@ -50,6 +57,9 @@
                     {lat: 45.040965, lng: 38.927546},
                     {lat: 45.054704, lng: 38.933711}
                 ],
+              objLine: {
+                  coordinates: []
+              }
             }
                 ;
         },
@@ -83,20 +93,23 @@
                 coordinates.then(items => {
                     let coords = []
                     items.forEach(obj => {
-                        coords.push(obj.coordinates.coordinates)
+                        coords.push({id: obj.id_line_object, name: obj.name, position: obj.coordinates.coordinates})
                     })
                     coords.map(arr => {
-                        let coords2 = []
-                        arr.map(item => {
-                            coords2.push({lat: item[0], lng: item[1]})
-                        })
-                        this.returnArrMarker(coords2)
+                      let coords2 = [{id: arr.id, name: arr.name,  position: []}]
+                      arr.position.map(item => {
+                        for (let i in coords2) {
+                          coords2[i].position.push({lat: item[0], lng: item[1]})
+                        }
+                      })
+                      this.lineMarkers.push(coords2)
                     })
+
                 })
             },
-            returnArrMarker(items) {
-                this.lineMarkers.push(items)
-            }
+          getLineInfo(item) {
+            console.log(item)
+          }
         }
     }
 </script>

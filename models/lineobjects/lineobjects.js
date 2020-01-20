@@ -13,21 +13,6 @@ module.exports = db.sequelize.define(
         coordinates: {
             type: Sequelize.GEOMETRY('LINESTRING')
         },
-        id_point_one: {
-            type: Sequelize.INTEGER
-        },
-        id_point_two: {
-            type: Sequelize.INTEGER
-        },
-        id_contract: {
-            type: Sequelize.INTEGER
-        },
-        links: {
-            type: Sequelize.STRING
-        },
-        comments: {
-            type: Sequelize.STRING
-        }
     }, {
         timestamps: false
     }
