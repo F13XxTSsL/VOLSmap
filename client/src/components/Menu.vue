@@ -1,5 +1,5 @@
 <template>
-  <nav class="menu amber darken-3">
+  <nav class="menu grey darken-3">
     <router-link tag="li" to="/home">Карта</router-link>
     <router-link tag="li" to="/partners">Партнеры</router-link>
     <router-link tag="li" to="/contracts">Контракты</router-link>
@@ -17,13 +17,20 @@ export default {
 
 <style scoped>
   .menu {
-    height: 60px;
+    height: 80px;
     align-items: center;
     justify-content: flex-end;
     display: flex;
     list-style: none;
     padding: 0;
     margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    opacity: 0.9;
+    box-shadow: 0px 1px 20px black;
   }
   .menu li {
     color: #fff;

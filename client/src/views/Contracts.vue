@@ -1,5 +1,5 @@
 <template>
-    <div class="contracts">
+    <div class="contracts margin__top ">
         <v-container>
             <v-data-table
                     :headers="headers"

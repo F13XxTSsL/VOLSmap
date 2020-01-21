@@ -18,3 +18,11 @@ export default {
   }),
 };
 </script>
+<style>
+  .margin__top {
+    margin-top: 80px;
+  }
+  body {
+    overflow: hidden;
+  }
+</style>
