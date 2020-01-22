@@ -22,7 +22,7 @@
                     v-for="item in markers"
                     :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
                     :clickable="true"
-                    @click="getPointInfo(item)"
+                    @click="getPointInfoClick(item)"
                     :icon="markerOptions"
             >
             </gmap-marker>
@@ -36,95 +36,158 @@
                         v-bind:path.sync="item.position"
                         v-bind:options="{ strokeColor:'#008000'}"
                         :clickable="true"
-                        @click="getLineInfo(item)"
+                        @click="getLineInfoClick(item)"
                 >
                 </gmap-polyline>
             </div>
         </gmap-map>
-        <LeftToolbar/>
+        <LeftToolbar
+                :rows="rows"
+        ></LeftToolbar>
         <h1 class="title_volsmap">VOLSmap</h1>
     </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import {gmapApi} from 'vue2-google-maps';
-  import LeftToolbar from '../components/LeftToolbar'
+    import axios from 'axios'
+    import {gmapApi} from 'vue2-google-maps';
+    import LeftToolbar from '../components/LeftToolbar'
 
-  export default {
-    name: "Map",
-    data() {
-      return {
-        markers: [],
-        markerOptions: {
-          url: require('../assets/bs.png'),
-          size: {width: 60, height: 90, f: 'px', b: 'px',},
-          scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
+    export default {
+        name: "Map",
+        data() {
+            return {
+                markers: [],
+                markerOptions: {
+                    url: require('../assets/bs.png'),
+                    size: {width: 60, height: 90, f: 'px', b: 'px',},
+                    scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
+                },
+                lineMarkers: [],
+                objLine: {
+                    coordinates: []
+                },
+                rows: []
+            }
         },
-        lineMarkers: [],
-        path: [
-          {lat: 45.040038, lng: 38.92336},
-          {lat: 45.040965, lng: 38.927546},
-          {lat: 45.054704, lng: 38.933711}
-        ],
-        objLine: {
-          coordinates: []
-        }
-      }
-        ;
-    },
-    components: {
-      LeftToolbar
-    },
-    computed: {
-      google: gmapApi
-    },
-    mounted() {
-      this.getObjects()
-      this.getLineObjects()
-    },
-    methods: {
-      getObjects() {
-        axios.get('http://localhost:3000/object').then(response => {
-          this.initialize(response.data)
-        })
-      },
-      initialize(data) {
-        for (let i in data) {
-          this.markers.push(data[i])
-        }
-      },
-      getPointInfo(item) {
-        axios.get(`http://localhost:3000/object/${item.id_object}`)
-      },
-      getLineObjects() {
-        let coordinates = new Promise(function (resolve) {
-          axios.get('http://localhost:3000/line_objects').then(response => {
-            resolve(response.data)
-          })
-        })
-        coordinates.then(items => {
-          let coords = []
-          items.forEach(obj => {
-            coords.push({id: obj.id_line_object, name: obj.name, position: obj.coordinates.coordinates})
-          })
-          coords.map(arr => {
-            let coords2 = [{id: arr.id, name: arr.name, position: []}]
-            arr.position.map(item => {
-              for (let i in coords2) {
-                coords2[i].position.push({lat: item[0], lng: item[1]})
-              }
-            })
-            this.lineMarkers.push(coords2)
-          })
+        components: {
+            LeftToolbar
+        },
+        computed: {
+            google: gmapApi
+        },
+        mounted() {
+            this.getObjects()
+            this.getLineObjects()
+        },
+        methods: {
+            getObjects() {
+                axios.get('http://localhost:3000/object').then(response => {
+                    this.initialize(response.data)
+                })
+            },
+            initialize(data) {
+                for (let i in data) {
+                    this.markers.push(data[i])
+                }
+            },
+            getPointInfoClick(item) {
+                console.log(item)
+                axios.get(`http://localhost:3000/object/${item.id_obj_contract}`).then(response => {
+                    this.rows = []
+                    this.rows.push(
+                        {
+                            label: 'Номер контракта',
+                            value: response.data.id_contract
+                        },
+                        {
+                            label: 'Дата',
+                            value: response.data.data
+                        },
+                        {
+                            label: 'Номер партнера',
+                            value: response.data.id_partner
+                        },
+                        {
+                            label: 'Ссылки',
+                            value: response.data.links
+                        },
+                        {
+                            label: 'Комментарии',
+                            value: response.data.comments
+                        },
+                        {
+                            label: 'Оплата',
+                            value: response.data.rent
+                        },
+                        {
+                            label: 'Тип размещения',
+                            value: response.data.placement
+                        }
+                    )
+                })
+            },
+            getLineObjects() {
+                let coordinates = new Promise(function (resolve) {
+                    axios.get('http://localhost:3000/line_objects').then(response => {
+                        resolve(response.data)
+                    })
+                })
+                coordinates.then(items => {
+                    let coords = []
+                    items.forEach(obj => {
+                        coords.push({id_line_object: obj.id_line_object, name: obj.name, id_contract: obj.id_contract, position: obj.coordinates.coordinates})
+                    })
+                    coords.map(arr => {
+                        let coords2 = [{id_line_object: arr.id_line_object, name: arr.name, id_contract: arr.id_contract, position: []}]
+                        arr.position.map(item => {
+                            for (let i in coords2) {
+                                coords2[i].position.push({lat: item[0], lng: item[1]})
+                            }
+                        })
+                        this.lineMarkers.push(coords2)
+                    })
 
-        })
-      },
-      getLineInfo(item) {
-        console.log(item)
-      }
+                })
+            },
+            getLineInfoClick(item) {
+                axios.get(`http://localhost:3000/object/${item.id_line_object}`).then(response => {
+                    console.log(response.data)
+                    this.rows = []
+                    this.rows.push(
+                        {
+                            label: 'Номер контракта',
+                            value: response.data.id_contract
+                        },
+                        {
+                            label: 'Дата',
+                            value: response.data.data
+                        },
+                        {
+                            label: 'Номер партнера',
+                            value: response.data.id_partner
+                        },
+                        {
+                            label: 'Ссылки',
+                            value: response.data.links
+                        },
+                        {
+                            label: 'Комментарии',
+                            value: response.data.comments
+                        },
+                        {
+                            label: 'Оплата',
+                            value: response.data.rent
+                        },
+                        {
+                            label: 'Тип размещения',
+                            value: response.data.placement
+                        }
+                    )
+                })
+            }
+        }
     }
-  }
 </script>
 
 <style lang="scss" scoped>

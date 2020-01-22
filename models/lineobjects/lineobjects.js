@@ -10,6 +10,9 @@ module.exports = db.sequelize.define(
         name: {
             type: Sequelize.STRING
         },
+        id_contract: {
+            type: Sequelize.INTEGER
+        },
         coordinates: {
             type: Sequelize.GEOMETRY('LINESTRING')
         },
