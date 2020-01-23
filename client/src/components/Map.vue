@@ -43,6 +43,7 @@
         </gmap-map>
         <LeftToolbar/>
         <h1 class="title_volsmap">VOLSmap</h1>
+        <Help/>
     </div>
 </template>
 
@@ -50,6 +51,7 @@
   import axios from 'axios'
   import {gmapApi} from 'vue2-google-maps';
   import LeftToolbar from '../components/LeftToolbar'
+  import Help from "./Help";
 
   export default {
     name: "Map",
@@ -74,6 +76,7 @@
         ;
     },
     components: {
+      Help,
       LeftToolbar
     },
     computed: {
