@@ -150,6 +150,7 @@
 </template>
 <script>
     import axios from 'axios'
+    import Helper from "../api/Helper";
 
     export default {
         data() {
@@ -229,10 +230,7 @@
                         links: item.links,
                         comments: item.comments,
                         rent: item.rent,
-                        placement: item.placement === 'indoor' ? item.placement = 'В помещении' :
-                                   item.placement === 'sewage' ? item.placement = 'В канализации' :
-                                   item.placement === 'prop' ? item.placement = 'На опорах' :
-                                   item.placement === 'roof' ? item.placement = 'По земле' : ''
+                        placement: Helper.typeDefinion(item.placement)
                     })
                 })
             },
