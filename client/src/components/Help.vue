@@ -61,6 +61,7 @@
         top: 50px;
         right: 8px;
         padding: 40px 20px 20px;
+        border-radius: 4px;
     }
     .indoor__line {
         background-color: #388E3C;
