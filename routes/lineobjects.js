@@ -15,5 +15,19 @@ router.get("/line_objects", (req, res) => {
         })
 })
 
+router.get("/line_objects/:id", (req, res) => {
+    contract.findOne({
+        where: {
+            id_contract: req.params.id
+        }
+    })
+        .then((contract) => {
+            res.json(contract)
+        })
+        .catch(err => {
+            res.send("error" + err)
+        })
+})
+
 
 module.exports = router

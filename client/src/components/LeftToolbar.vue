@@ -2,9 +2,9 @@
     <div class="wrapper__toolbar grey darken-3">
         <div>
             <v-simple-table dark
-                    :dense="dense"
-                    :fixed-header="fixedHeader"
-                    :height="height"
+                            :dense="dense"
+                            :fixed-header="fixedHeader"
+                            :height="height"
             >
                 <template v-slot:default>
                     <thead>
@@ -14,8 +14,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="label in computedHeadColumnsOne" :key="label.id_contract">
-                        <td>{{ label }}</td>
+                    <tr v-for="item in rows" :key="item.id_contract">
+                        <td>{{ item.label }}</td>
+                        <td>{{ item.value }}</td>
                     </tr>
                     </tbody>
                 </template>
@@ -25,30 +26,18 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      props: {
-        headColumnsOne: {
-          type: Array,
-          required: true
+    export default {
+        props: {
+            rows: {
+                type: Array
+            }
         },
-        headColumnsTwo: {
-          type: Array,
-          required: true
-        }
-      },
-      dense: false,
-      fixedHeader: false,
-      height: 930,
-    }),
-    methods: {
-    },
-    computed: {
-      computedHeadColumnsOne () {
-        console.log(this.headColumnsOne)
-      }
+        data: () => ({
+            dense: false,
+            fixedHeader: false,
+            height: 930
+        }),
     }
-  }
 </script>
 
 <style scoped>
