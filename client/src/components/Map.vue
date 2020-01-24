@@ -2,30 +2,21 @@
     <div class="map__wrapper">
         <gmap-map
                 id="map"
-                :options="{
-                    zoom: 14,
-                    mapTypeId: 'terrain',
-                    zoomControl: false,
-                    mapTypeControl: false,
-                    scaleControl: false,
-                    streetViewControl: false,
-                    rotateControl: false,
-                    fullscreenControl: false
-            }"
-                :center="{
-                        lat: 45.055399,
-                        lng: 38.967545
-                    }"
+                :options=optionsMap
+                :center=centerMap
         >
-            <gmap-marker
-                    :key="item.id_object"
-                    v-for="item in markers"
-                    :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
-                    :clickable="true"
-                    @click="getPointInfoClick(item)"
-                    :icon="markerOptions"
-            >
-            </gmap-marker>
+            <div class="marker">
+                <gmap-marker
+                        :key="item.id_object"
+                        v-for="item in markers"
+                        :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
+                        :clickable="true"
+                        @click="getPointInfoClick(item)"
+                        :icon="markerOptions"
+                        :animation=4
+                >
+                </gmap-marker>
+            </div>
             <div
                     :key="index[items]"
                     v-for="(items, index) in lineMarkers"
@@ -34,7 +25,7 @@
                         :key="item.id"
                         v-for="item in items"
                         v-bind:path.sync="item.position"
-                        v-bind:options="{ strokeColor:'#008000'}"
+                        v-bind:options="{strokeColor: '#388E3C', strokeWeight: 5}"
                         :clickable="true"
                         @click="getLineInfoClick(item)"
                 >
@@ -53,28 +44,80 @@
     import axios from 'axios'
     import {gmapApi} from 'vue2-google-maps';
     import LeftToolbar from '../components/LeftToolbar'
+    import Helper from "../api/Helper";
     import Help from "./Help";
 
     export default {
         name: "Map",
         data() {
             return {
+                optionsMap: {
+                    zoom: 14,
+                    mapTypeId: 'terrain',
+                    zoomControl: false,
+                    mapTypeControl: false,
+                    scaleControl: false,
+                    streetViewControl: false,
+                    rotateControl: false,
+                    fullscreenControl: false,
+                    disableDefaultUi: false,
+                    styles: [
+                        {
+                            "featureType": "poi",
+                            "elementType": "labels.text",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "poi.business",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "labels.icon",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "transit",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                centerMap: {
+                    lat: 45.055399,
+                    lng: 38.967545
+                },
                 markers: [],
                 markerOptions: {
                     url: require('../assets/bs.png'),
-                    size: {width: 60, height: 90, f: 'px', b: 'px',},
-                    scaledSize: {width: 40, height: 40, f: 'px', b: 'px',},
+                    size: {width: 40, height: 40, f: 'px', b: 'px'},
+                    scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
                 },
                 lineMarkers: [],
                 objLine: {
                     coordinates: []
                 },
-                rows: []
+                rows: [],
             }
         },
         components: {
-            Help,
-            LeftToolbar
+            LeftToolbar,
+            Help
         },
         computed: {
             google: gmapApi
@@ -95,38 +138,49 @@
                 }
             },
             getPointInfoClick(item) {
-                console.log(item)
                 axios.get(`http://localhost:3000/object/${item.id_obj_contract}`).then(response => {
                     this.rows = []
                     this.rows.push(
                         {
-                            label: 'Номер контракта',
+                            label: 'Номер объекта :',
+                            value: item.id_object
+                        },
+                        {
+                            label: 'Тип объекта :',
+                            value: item.type
+                        },
+                        {
+                            label: 'Комментарии по объекту :',
+                            value: item.comments
+                        },
+                        {
+                            label: 'Номер контракта :',
                             value: response.data.id_contract
                         },
                         {
-                            label: 'Дата',
+                            label: 'Дата :',
                             value: response.data.data
                         },
                         {
-                            label: 'Номер партнера',
+                            label: 'Номер партнера :',
                             value: response.data.id_partner
                         },
                         {
-                            label: 'Ссылки',
+                            label: 'Ссылки :',
                             value: response.data.links
                         },
                         {
-                            label: 'Комментарии',
+                            label: 'Комментарии :',
                             value: response.data.comments
                         },
                         {
-                            label: 'Оплата',
-                            value: response.data.rent
+                            label: 'Оплата :',
+                            value: response.data.rent + " Руб."
                         },
                         {
-                            label: 'Тип размещения',
-                            value: response.data.placement
-                        }
+                            label: 'Тип размещения :',
+                            value: Helper.typeDefinion(response.data.placement)
+                        },
                     )
                 })
             },
@@ -134,15 +188,27 @@
                 let coordinates = new Promise(function (resolve) {
                     axios.get('http://localhost:3000/line_objects').then(response => {
                         resolve(response.data)
+                        // this.typeColor = Helper.typeDefinionColor(response.data.placement)
                     })
                 })
                 coordinates.then(items => {
+                    console.log(items)
                     let coords = []
                     items.forEach(obj => {
-                        coords.push({id_line_object: obj.id_line_object, name: obj.name, id_contract: obj.id_contract, position: obj.coordinates.coordinates})
+                        coords.push({
+                            id_line_object: obj.id_line_object,
+                            name: obj.name,
+                            id_contract: obj.id_contract,
+                            position: obj.coordinates.coordinates
+                        })
                     })
                     coords.map(arr => {
-                        let coords2 = [{id_line_object: arr.id_line_object, name: arr.name, id_contract: arr.id_contract, position: []}]
+                        let coords2 = [{
+                            id_line_object: arr.id_line_object,
+                            name: arr.name,
+                            id_contract: arr.id_contract,
+                            position: []
+                        }]
                         arr.position.map(item => {
                             for (let i in coords2) {
                                 coords2[i].position.push({lat: item[0], lng: item[1]})
@@ -154,37 +220,45 @@
                 })
             },
             getLineInfoClick(item) {
+                console.log(item)
                 axios.get(`http://localhost:3000/object/${item.id_line_object}`).then(response => {
-                    console.log(response.data)
                     this.rows = []
                     this.rows.push(
                         {
-                            label: 'Номер контракта',
+                            label: 'Номер линейного объекта :',
+                            value: item.id_line_object
+                        },
+                        {
+                            label: 'Название объекта :',
+                            value: item.name
+                        },
+                        {
+                            label: 'Номер контракта :',
                             value: response.data.id_contract
                         },
                         {
-                            label: 'Дата',
+                            label: 'Дата :',
                             value: response.data.data
                         },
                         {
-                            label: 'Номер партнера',
+                            label: 'Номер партнера :',
                             value: response.data.id_partner
                         },
                         {
-                            label: 'Ссылки',
+                            label: 'Ссылки :',
                             value: response.data.links
                         },
                         {
-                            label: 'Комментарии',
+                            label: 'Комментарии :',
                             value: response.data.comments
                         },
                         {
-                            label: 'Оплата',
-                            value: response.data.rent
+                            label: 'Оплата :',
+                            value: response.data.rent + " Руб."
                         },
                         {
-                            label: 'Тип размещения',
-                            value: response.data.placement
+                            label: 'Тип размещения :',
+                            value: Helper.typeDefinion(response.data.placement)
                         }
                     )
                 })

@@ -13,4 +13,18 @@ export default {
       return type = 'По земле'
     }
   }
+  // typeDefinionColor (type) {
+  //   if (type === 'indoor') {
+  //     return {strokeColor:'#388E3C'}
+  //   }
+  //   if (type === 'sewage') {
+  //     return type = 'В канализации'
+  //   }
+  //   if (type === 'prop') {
+  //     return type = 'На опорах'
+  //   }
+  //   if (type === 'roof') {
+  //     return type = 'По земле'
+  //   }
+  // }
 }

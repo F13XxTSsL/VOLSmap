@@ -9,14 +9,14 @@
                 <template v-slot:default>
                     <thead>
                     <tr>
-                        <th class="text-left">Наименование</th>
-                        <th class="text-left">Данные</th>
+                        <th class="text-left text-title">Наименование</th>
+                        <th class="text-left text-title">Данные</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="item in rows" :key="item.id_contract">
-                        <td>{{ item.label }}</td>
-                        <td>{{ item.value }}</td>
+                        <td class="text-body">{{ item.label }}</td>
+                        <td class="text-body">{{ item.value }}</td>
                     </tr>
                     </tbody>
                 </template>
@@ -41,13 +41,25 @@
 </script>
 
 <style scoped>
+    td, th {
+        height: 65px;
+    }
     .wrapper__toolbar {
-        width: 400px;
+        width: 450px;
         height: 100vh;
         z-index: 100;
         opacity: 0.9;
         position: absolute;
         bottom: 0;
         top: 80px;
+    }
+    .text-title {
+        font-weight: 400;
+        font-size: 1rem;
+        color: #fff!important;
+    }
+    .text-body {
+        font-size: 0.80rem;
+        opacity: 0.8;
     }
 </style>
