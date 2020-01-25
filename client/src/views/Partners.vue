@@ -188,7 +188,6 @@
                 })
             },
             initialize(data) {
-                console.log(data)
                 data.map(item => {
                     this.rows.push({
                         id_partner: item.id_partner,

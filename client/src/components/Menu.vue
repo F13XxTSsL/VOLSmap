@@ -1,17 +1,38 @@
 <template>
-  <nav class="menu grey darken-3">
+  <div>
+  <nav class="menu grey darken-3" v-if="this.$store.state.statusProfile === 'admin'">
     <router-link tag="li" to="/home">Карта</router-link>
     <router-link tag="li" to="/partners">Партнеры</router-link>
     <router-link tag="li" to="/contracts">Контракты</router-link>
     <router-link tag="li" to="/objects">Объекты</router-link>
     <router-link tag="li" to="/line_objects">Линейные объекты</router-link>
+    <router-link tag="li" to="/login" @="logOut">Выйти</router-link>
   </nav>
+  <nav class="menu grey darken-3" v-else-if="this.$store.state.statusProfile === 'operator'">
+    <router-link tag="li" to="/home">Карта</router-link>
+    <router-link tag="li" to="/partners">Партнеры</router-link>
+    <router-link tag="li" to="/contracts">Контракты</router-link>
+    <router-link tag="li" to="/login" @="logOut">Выйти</router-link>
+  </nav>
+<!--  <nav class="menu grey darken-3" v-else-if="this.props.profile = 'operator'">-->
+<!--    <router-link tag="li" to="/home">Карта</router-link>-->
+<!--    <router-link tag="li" to="/partners">Партнеры</router-link>-->
+<!--    <router-link tag="li" to="/contracts">Контракты</router-link>-->
+<!--    <router-link tag="li" to="/login" @="logOut">Выйти</router-link>-->
+<!--  </nav>-->
+  </div>
 </template>
 
 <script>
 export default {
   data: () => ({
   }),
+  methods: {
+    logOut() {
+      localStorage.removeItem('usertoken')
+      this.$store.state.statusProfile = ''
+    }
+  }
 };
 </script>
 

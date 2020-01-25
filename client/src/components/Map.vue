@@ -1,43 +1,43 @@
 <template>
-    <div class="map__wrapper">
-        <gmap-map
-                id="map"
-                :options=optionsMap
-                :center=centerMap
-        >
-            <div class="marker">
-                <gmap-marker
-                        :key="item.id_object"
-                        v-for="item in markers"
-                        :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
-                        :clickable="true"
-                        @click="getPointInfoClick(item)"
-                        :icon="markerOptions"
-                        :animation=4
-                >
-                </gmap-marker>
-            </div>
-            <div
-                    :key="index[items]"
-                    v-for="(items, index) in lineMarkers"
-            >
-                <gmap-polyline
-                        :key="item.id"
-                        v-for="item in items"
-                        v-bind:path.sync="item.position"
-                        v-bind:options="{strokeColor: '#388E3C', strokeWeight: 5}"
-                        :clickable="true"
-                        @click="getLineInfoClick(item)"
-                >
-                </gmap-polyline>
-            </div>
-        </gmap-map>
-        <LeftToolbar
-                :rows="rows"
-        ></LeftToolbar>
-        <h1 class="title_volsmap">VOLSmap</h1>
-        <Help/>
-    </div>
+  <div class="map__wrapper">
+    <gmap-map
+      id="map"
+      :options="optionsMap"
+      :center="centerMap"
+    >
+      <div class="marker">
+        <gmap-marker
+          :key="item.id_object"
+          v-for="item in markers"
+          :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
+          :clickable="true"
+          @click="getPointInfoClick(item)"
+          :icon="markerOptions"
+          :animation="4"
+        />
+      </div>
+      <div
+        :key="index[items]"
+        v-for="(items, index) in lineMarkers"
+      >
+        <gmap-polyline
+          :key="item.id"
+          v-for="item in items"
+          :path.sync="item.position"
+          :options="{strokeColor: '#388E3C', strokeWeight: 5}"
+          :clickable="true"
+          @click="getLineInfoClick(item)"
+        />
+      </div>
+    </gmap-map>
+    <LeftToolbar
+      :rows="rows"
+    />
+    <h1 class="title_volsmap">
+      VOLSmap
+    </h1>
+    <Help />
+  </div>
 </template>
 
 <script>
@@ -192,7 +192,6 @@
                     })
                 })
                 coordinates.then(items => {
-                    console.log(items)
                     let coords = []
                     items.forEach(obj => {
                         coords.push({
@@ -220,7 +219,6 @@
                 })
             },
             getLineInfoClick(item) {
-                console.log(item)
                 axios.get(`http://localhost:3000/object/${item.id_line_object}`).then(response => {
                     this.rows = []
                     this.rows.push(
