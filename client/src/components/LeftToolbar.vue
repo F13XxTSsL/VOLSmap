@@ -48,7 +48,7 @@
         width: 450px;
         height: 100vh;
         z-index: 100;
-        opacity: 0.9;
+        opacity: 0.7;
         position: absolute;
         bottom: 0;
         top: 80px;
@@ -60,6 +60,5 @@
     }
     .text-body {
         font-size: 0.80rem;
-        opacity: 0.8;
     }
 </style>

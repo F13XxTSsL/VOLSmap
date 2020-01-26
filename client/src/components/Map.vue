@@ -188,7 +188,6 @@
                 let coordinates = new Promise(function (resolve) {
                     axios.get('http://localhost:3000/line_objects').then(response => {
                         resolve(response.data)
-                        // this.typeColor = Helper.typeDefinionColor(response.data.placement)
                     })
                 })
                 coordinates.then(items => {

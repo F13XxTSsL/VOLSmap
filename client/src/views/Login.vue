@@ -64,7 +64,7 @@
 <script>
     import axios from 'axios'
     import router from "../router";
-    import {mapState} from 'vuex'
+    import EventBus from "../components/EventBus";
 
     export default {
         data() {
@@ -79,14 +79,18 @@
                     login: this.login,
                     password: this.password
                 }).then((res) => {
-                  this.$store.state.statusProfile = res.data.status_user
                     localStorage.setItem('usertoken', res.data)
+                    localStorage.setItem('status', res.data.status_user)
                     this.login = ''
                     this.password = ''
                     router.push({name: 'home'})
+                    this.emitMethod(res.data.status_user)
                 }).catch(err => {
                     console.log(err)
                 })
+            },
+            emitMethod(status) {
+              EventBus.$emit('logIn', status)
             }
         }
     }
