@@ -19,6 +19,9 @@ module.exports = db.sequelize.define(
     comments: {
       type: Sequelize.STRING
     },
+    status: {
+      type: Sequelize.STRING
+    }
   }, {
     timestamps: false
   }

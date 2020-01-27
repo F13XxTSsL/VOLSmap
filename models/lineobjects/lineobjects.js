@@ -16,7 +16,14 @@ module.exports = db.sequelize.define(
         coordinates: {
             type: Sequelize.GEOMETRY('LINESTRING')
         },
-    }, {
+        status: {
+          type: Sequelize.STRING
+        },
+        placement: {
+          type: Sequelize.STRING
+        }
+    },
+  {
         timestamps: false
     }
 )

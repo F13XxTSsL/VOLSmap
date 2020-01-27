@@ -70,7 +70,7 @@
         background-color: #FFD600;
     }
     .sewage__line {
-        background-color: #90A4AE;
+        background-color: #42A5F5;
     }
     .roof__line {
         background-color: #8D6E63;
