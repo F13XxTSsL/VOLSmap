@@ -45,9 +45,15 @@
                 />
             </div>
         </gmap-map>
-        <LeftToolbar
-                :rows="rows"
-        />
+        <transition name="slide-fade">
+            <LeftToolbar
+                    :rows="rows"
+                    v-show="showLeftBar"
+                    class="LeftToolbar"
+            >
+            </LeftToolbar>
+
+        </transition>
         <h1 class="title_volsmap">
             VOLSmap
         </h1>
@@ -123,6 +129,7 @@
           coordinates: []
         },
         rows: [],
+        showLeftBar: false
       }
     },
     components: {
@@ -197,6 +204,7 @@
             },
           )
         })
+        this.showLeftBar = true
       },
       getLineObjects() {
         let coordinates = new Promise(function (resolve) {
@@ -236,7 +244,6 @@
         })
       },
       getLineInfoClick(item) {
-        console.log(item)
         axios.get(`http://localhost:3000/object/${item.id_line_object}`).then(response => {
           this.rows = []
           this.rows.push(
@@ -282,6 +289,7 @@
             }
           )
         })
+        this.showLeftBar = true
       }
     }
   }
@@ -303,5 +311,16 @@
         bottom: 20px;
         right: 20px;
         opacity: 0.7;
+    }
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+        {
+        transform: translateX(-450px);
+        opacity: 0;
     }
 </style>

@@ -6,7 +6,8 @@
                             :fixed-header="fixedHeader"
                             :height="height"
             >
-                <template v-slot:default>
+                <template
+                        v-slot:default>
                     <thead>
                     <tr>
                         <th class="text-left text-title">Наименование</th>
