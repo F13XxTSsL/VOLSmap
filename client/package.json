@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "axios": "^0.19.1",
-    "bcrypt": "^3.0.6",
     "core-js": "^3.6.4",
     "google-maps-api-loader": "^1.1.1",
     "vue": "^2.6.10",
