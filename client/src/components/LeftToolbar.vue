@@ -17,7 +17,9 @@
                     <tbody>
                     <tr v-for="item in rows" :key="item.id_contract">
                         <td class="text-body">{{ item.label }}</td>
-                        <td class="text-body">{{ item.value }}</td>
+                        <td class="text-body"
+                        >{{ item.value }}
+                        </td>
                     </tr>
                     </tbody>
                 </template>
@@ -27,24 +29,36 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            rows: {
-                type: Array
-            }
-        },
-        data: () => ({
-            dense: false,
-            fixedHeader: false,
-            height: 930
-        }),
+  export default {
+    props: {
+      rows: {
+        type: Array
+      },
+      classes: {
+        type: String,
+        required: false
+      },
+    },
+    data: () => ({
+      dense: false,
+      fixedHeader: false,
+      height: 930
+    }),
+    methods: {
+      // getCellClasses(item) {
+      //   let classes = []
+      //   classes.push(item.statusClass === 'active' ? 'green' : 'red')
+      //   return classes.join('')
+      // }
     }
+  }
 </script>
 
 <style scoped>
     td, th {
         height: 65px;
     }
+
     .wrapper__toolbar {
         width: 450px;
         height: 100vh;
@@ -54,12 +68,17 @@
         bottom: 0;
         top: 80px;
     }
+
     .text-title {
         font-weight: 400;
         font-size: 1rem;
-        color: #fff!important;
+        color: #fff !important;
     }
+
     .text-body {
         font-size: 0.80rem;
+    }
+    td.green {
+        background-color: green;
     }
 </style>

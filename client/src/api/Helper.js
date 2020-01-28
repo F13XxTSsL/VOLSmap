@@ -21,18 +21,15 @@ export default {
       return type = 'Отключена'
     }
   },
-  // typeDefinionColor (type) {
-  //   if (type === 'indoor') {
-  //     return {strokeColor:'#388E3C'}
-  //   }
-  //   if (type === 'sewage') {
-  //     return type = 'В канализации'
-  //   }
-  //   if (type === 'prop') {
-  //     return type = 'На опорах'
-  //   }
-  //   if (type === 'roof') {
-  //     return type = 'По земле'
-  //   }
-  // }
+  typeObjectItems (type) {
+    if (type === 'BS') {
+      return type = 'Базовая станция'
+    }
+    if (type === 'Eq') {
+      return type = 'Другой объект'
+    }
+  },
+  disclosureCoordinates (coordinates) {
+    return  coordinates.coordinates
+  }
 }

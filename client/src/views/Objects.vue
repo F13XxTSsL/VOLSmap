@@ -1,6 +1,468 @@
 <template>
-    <h1>Object link</h1>
+  <div class="contracts margin__top ">
+    <v-container>
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            label="Поиск объекта"
+            single-line
+            hide-details
+          />
+        </v-card-title>
+      </v-card>
+      <v-data-table
+        :headers="headers"
+        :items="rows"
+        class="elevation-1"
+        :search="search"
+      >
+        <template v-slot:top>
+          <v-toolbar
+            flat
+            color="white"
+          >
+            <v-toolbar-title>Объекты</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            />
+            <v-spacer />
+            <v-dialog
+              v-model="dialogAdd"
+              max-width="500px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                >
+                  Добавить
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Добавление объекта</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.id_object"
+                          label="ID объекта"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.id_obj_contract"
+                          label="ID Контракта"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="addItem.comments"
+                          label="Комментарии"
+                        />
+                      </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          md="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="typeObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Тип объекта"
+                            @change="atSelectedType($event)"
+                          />
+                        </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="statusObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Статус"
+                            @change="atSelectedStatus($event)"
+                          />
+                        </v-col>
+                        <v-col
+                                cols="12"
+                                sm="6"
+                                md="6"
+                        >
+                            <v-text-field
+                                    v-model="addItem.coordinate_lat"
+                                    label="Широта"
+                            />
+                        </v-col>
+                        <v-col
+                                cols="12"
+                                sm="6"
+                                md="6"
+                        >
+                            <v-text-field
+                                    v-model="addItem.coordinate_lng"
+                                    label="Долгота"
+                            />
+                        </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="saveAdd"
+                  >
+                    Добавить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog
+              v-model="dialogEditWindow"
+              max-width="500px"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Редактирование объекта</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.id_object"
+                          label="ID Объекта"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.id_obj_contract"
+                          label="ID Контракта"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="editItem.comments"
+                          label="Ссылки"
+                        />
+                      </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="typeObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Тип объекта"
+                            @change="atSelectedType($event)"
+                          />
+                        </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="statusObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Статус"
+                            @change="atSelectedStatus($event)"
+                          />
+                        </v-col>
+                      <v-col
+                              cols="12"
+                              sm="6"
+                              md="6"
+                      >
+                        <v-text-field
+                                v-model="editItem.coordinate_lat"
+                                label="Широта"
+                        />
+                      </v-col>
+                      <v-col
+                              cols="12"
+                              sm="6"
+                              md="6"
+                      >
+                        <v-text-field
+                                v-model="editItem.coordinate_lng"
+                                label="Долгота"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="editItemSave"
+                  >
+                    Сохранить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="dialogEdit(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-container>
+  </div>
 </template>
+<script>
+  import axios from 'axios'
+  import Helper from "../api/Helper";
+
+  export default {
+    data() {
+      return {
+        search: '',
+        dialogAdd: false,
+        dialogEditWindow: false,
+        typeObjects: [
+          {id: 'bs', text: 'Базовая станция'},
+          {id: 'eq', text: 'Другой объект'},
+        ],
+        statusObjects: [
+          {id: 'active', text: 'Активен'},
+          {id: 'error', text: 'Отключен'},
+        ],
+        headers: [
+          {text: 'Номер объекта', align: 'left', sortable: false, value: 'id_object',},
+          {text: 'Тип объекта', sortable: false, value: 'type',},
+          {text: 'Координаты', sortable: false, value: 'coordinates',},
+          {text: 'Номер контракта', value: 'id_obj_contract', sortable: false},
+          {text: 'Комментарии', value: 'comments', sortable: false},
+          {text: 'Статус работы', value: 'status', sortable: false},
+          {text: 'Действия', value: 'action', sortable: false},
+        ],
+        rows: [],
+        addIndex: -1,
+        editIndex: -1,
+        addItem: {
+          id_object: 0,
+          type: this.typeObjects,
+          id_obj_contract: 0,
+          comments: '',
+          status: this.statusObjects,
+          coordinate_lat: this.coordinate_lat,
+          coordinate_lng: this.coordinate_lng
+        },
+        editItem: {
+          id_object: 0,
+          type: this.typeObjects,
+          id_obj_contract: 0,
+          comments: '',
+          status: this.statusObjects,
+          coordinate_lat: this.coordinate_lat,
+          coordinate_lng: this.coordinate_lng
+        },
+        defaultItem: {
+          id_object: 0,
+          type: this.typeObjects,
+          id_obj_contract: 0,
+          comments: '',
+          status: this.statusObjects,
+          coordinate_lat: 0,
+          coordinate_lng: 0
+        },
+        selectedSpacer: '',
+        selectedSpacer2: ''
+      }
+    },
+    watch: {
+      dialog(val) {
+        val || this.close()
+      },
+    },
+    mounted() {
+      this.getObjects()
+    },
+    methods: {
+      getObjects() {
+        axios.get('http://localhost:3000/objects').then(response => {
+          this.initialize(response.data)
+        })
+      },
+      initialize(data) {
+        data.map(item => {
+          this.rows.push({
+            id_object: item.id_object,
+            type: Helper.typeObjectItems(item.type),
+            coordinates: Helper.disclosureCoordinates(item.coordinates),
+            id_obj_contract: item.id_obj_contract,
+            comments: item.comments,
+            status: Helper.typeObject(item.status),
+            statusClass: item.status === 'active'
+          })
+        })
+      },
+      atSelectedType(event) {
+        this.selectedSpacer = event
+      },
+      atSelectedStatus(event) {
+        this.selectedSpacer2 = event
+      },
+      dialogEdit(item) {
+        this.dialogEditWindow = true
+        this.editItem.id_object = item.id_object
+        this.editItem.type = this.selectedSpacer
+        this.editItem.id_obj_contract = item.id_obj_contract
+        this.editItem.comments = item.comments
+        this.editItem.status = this.selectedSpacer2
+        this.editItem.coordinate_lat = item.coordinates[0]
+        this.editItem.coordinate_lng = item.coordinates[1]
+      },
+      editItemSave() {
+        axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
+          {
+            id_object: this.editItem.id_object,
+            type: this.selectedSpacer,
+            coordinates: {type: "Point", coordinates:[this.editItem.coordinate_lat, this.editItem.coordinate_lng]},
+            id_obj_contract: this.editItem.id_obj_contract,
+            comments: this.editItem.comments,
+            rent: this.editItem.rent,
+            status:  this.selectedSpacer2,
+          },
+        ).then((res) => {
+          this.editItem.id_object = this.defaultItem.id_object
+          this.editItem.type =  this.selectedSpacer
+          this.editItem.id_obj_contract = this.defaultItem.id_obj_contract
+          this.editItem.comments = this.defaultItem.comments
+          this.editItem.status = this.selectedSpacer2
+          this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
+          this.editItem.coordinate_lng = this.defaultItem.coordinate_lng
+        }).catch(err => console.log(err))
+        this.dialogEditWindow = false
+
+      },
+      deleteItem(item) {
+        const index = this.rows.indexOf(item)
+        const result = confirm('Вы уверены, что хотите удалить запись?') && this.rows.splice(index, 1)
+        if (result) {
+          axios.delete(`http://localhost:3000/objects/${item.id_object}`)
+        }
+
+      },
+      close() {
+        this.dialogAdd = false
+        this.dialogEditWindow = false
+        setTimeout(() => {
+          this.addItem = Object.assign({}, this.defaultItem)
+          this.addIndex = -1
+        }, 300)
+      },
+      saveAdd() {
+        axios.post('http://localhost:3000/objects', {
+          id_object: this.addItem.id_object,
+          type: this.selectedSpacer,
+          coordinates: {type: "Point", coordinates:[this.addItem.coordinate_lat, this.addItem.coordinate_lng]} ,
+          id_obj_contract: this.addItem.id_obj_contract,
+          comments: this.addItem.comments,
+          status: this.selectedSpacer2
+        }).then((res) => {
+          this.addItem.id_object = this.editItem.id_object,
+            this.addItem.type = '',
+            this.addItem.id_obj_contract = 0,
+            this.addItem.comments = '',
+            this.addItem.status = ''
+        }).catch((err) => {
+          console.log(err)
+        })
+        this.close()
+      },
+    },
+  }
+</script>
+<style>
+    .container {
+        position: relative;
+    }
+
+    .v-progress-circular {
+        position: absolute;
+        z-index: 50;
+        display: flex;
+        align-self: center;
+        width: 100%;
+        top: 40%;
+    }
+</style>
+
 
 
 

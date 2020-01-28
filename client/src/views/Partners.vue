@@ -295,7 +295,7 @@
                     contacts: '',
                     comments: '',
                     links: '',
-                },
+                }
             }
         },
         watch: {

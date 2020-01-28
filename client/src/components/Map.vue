@@ -140,7 +140,7 @@
     },
     methods: {
       getObjects() {
-        axios.get('http://localhost:3000/object').then(response => {
+        axios.get('http://localhost:3000/objects').then(response => {
           this.initialize(response.data)
         })
       },
@@ -150,7 +150,7 @@
         }
       },
       getPointInfoClick(item) {
-        axios.get(`http://localhost:3000/object/${item.id_obj_contract}`).then(response => {
+        axios.get(`http://localhost:3000/objects/${item.id_obj_contract}`).then(response => {
           this.rows = []
           this.rows.push(
             {
@@ -159,7 +159,7 @@
             },
             {
               label: 'Тип объекта :',
-              value: item.type
+              value:  Helper.typeObjectItems(item.type)
             },
             {
               label: 'Номер контракта :',
@@ -239,7 +239,7 @@
         })
       },
       getLineInfoClick(item) {
-        axios.get(`http://localhost:3000/object/${item.id_line_object}`).then(response => {
+        axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
           this.rows = []
           this.rows.push(
             {
