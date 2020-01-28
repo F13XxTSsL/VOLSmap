@@ -17,11 +17,6 @@
                          size: {width: 40, height: 40, f: 'px', b: 'px'},
                          scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
                          :
-                         item.status === 'warning' ?
-                         {url: require('../assets/bs_warning.png'),
-                         size: {width: 40, height: 40, f: 'px', b: 'px'},
-                         scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
-                         :
                          {url: require('../assets/bs.png'),
                          size: {width: 40, height: 40, f: 'px', b: 'px'},
                          scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"

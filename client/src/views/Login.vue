@@ -78,12 +78,6 @@
         textError: ''
       }
     },
-    mounted() {
-      window.onbeforeunload = function () {
-        localStorage.removeItem('usertoken')
-        localStorage.removeItem('status')
-      }
-    },
     methods: {
       loginIn() {
         axios.post('http://localhost:3000/login', {

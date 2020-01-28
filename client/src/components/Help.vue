@@ -27,7 +27,11 @@
                 </div>
                 <div class="type bs">
                     <div class="object bs__object"><img src="../assets/bs.png"></div>
-                    <div class="text bs__text"> - Базовая станция</div>
+                    <div class="text bs__text"> - Базовая станция (активна)</div>
+                </div>
+                <div class="type bs">
+                    <div class="object bs__object"><img src="../assets/bs_error.png"></div>
+                    <div class="text bs__text"> - Базовая станция (отключена)</div>
                 </div>
             </div>
         </div>

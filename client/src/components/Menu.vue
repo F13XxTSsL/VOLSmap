@@ -36,11 +36,11 @@
         methods: {
             logOut() {
                 localStorage.removeItem('usertoken')
-               localStorage.removeItem('status')
+                localStorage.removeItem('status')
                 this.auth = ''
             }
         },
-        mounted() {
+      mounted() {
             EventBus.$on('logIn', (status) => {
                 this.auth = status
             })

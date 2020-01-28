@@ -1,130 +1,254 @@
 <template>
-    <div class="partners margin__top">
-        <v-container>
-            <v-data-table
-                    :headers="headers"
-                    :items="rows"
-                    class="elevation-1"
+  <div class="partners margin__top">
+    <v-container>
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            label="Поиск партнера"
+            single-line
+            hide-details
+          />
+        </v-card-title>
+      </v-card>
+      <v-data-table
+        :headers="headers"
+        :items="rows"
+        class="elevation-1"
+        :search="search"
+      >
+        <template v-slot:top>
+          <v-toolbar
+            flat
+            color="white"
+          >
+            <v-toolbar-title>Партнеры</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            />
+            <v-spacer />
+            <v-dialog
+              v-model="dialogAdd"
+              max-width="500px"
             >
-                <template v-slot:top>
-                    <v-toolbar flat color="white">
-                        <v-toolbar-title>Партнеры</v-toolbar-title>
-                        <v-divider
-                                class="mx-4"
-                                inset
-                                vertical
-                        ></v-divider>
-                        <v-spacer></v-spacer>
-                        <v-dialog v-model="dialogAdd" max-width="500px">
-                            <template v-slot:activator="{ on }">
-                                <v-btn color="primary" dark class="mb-2" v-on="on">Добавить</v-btn>
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Добавление партнера</span>
-                                </v-card-title>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                >
+                  Добавить
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Добавление партнера</span>
+                </v-card-title>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.id_partner"
-                                                              label="ID партенра"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.name"
-                                                              label="Наименование"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.INN" label="ИНН"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.contacts"
-                                                              label="Контакты"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.comments"
-                                                              label="Комментарии"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="addItem.links" label="Ссылки"></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.id_partner"
+                          label="ID партенра"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.name"
+                          label="Наименование"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.INN"
+                          label="ИНН"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.contacts"
+                          label="Контакты"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.comments"
+                          label="Комментарии"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="addItem.links"
+                          label="Ссылки"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="close">Назад</v-btn>
-                                    <v-btn color="blue darken-1" text @click="saveAdd">Сохранить</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                        <v-dialog v-model="dialogEditWindow" max-width="500px">
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Редактирование партнера</span>
-                                </v-card-title>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="saveAdd"
+                  >
+                    Сохранить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog
+              v-model="dialogEditWindow"
+              max-width="500px"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Редактирование партнера</span>
+                </v-card-title>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.id_partner"
-                                                              label="ID партенра"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.name"
-                                                              label="Наименование"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.INN" label="ИНН"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.contacts"
-                                                              label="Контакты"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.comments"
-                                                              label="Комментарии"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editItem.links" label="Ссылки"></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.id_partner"
+                          label="ID партенра"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.name"
+                          label="Наименование"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.INN"
+                          label="ИНН"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.contacts"
+                          label="Контакты"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.comments"
+                          label="Комментарии"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editItem.links"
+                          label="Ссылки"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="close">Назад</v-btn>
-                                    <v-btn color="blue darken-1" text @click="editItemSave">Сохранить</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.action="{ item }">
-                    <v-icon
-                            small
-                            class="mr-2"
-                            @click="dialogEdit(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                            small
-                            @click="deleteItem(item)"
-                    >
-                        mdi-delete
-                    </v-icon>
-                </template>
-                <template v-slot:no-data>
-                    <v-btn color="primary" @click="initialize">Восстановить</v-btn>
-                </template>
-            </v-data-table>
-        </v-container>
-    </div>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="editItemSave"
+                  >
+                    Сохранить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="dialogEdit(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-container>
+  </div>
 </template>
 <script>
     import axios from 'axios'
@@ -133,6 +257,7 @@
     export default {
         data() {
             return {
+              search: '',
                 dialogAdd: false,
                 dialogEditWindow: false,
                 headers: [

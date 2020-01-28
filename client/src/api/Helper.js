@@ -17,9 +17,6 @@ export default {
     if (type === 'active') {
       return type = 'Активна'
     }
-    if (type === 'warning') {
-      return type = 'Предупреждение'
-    }
     if (type === 'error') {
       return type = 'Отключена'
     }
