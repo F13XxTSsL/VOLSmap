@@ -294,11 +294,14 @@
         dialogAdd: false,
         dialogEditWindow: false,
         typeObjects: [
-          {id: 'bs', text: 'Базовая станция'},
-          {id: 'eq', text: 'Другой объект'},
+          {id: 'BTS', text: 'Базовая станция'},
+          {id: 'Switch', text: 'Коммутатор'},
+          {id: 'Controller', text: 'Контроллер'},
+          {id: 'Coupling', text: 'Муфта'},
         ],
         statusObjects: [
           {id: 'active', text: 'Активен'},
+          {id: 'construction', text: 'Строительство'},
           {id: 'error', text: 'Отключен'},
         ],
         headers: [

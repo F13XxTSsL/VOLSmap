@@ -17,16 +17,25 @@ export default {
     if (type === 'active') {
       return type = 'Активна'
     }
+    if (type === 'construction') {
+      return type = 'Строительство'
+    }
     if (type === 'error') {
       return type = 'Отключена'
     }
   },
   typeObjectItems (type) {
-    if (type === 'BS') {
+    if (type === 'BTS') {
       return type = 'Базовая станция'
     }
-    if (type === 'Eq') {
-      return type = 'Другой объект'
+    if (type === 'Switch') {
+      return type = 'Коммутатор'
+    }
+    if (type === 'Controller') {
+      return type = 'Контроллер'
+    }
+    if (type === 'Coupling') {
+      return type = 'Муфта'
     }
   },
   disclosureCoordinates (coordinates) {
