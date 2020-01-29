@@ -60,7 +60,7 @@
     }
 
     .wrapper__toolbar {
-        width: 450px;
+        width: 500px;
         height: 100vh;
         z-index: 100;
         opacity: 0.7;

@@ -58,6 +58,10 @@ router.put("/objects/:id", (req, res) => {
         id_obj_contract: req.body.id_obj_contract,
         comments: req.body.comments,
         status: req.body.status,
+        name_obj: req.body.name_obj,
+        data_for_exploitation: req.body.data_for_exploitation,
+        links: req.body.links,
+        adress: req.body.adress
       },
       {where: {id_object: req.params.id}},
     )

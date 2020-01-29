@@ -21,6 +21,18 @@ module.exports = db.sequelize.define(
     },
     status: {
       type: Sequelize.STRING
+    },
+    name_obj: {
+      type: Sequelize.STRING
+    },
+    data_for_exploitation: {
+      type: Sequelize.DATE
+    },
+    links: {
+      type: Sequelize.STRING
+    },
+    adress: {
+      type: Sequelize.STRING
     }
   }, {
     timestamps: false

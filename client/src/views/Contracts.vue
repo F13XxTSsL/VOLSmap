@@ -54,37 +54,27 @@
                                             <v-col
                                                     cols="12"
                                                     sm="6"
-                                                    md="4"
+                                                    md="6"
                                             >
                                                 <v-text-field
                                                         v-model="addItem.id_contract"
-                                                        label="ID контракта"
+                                                        label="Номер контракта"
                                                 />
                                             </v-col>
                                             <v-col
                                                     cols="12"
                                                     sm="6"
-                                                    md="4"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.data"
-                                                        label="Дата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="4"
+                                                    md="6"
                                             >
                                                 <v-text-field
                                                         v-model="addItem.id_partner"
-                                                        label="ID партнера"
+                                                        label="Номер партнера"
                                                 />
                                             </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="4"
+                                                    sm="12"
+                                                    md="12"
                                             >
                                                 <v-text-field
                                                         v-model="addItem.links"
@@ -93,8 +83,8 @@
                                             </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="4"
+                                                    sm="12"
+                                                    md="12"
                                             >
                                                 <v-text-field
                                                         v-model="addItem.comments"
@@ -103,19 +93,14 @@
                                             </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="4"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.rent"
-                                                        label="Оплата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
+                                                    sm="12"
                                                     md="12"
                                             >
+                                                <v-text-field
+                                                        v-model="addItem.responsible"
+                                                        label="Ответственный"
+                                                />
+                                            </v-col>
                                                 <v-col
                                                         class="d-flex"
                                                         cols="12"
@@ -129,6 +114,25 @@
                                                             @change="atSelected($event)"
                                                     />
                                                 </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="6"
+                                            >
+                                                <v-text-field
+                                                        v-model="addItem.rent"
+                                                        label="Оплата"
+                                                />
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="6"
+                                            >
+                                                <v-text-field
+                                                        v-model="addItem.data"
+                                                        label="Дата"
+                                                />
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -148,7 +152,7 @@
                                             text
                                             @click="saveAdd"
                                     >
-                                        Сохранить
+                                        Добавить
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -168,37 +172,27 @@
                                             <v-col
                                                     cols="12"
                                                     sm="6"
-                                                    md="4"
+                                                    md="6"
                                             >
                                                 <v-text-field
                                                         v-model="editItem.id_contract"
-                                                        label="ID контракта"
+                                                        label="Номер контракта"
                                                 />
                                             </v-col>
                                             <v-col
                                                     cols="12"
                                                     sm="6"
-                                                    md="4"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.data"
-                                                        label="Дата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="4"
+                                                    md="6"
                                             >
                                                 <v-text-field
                                                         v-model="editItem.id_partner"
-                                                        label="ID партнера"
+                                                        label="Номер партнера"
                                                 />
                                             </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="4"
+                                                    sm="12"
+                                                    md="12"
                                             >
                                                 <v-text-field
                                                         v-model="editItem.links"
@@ -206,30 +200,25 @@
                                                 />
                                             </v-col>
                                             <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="4"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.comments"
-                                                        label="Комментарии"
-                                                />
-                                            </v-col>
+                                                cols="12"
+                                                sm="12"
+                                                md="12"
+                                        >
+                                            <v-text-field
+                                                    v-model="editItem.comments"
+                                                    label="Комментарии"
+                                            />
+                                        </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="4"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.rent"
-                                                        label="Оплата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
+                                                    sm="12"
                                                     md="12"
                                             >
+                                                <v-text-field
+                                                        v-model="editItem.responsible"
+                                                        label="Ответственный"
+                                                />
+                                            </v-col>
                                                 <v-col
                                                         class="d-flex"
                                                         cols="12"
@@ -243,6 +232,25 @@
                                                             @change="atSelected($event)"
                                                     />
                                                 </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="6"
+                                            >
+                                                <v-text-field
+                                                        v-model="editItem.rent"
+                                                        label="Оплата"
+                                                />
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="6"
+                                            >
+                                                <v-text-field
+                                                        v-model="editItem.data"
+                                                        label="Дата"
+                                                />
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -312,7 +320,8 @@
           {text: 'Комментарии', value: 'comments', sortable: false},
           {text: 'Оплата', value: 'rent', sortable: false},
           {text: 'Cпособ прокладки', value: 'placement', sortable: false},
-          {text: 'Действия', value: 'action', sortable: false},
+          {text: 'Ответственный', value: 'responsible', sortable: false},
+          {text: 'Действия', value: 'action', sortable: false}
         ],
         rows: [],
         addIndex: -1,
@@ -324,7 +333,8 @@
           links: '',
           comments: '',
           rent: 0.0,
-          placement: this.itemsPlacement
+          placement: this.itemsPlacement,
+          responsible: this.responsible
         },
         editItem: {
           id_contract: 0,
@@ -333,7 +343,8 @@
           links: '',
           comments: '',
           rent: 0.0,
-          placement: this.itemsPlacement
+          placement: this.itemsPlacement,
+          responsible: this.responsible
         },
         defaultItem: {
           id_contract: 0,
@@ -342,7 +353,8 @@
           links: '',
           comments: '',
           rent: 0.0,
-          placement: this.itemsPlacement
+          placement: this.itemsPlacement,
+          responsible: this.responsible
         },
         selectedSpacer: ''
       }
@@ -370,7 +382,8 @@
             links: item.links,
             comments: item.comments,
             rent: item.rent,
-            placement: Helper.typeDefinion(item.placement)
+            placement: Helper.typeDefinion(item.placement),
+            responsible: item.responsible
           })
         })
       },
@@ -386,6 +399,7 @@
         this.editItem.comments = item.comments
         this.editItem.rent = item.rent
         this.editItem.placement = item.placement
+        this.editItem.responsible = item.responsible
       },
       editItemSave() {
         axios.put(`http://localhost:3000/contracts/${this.editItem.id_contract}`,
@@ -396,7 +410,8 @@
             links: this.editItem.links,
             comments: this.editItem.comments,
             rent: this.editItem.rent,
-            placement: this.selectedSpacer
+            placement: this.selectedSpacer,
+            responsible: this.responsible
           },
         ).then((res) => {
           this.editItem.id_contract = this.defaultItem.id_contract
@@ -406,6 +421,7 @@
           this.editItem.comments = this.defaultItem.comments
           this.editItem.rent = this.defaultItem.rent
           this.editItem.placement = this.selectedSpacer
+          this.editItem.responsible = this.defaultItem.responsible
         }).catch(err => console.log(err))
         this.dialogEditWindow = false
 
@@ -434,15 +450,17 @@
           links: this.addItem.links,
           comments: this.addItem.comments,
           rent: this.addItem.rent,
-          placement: this.selectedSpacer
+          placement: this.selectedSpacer,
+          responsible: this.addItem.responsible,
         }).then((res) => {
           this.addItem.id_contract = this.editItem.id_contract,
             this.addItem.data = '',
             this.addItem.id_partner = 0,
             this.addItem.links = '',
             this.addItem.comments = '',
-            this.addItem.rent = 0.0
-          this.addItem.placement = ''
+            this.addItem.rent = 0.0,
+            this.addItem.placement = '',
+            this.addItem.responsible = ''
         }).catch((err) => {
           console.log(err)
         })

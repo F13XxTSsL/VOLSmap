@@ -59,7 +59,8 @@ router.put("/contracts/:id", (req, res) => {
                 links: req.body.links,
                 comments: req.body.comments,
                 rent: req.body.rent,
-                placement: req.body.placement
+                placement: req.body.placement,
+                responsible: req.body.responsible
             },
             {where: {id_contract: req.params.id}},
         )
