@@ -1,67 +1,84 @@
 <template>
-  <div class="map__wrapper">
-    <gmap-map
-      id="map"
-      :options="optionsMap"
-      :center="centerMap"
-      :clickable="true"
-    >
-      <div class="marker">
-        <gmap-marker
-          :key="item.id_object"
-          v-for="item in markers"
-          :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
-          :clickable="true"
-          @click="getPointInfoClick(item)"
-          :icon="item.status === 'error' ?
-            {url: require('../assets/bs_error.png'),
+    <div class="map__wrapper">
+        <gmap-map
+                id="map"
+                :options="optionsMap"
+                :center="centerMap"
+                :clickable="true"
+        >
+            <gmap-marker
+                    :key="item.id_object"
+                    v-for="item in markers"
+                    :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
+                    :clickable="true"
+                    @click="getPointInfoClick(item)"
+                    :icon="item.status === 'error' ?
+          {url: require('../assets/bs_error.png'),
+           size: {width: 40, height: 40, f: 'px', b: 'px'},
+           scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
+          :
+          item.status === 'construction' ?
+            {url: require('../assets/bs_construction.png'),
              size: {width: 40, height: 40, f: 'px', b: 'px'},
              scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
             :
-            item.status === 'construction' ?
-              {url: require('../assets/bs_construction.png'),
-               size: {width: 40, height: 40, f: 'px', b: 'px'},
-               scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
-              :
-              {url: require('../assets/bs.png'),
-               size: {width: 40, height: 40, f: 'px', b: 'px'},
-               scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"
-          :animation="4"
-        />
-      </div>
-      <div
-        :key="index[items]"
-        v-for="(items, index) in lineMarkers"
-      >
-        <gmap-polyline
-          :key="item.id"
-          v-for="item in items"
-          :path.sync="item.position"
-          :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
+            {url: require('../assets/bs.png'),
+             size: {width: 40, height: 40, f: 'px', b: 'px'},
+             scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"
+                    :animation="4"
+            />
+
+            <gmap-info-window
+                    class="info__window"
+                    :options="infoOptions"
+                    :position="infoWindowPos"
+                    :opened="infoWinOpen"
+                    @closeclick="infoWinOpenClose"
+            >
+                <div v-html="infoContent"></div>
+            </gmap-info-window>
+
+            <div
+                    :key="index[items]"
+                    v-for="(items, index) in lineMarkers"
+            >
+                <gmap-polyline
+                        :key="item.id"
+                        v-for="item in items"
+                        :path.sync="item.position"
+                        :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
             item.placement === 'prop' ? {strokeColor: '#FFD600', strokeWeight: 4} :
             item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
             {strokeColor: '#388E3C', strokeWeight: 4}"
-          :clickable="true"
-          @click="getLineInfoClick(item)"
-        />
-      </div>
-    </gmap-map>
-    <transition name="slide-fade">
-      <LeftToolbar
-        :rows="rows"
-        v-show="showLeftBar"
-        class="LeftToolbar"
-      >
-      </LeftToolbar>
-    </transition>
-      <transition name="slide-fade">
-      <div v-show="closeLeftToolBar" class="close" @click="close"><v-icon dark class="fas fa-caret-left"></v-icon></div>
-      </transition>
-    <h1 class="title_volsmap">
-      VOLSmap
-    </h1>
-    <Help />
-  </div>
+                        :clickable="true"
+                        @click="getLineInfoClick(item)"
+                />
+            </div>
+        </gmap-map>
+        <transition name="slide-fade">
+            <LeftToolbar
+                    :rows="rows"
+                    v-show="showLeftBar"
+                    class="LeftToolbar"
+            />
+        </transition>
+        <transition name="slide-fade">
+            <div
+                    v-show="closeLeftToolBar"
+                    class="close"
+                    @click="close"
+            >
+                <v-icon
+                        dark
+                        class="fas fa-caret-left"
+                />
+            </div>
+        </transition>
+        <h1 class="title_volsmap">
+            VOLSmap
+        </h1>
+        <Help/>
+    </div>
 </template>
 
 <script>
@@ -133,7 +150,19 @@
         },
         rows: [],
         showLeftBar: false,
-        closeLeftToolBar: false
+        closeLeftToolBar: false,
+        infoWinOpen: false,
+        infoContent: '',
+        infoWindowPos: {
+          lat: 45.055399,
+          lng: 38.967545
+        },
+        infoOptions: {
+          pixelOffset: {
+            width: 0,
+            height: -35
+          }
+        },
       }
     },
     components: {
@@ -222,6 +251,7 @@
         })
         this.showLeftBar = true
         this.closeLeftToolBar = true
+        this.openInfoObject(item)
       },
       getLineObjects() {
         let coordinates = new Promise(function (resolve) {
@@ -261,6 +291,7 @@
         })
       },
       getLineInfoClick(item) {
+        this.infoWinOpen = false
         axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
           this.rows = []
           this.rows.push(
@@ -308,12 +339,26 @@
       close() {
         this.showLeftBar = false
         this.closeLeftToolBar = false
+        this.infoWinOpen = false
+      },
+      openInfoObject(item) {
+        this.infoWindowPos.lat = item.coordinates.coordinates[0]
+        this.infoWindowPos.lng = item.coordinates.coordinates[1]
+        this.infoContent = `<div class="info__window-text"> ${Helper.typeObjectItems(item.type)} </div>
+                            <div class="info__window-text"> ${item.name_obj}</div>
+                            <div class="info__window-text"> ${item.adress}</div>`
+        this.infoWinOpen = true
+      },
+      infoWinOpenClose () {
+        this.showLeftBar = false
+        this.closeLeftToolBar = false
+        this.infoWinOpen = false
       }
     }
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
     #map {
         height: 100vh;
@@ -343,11 +388,12 @@
         transform: translateX(-450px);
         opacity: 0;
     }
+
     .close {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(0,0,0,0.6);
+        background-color: rgba(0, 0, 0, 0.6);
         height: 110px;
         width: 30px;
         position: fixed;
@@ -357,4 +403,12 @@
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
     }
+    .gm-style-iw.gm-style-iw-c {
+      padding: 12px!important;
+      padding-bottom: 0px!important;
+    }
+  .info__window-text {
+    font-size: 14px;
+    padding-bottom: 5px;
+  }
 </style>
