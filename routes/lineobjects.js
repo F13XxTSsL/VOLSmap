@@ -7,7 +7,6 @@ const lineObjects = require("../models/lineobjects/lineobjects")
 router.get("/line_objects", (req, res) => {
     lineObjects.findAll()
         .then(lineObjects => {
-            console.log(lineObjects)
             res.json(lineObjects)
         })
         .catch(err => {

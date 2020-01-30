@@ -36,6 +36,7 @@
                                                 name="login"
                                                 v-model="login"
                                                 type="text"
+                                                prepend-icon="fas fa-user-alt"
                                         />
 
                                         <v-text-field
@@ -44,17 +45,20 @@
                                                 v-model="password"
                                                 name="password"
                                                 type="password"
+                                                prepend-icon="fas fa-key"
                                         />
-                                        <v-spacer/>
+                                        <v-card-actions>
+                                         <v-spacer/>
                                         <v-btn
                                                 type="submit"
                                                 color="darken-3"
+                                                class="btn__login"
                                         >
-                                            Войти
+                                            <v-icon class="icon fas fa-sign-in-alt"></v-icon> Войти
                                         </v-btn>
+                                        </v-card-actions>
                                     </v-form>
                                 </v-card-text>
-                                <v-card-actions/>
                             </v-card>
                         </v-col>
                     </v-row>
@@ -108,5 +112,8 @@
     .error {
         margin-bottom: 0px;
   }
+    .icon {
+        margin-right: 10px;
+    }
 
 </style>

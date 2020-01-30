@@ -55,7 +55,7 @@
       </LeftToolbar>
     </transition>
       <transition name="slide-fade">
-      <div v-show="closeLeftToolBar" class="close" @click="close"><v-icon dark class="far fa-arrow-alt-circle-left fa-2x"></v-icon></div>
+      <div v-show="closeLeftToolBar" class="close" @click="close"><v-icon dark class="fas fa-caret-left"></v-icon></div>
       </transition>
     <h1 class="title_volsmap">
       VOLSmap
@@ -348,11 +348,11 @@
         align-items: center;
         justify-content: center;
         background-color: rgba(0,0,0,0.6);
-        height: 100px;
+        height: 110px;
         width: 30px;
         position: fixed;
         cursor: pointer;
-        top: 465px;
+        top: 13.3%;
         left: 500px;
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;

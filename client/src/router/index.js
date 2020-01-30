@@ -32,7 +32,12 @@ const routes = [
     path: '/',
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
-  }
+  },
+  {
+    path: '*',
+    name: 'NotFoundComponent',
+    component: () => import(/* webpackChunkName: "about" */ '../views/NotFoundComponent.vue')
+  },
 ]
 
 const router = new VueRouter({

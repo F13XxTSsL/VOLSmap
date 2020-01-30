@@ -54,17 +54,17 @@
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="addItem.id_partner"
-                          label="ID партенра"
+                          label="Номер партнера"
                         />
                       </v-col>
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="addItem.name"
@@ -73,8 +73,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="addItem.INN"
@@ -83,8 +83,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="addItem.contacts"
@@ -93,8 +93,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="addItem.comments"
@@ -103,8 +103,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="addItem.links"
@@ -149,17 +149,17 @@
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="editItem.id_partner"
-                          label="ID партенра"
+                          label="Номер партнера"
                         />
                       </v-col>
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="editItem.name"
@@ -168,8 +168,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="editItem.INN"
@@ -178,8 +178,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="editItem.contacts"
@@ -188,8 +188,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="editItem.comments"
@@ -198,8 +198,8 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="6"
-                        md="4"
+                        sm="12"
+                        md="12"
                       >
                         <v-text-field
                           v-model="editItem.links"
