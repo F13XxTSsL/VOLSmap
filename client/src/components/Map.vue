@@ -1,65 +1,67 @@
 <template>
-    <div class="map__wrapper">
-        <gmap-map
-                id="map"
-                :options="optionsMap"
-                :center="centerMap"
-                :clickable="true"
-        >
-            <div class="marker">
-                <gmap-marker
-                        :key="item.id_object"
-                        v-for="item in markers"
-                        :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
-                        :clickable="true"
-                        @click="getPointInfoClick(item)"
-                        :icon="item.status === 'error' ?
-                         {url: require('../assets/bs_error.png'),
-                         size: {width: 40, height: 40, f: 'px', b: 'px'},
-                         scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
-                         :
-                         item.status === 'construction' ?
-                         {url: require('../assets/bs_construction.png'),
-                         size: {width: 40, height: 40, f: 'px', b: 'px'},
-                         scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
-                         :
-                         {url: require('../assets/bs.png'),
-                         size: {width: 40, height: 40, f: 'px', b: 'px'},
-                         scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"
-                        :animation="4"
-                />
-            </div>
-            <div
-                    :key="index[items]"
-                    v-for="(items, index) in lineMarkers"
-            >
-                <gmap-polyline
-                        :key="item.id"
-                        v-for="item in items"
-                        :path.sync="item.position"
-                        :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
-                                  item.placement === 'prop' ? {strokeColor: '#FFD600', strokeWeight: 4} :
-                                  item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
-                                  {strokeColor: '#388E3C', strokeWeight: 4}"
-                        :clickable="true"
-                        @click="getLineInfoClick(item)"
-                />
-            </div>
-        </gmap-map>
-        <transition name="slide-fade">
-            <LeftToolbar
-                    :rows="rows"
-                    v-show="showLeftBar"
-                    class="LeftToolbar"
-            >
-            </LeftToolbar>
-
-        </transition>
-        <h1 class="title_volsmap">
-            VOLSmap
-        </h1>
-        <Help/>
-    </div>
+  <div class="map__wrapper">
+    <gmap-map
+      id="map"
+      :options="optionsMap"
+      :center="centerMap"
+      :clickable="true"
+    >
+      <div class="marker">
+        <gmap-marker
+          :key="item.id_object"
+          v-for="item in markers"
+          :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
+          :clickable="true"
+          @click="getPointInfoClick(item)"
+          :icon="item.status === 'error' ?
+            {url: require('../assets/bs_error.png'),
+             size: {width: 40, height: 40, f: 'px', b: 'px'},
+             scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
+            :
+            item.status === 'construction' ?
+              {url: require('../assets/bs_construction.png'),
+               size: {width: 40, height: 40, f: 'px', b: 'px'},
+               scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
+              :
+              {url: require('../assets/bs.png'),
+               size: {width: 40, height: 40, f: 'px', b: 'px'},
+               scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"
+          :animation="4"
+        />
+      </div>
+      <div
+        :key="index[items]"
+        v-for="(items, index) in lineMarkers"
+      >
+        <gmap-polyline
+          :key="item.id"
+          v-for="item in items"
+          :path.sync="item.position"
+          :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
+            item.placement === 'prop' ? {strokeColor: '#FFD600', strokeWeight: 4} :
+            item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
+            {strokeColor: '#388E3C', strokeWeight: 4}"
+          :clickable="true"
+          @click="getLineInfoClick(item)"
+        />
+      </div>
+    </gmap-map>
+    <transition name="slide-fade">
+      <LeftToolbar
+        :rows="rows"
+        v-show="showLeftBar"
+        class="LeftToolbar"
+      >
+      </LeftToolbar>
+    </transition>
+      <transition name="slide-fade">
+      <div v-show="closeLeftToolBar" class="close" @click="close"><v-icon dark class="far fa-arrow-alt-circle-left fa-2x"></v-icon></div>
+      </transition>
+    <h1 class="title_volsmap">
+      VOLSmap
+    </h1>
+    <Help />
+  </div>
 </template>
 
 <script>
@@ -130,7 +132,8 @@
           coordinates: []
         },
         rows: [],
-        showLeftBar: false
+        showLeftBar: false,
+        closeLeftToolBar: false
       }
     },
     components: {
@@ -156,7 +159,6 @@
         }
       },
       getPointInfoClick(item) {
-        console.log(item)
         axios.get(`http://localhost:3000/objects/${item.id_obj_contract}`).then(response => {
           this.rows = []
           this.rows.push(
@@ -185,11 +187,7 @@
               value: item.links
             },
             {
-              label: 'Комментарии по объекту :',
-              value: item.comments
-            },
-            {
-              label: 'Номер контракта :',
+              label: 'Номер договора :',
               value: response.data.id_contract
             },
             {
@@ -205,11 +203,7 @@
               value: response.data.links
             },
             {
-              label: 'Комментарии к контракту:',
-              value: response.data.comments
-            },
-            {
-              label: 'Оплата :',
+              label: 'Арендная плата :',
               value: response.data.rent + " Руб."
             },
             {
@@ -227,6 +221,7 @@
           )
         })
         this.showLeftBar = true
+        this.closeLeftToolBar = true
       },
       getLineObjects() {
         let coordinates = new Promise(function (resolve) {
@@ -294,10 +289,6 @@
               value: response.data.links
             },
             {
-              label: 'Комментарии к объекту :',
-              value: response.data.comments
-            },
-            {
               label: 'Оплата :',
               value: response.data.rent + " Руб."
             },
@@ -309,13 +300,14 @@
               label: 'Статус работы :',
               value: Helper.typeObject(item.status)
             },
-            {
-              label: 'Комментарии :',
-              value: response.data.comments
-            }
           )
         })
         this.showLeftBar = true
+        this.closeLeftToolBar = true
+      },
+      close() {
+        this.showLeftBar = false
+        this.closeLeftToolBar = false
       }
     }
   }
@@ -350,5 +342,19 @@
     .slide-fade-enter, .slide-fade-leave-to {
         transform: translateX(-450px);
         opacity: 0;
+    }
+    .close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.6);
+        height: 100px;
+        width: 30px;
+        position: fixed;
+        cursor: pointer;
+        top: 465px;
+        left: 500px;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
     }
 </style>

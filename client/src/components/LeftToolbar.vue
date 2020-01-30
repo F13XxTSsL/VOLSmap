@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper__toolbar grey darken-3">
-        <div>
+        <div class="table__data-left">
             <v-simple-table dark
                             :dense="dense"
                             :fixed-header="fixedHeader"
@@ -45,18 +45,16 @@
       height: 930
     }),
     methods: {
-      // getCellClasses(item) {
-      //   let classes = []
-      //   classes.push(item.statusClass === 'active' ? 'green' : 'red')
-      //   return classes.join('')
-      // }
     }
   }
 </script>
 
 <style scoped>
+    .table__data-left {
+        position: relative;
+    }
     td, th {
-        height: 65px;
+        height: 55px;
     }
 
     .wrapper__toolbar {
