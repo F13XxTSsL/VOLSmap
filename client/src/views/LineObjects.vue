@@ -1,3 +1,16 @@
 <template>
-    <h1>LineObjects link</h1>
+    <div class="margin__top">
+    </div>
 </template>
+
+<script>
+    export default {
+      data () {
+        return {
+
+        }
+      },
+      components: {
+      }
+    }
+</script>

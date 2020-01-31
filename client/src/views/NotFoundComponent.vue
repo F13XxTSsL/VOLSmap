@@ -1,5 +1,5 @@
 <template>
-    <h1 class="margin__top">404</h1>
+    <h1 class="margin__top">Такой страницы не существует <br>404</h1>
 </template>
 
 <script>

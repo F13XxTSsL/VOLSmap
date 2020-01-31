@@ -56,7 +56,7 @@
             </div>
         </gmap-map>
         <transition name="slide-fade">
-            <LeftToolbar
+            <LeftStatisticTable
                     :rows="rows"
                     v-show="showLeftBar"
                     class="LeftToolbar"
@@ -84,9 +84,9 @@
 <script>
   import axios from 'axios'
   import {gmapApi} from 'vue2-google-maps';
-  import LeftToolbar from '../components/LeftToolbar'
   import Helper from "../api/Helper";
   import Help from "./Help";
+  import LeftStatisticTable from "./Tables/LeftStatisticTable";
 
   export default {
     name: "Map",
@@ -166,8 +166,8 @@
       }
     },
     components: {
-      LeftToolbar,
-      Help
+      Help,
+      LeftStatisticTable
     },
     computed: {
       google: gmapApi
@@ -192,60 +192,74 @@
           this.rows = []
           this.rows.push(
             {
-              label: 'Номер объекта :',
-              value: item.id_object
+              name: 'Номер объекта :',
+              Категория: 'Объект',
+              data: item.id_object
+          },
+            {
+              name: 'Имя объекта :',
+              Категория: 'Объект',
+              data: item.name_obj
             },
             {
-              label: 'Имя объекта :',
-              value: item.name_obj
+              name: 'Тип объекта :',
+              Категория: 'Объект',
+              data: Helper.typeObjectItems(item.type)
             },
             {
-              label: 'Тип объекта :',
-              value: Helper.typeObjectItems(item.type)
+              name: 'Дата эксплуатации :',
+              Категория: 'Объект',
+              data: item.data_for_exploitation
             },
             {
-              label: 'Дата эксплуатации :',
-              value: item.data_for_exploitation
+              name: 'Адрес :',
+              Категория: 'Объект',
+              data: item.adress
             },
             {
-              label: 'Адрес :',
-              value: item.adress
+              name: 'Сслыки на объект :',
+              Категория: 'Объект',
+              data: item.links
             },
             {
-              label: 'Сслыки на объект :',
-              value: item.links
+              name: 'Cтатус работы :',
+              Категория: 'Объект',
+              data: Helper.typeObject(item.status)
             },
             {
-              label: 'Номер договора :',
-              value: response.data.id_contract
+              name: 'Номер договора :',
+              Категория: 'Договор',
+              data: response.data.id_contract
             },
             {
-              label: 'Дата заключения :',
-              value: response.data.data
+              name: 'Дата заключения :',
+              Категория: 'Договор',
+              data: response.data.data
             },
             {
-              label: 'Номер партнера :',
-              value: response.data.id_partner
+              name: 'Номер партнера :',
+              Категория: 'Договор',
+              data: response.data.id_partner
             },
             {
-              label: 'Ссылки на контракт :',
-              value: response.data.links
+              name: 'Ссылки на контракт :',
+              Категория: 'Договор',
+              data: response.data.links
             },
             {
-              label: 'Арендная плата :',
-              value: response.data.rent + " Руб."
+              name: 'Арендная плата :',
+              Категория: 'Договор',
+              data: response.data.rent + " Руб."
             },
             {
-              label: 'Тип размещения :',
-              value: Helper.typeDefinion(response.data.placement)
+              name: 'Тип размещения :',
+              Категория: 'Договор',
+              data: Helper.typeDefinion(response.data.placement)
             },
             {
-              label: 'Ответственный',
-              value: response.data.responsible
-            },
-            {
-              label: 'Cтатус работы :',
-              value: Helper.typeObject(item.status)
+              name: 'ФИО :',
+              Категория: 'Ответственный',
+              data: response.data.responsible
             },
           )
         })
@@ -296,41 +310,51 @@
           this.rows = []
           this.rows.push(
             {
-              label: 'Номер линейного объекта :',
-              value: item.id_line_object
+              name: 'Номер линейного объекта :',
+              Категория: 'Объект',
+              data: item.id_line_object,
+              isSelected: true
             },
             {
-              label: 'Название объекта :',
-              value: item.name
+              name: 'Название объекта :',
+              Категория: 'Объект',
+              data: item.name
             },
             {
-              label: 'Номер контракта :',
-              value: response.data.id_contract
+              name: 'Тип размещения :',
+              Категория: 'Объект',
+              data: Helper.typeDefinion(item.placement)
             },
             {
-              label: 'Дата :',
-              value: response.data.data
+              name: 'Статус работы :',
+              Категория: 'Объект',
+              data: Helper.typeObject(item.status)
             },
             {
-              label: 'Номер партнера :',
-              value: response.data.id_partner
+              name: 'Номер контракта :',
+              Категория: 'Договор',
+              data: response.data.id_contract
             },
             {
-              label: 'Ссылки :',
-              value: response.data.links
+              name: 'Дата заключения:',
+              Категория: 'Договор',
+              data: response.data.data
             },
             {
-              label: 'Оплата :',
-              value: response.data.rent + " Руб."
+              name: 'Номер партнера :',
+              Категория: 'Договор',
+              data: response.data.id_partner
             },
             {
-              label: 'Тип размещения :',
-              value: Helper.typeDefinion(item.placement)
+              name: 'Ссылки по договору:',
+              Категория: 'Договор',
+              data: response.data.links
             },
             {
-              label: 'Статус работы :',
-              value: Helper.typeObject(item.status)
-            },
+              name: 'Арендная оплата :',
+              Категория: 'Договор',
+              data: response.data.rent + " Руб."
+            }
           )
         })
         this.showLeftBar = true
@@ -398,7 +422,7 @@
         width: 30px;
         position: fixed;
         cursor: pointer;
-        top: 13.3%;
+        top: 176px;
         left: 500px;
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
