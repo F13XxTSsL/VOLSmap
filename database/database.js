@@ -14,6 +14,5 @@ const sequelize = new Sequelize("ikudashkin_vols", "ikudashkin_vols", "Dvtcntvs"
 });
 
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 module.exports = db;

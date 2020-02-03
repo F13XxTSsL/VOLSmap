@@ -9,7 +9,7 @@
             disable-sort
             disable-filtering
             disable-pagination
-            hide-default-footer="true"
+            :hide-default-footer="true"
     ></v-data-table>
 </template>
 
@@ -42,12 +42,13 @@
 <style>
     .leftTableStatic {
         width: 500px;
-        height: 100vh;
         z-index: 100;
         opacity: 0.7;
         position: absolute;
         bottom: 0;
         top: 80px;
+        border-radius: 0px;
+        overflow: auto;
     }
     .leftTableStatic .v-icon.notranslate.fas.fa-times.theme--dark {
         display: none;

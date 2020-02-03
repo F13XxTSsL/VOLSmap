@@ -82,304 +82,321 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import {gmapApi} from 'vue2-google-maps';
-  import Helper from "../api/Helper";
-  import Help from "./Help";
-  import LeftStatisticTable from "./Tables/LeftStatisticTable";
+    import axios from 'axios'
+    import {gmapApi} from 'vue2-google-maps';
+    import Helper from "../api/Helper";
+    import Help from "./Help";
+    import LeftStatisticTable from "./Tables/LeftStatisticTable";
 
-  export default {
-    name: "Map",
-    data() {
-      return {
-        optionsMap: {
-          zoom: 14,
-          mapTypeId: 'terrain',
-          zoomControl: false,
-          mapTypeControl: false,
-          scaleControl: false,
-          streetViewControl: false,
-          rotateControl: false,
-          fullscreenControl: false,
-          disableDefaultUi: false,
-          styles: [
-            {
-              "featureType": "poi",
-              "elementType": "labels.text",
-              "stylers": [
-                {
-                  "visibility": "off"
-                }
-              ]
-            },
-            {
-              "featureType": "poi.business",
-              "stylers": [
-                {
-                  "visibility": "off"
-                }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "labels.icon",
-              "stylers": [
-                {
-                  "visibility": "off"
-                }
-              ]
-            },
-            {
-              "featureType": "transit",
-              "stylers": [
-                {
-                  "visibility": "off"
-                }
-              ]
+    export default {
+        name: "Map",
+        data() {
+            return {
+                optionsMap: {
+                    zoom: 14,
+                    mapTypeId: 'terrain',
+                    zoomControl: false,
+                    mapTypeControl: false,
+                    scaleControl: false,
+                    streetViewControl: false,
+                    rotateControl: false,
+                    fullscreenControl: false,
+                    disableDefaultUi: false,
+                    styles: [
+                        {
+                            "featureType": "poi",
+                            "elementType": "labels.text",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "poi.business",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "labels.icon",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "transit",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                centerMap: {
+                    lat: 45.055399,
+                    lng: 38.967545
+                },
+                markers: [],
+                lineMarkers: [],
+                objLine: {
+                    coordinates: []
+                },
+                rows: [],
+                showLeftBar: false,
+                closeLeftToolBar: false,
+                infoWinOpen: false,
+                infoContent: '',
+                infoWindowPos: {
+                    lat: 45.055399,
+                    lng: 38.967545
+                },
+                infoOptions: {
+                    pixelOffset: {
+                        width: 0,
+                        height: -35
+                    }
+                },
             }
-          ]
         },
-        centerMap: {
-          lat: 45.055399,
-          lng: 38.967545
+        components: {
+            Help,
+            LeftStatisticTable
         },
-        markers: [],
-        lineMarkers: [],
-        objLine: {
-          coordinates: []
+        computed: {
+            google: gmapApi
         },
-        rows: [],
-        showLeftBar: false,
-        closeLeftToolBar: false,
-        infoWinOpen: false,
-        infoContent: '',
-        infoWindowPos: {
-          lat: 45.055399,
-          lng: 38.967545
+        mounted() {
+            this.getObjects()
+            this.getLineObjects()
         },
-        infoOptions: {
-          pixelOffset: {
-            width: 0,
-            height: -35
-          }
-        },
-      }
-    },
-    components: {
-      Help,
-      LeftStatisticTable
-    },
-    computed: {
-      google: gmapApi
-    },
-    mounted() {
-      this.getObjects()
-      this.getLineObjects()
-    },
-    methods: {
-      getObjects() {
-        axios.get('http://localhost:3000/objects').then(response => {
-          this.initialize(response.data)
-        })
-      },
-      initialize(data) {
-        for (let i in data) {
-          this.markers.push(data[i])
-        }
-      },
-      getPointInfoClick(item) {
-        axios.get(`http://localhost:3000/objects/${item.id_obj_contract}`).then(response => {
-          this.rows = []
-          this.rows.push(
-            {
-              name: 'Номер объекта :',
-              Категория: 'Объект',
-              data: item.id_object
-          },
-            {
-              name: 'Имя объекта :',
-              Категория: 'Объект',
-              data: item.name_obj
+        methods: {
+            getObjects() {
+                axios.get('http://localhost:3000/objects').then(response => {
+                    this.initialize(response.data)
+                })
             },
-            {
-              name: 'Тип объекта :',
-              Категория: 'Объект',
-              data: Helper.typeObjectItems(item.type)
+            initialize(data) {
+                for (let i in data) {
+                    this.markers.push(data[i])
+                }
             },
-            {
-              name: 'Дата эксплуатации :',
-              Категория: 'Объект',
-              data: item.data_for_exploitation
+            getPointInfoClick(item) {
+                this.rows = []
+                this.rows.push(
+                    {
+                        name: 'Номер объекта :',
+                        Категория: 'Объект',
+                        data: item.id_object
+                    },
+                    {
+                        name: 'Имя объекта :',
+                        Категория: 'Объект',
+                        data: item.name_obj
+                    },
+                    {
+                        name: 'Тип объекта :',
+                        Категория: 'Объект',
+                        data: Helper.typeObjectItems(item.type)
+                    },
+                    {
+                        name: 'Дата эксплуатации :',
+                        Категория: 'Объект',
+                        data: item.data_for_exploitation
+                    },
+                    {
+                        name: 'Адрес :',
+                        Категория: 'Объект',
+                        data: item.adress
+                    },
+                    {
+                        name: 'Сслыки на объект :',
+                        Категория: 'Объект',
+                        data: item.links
+                    },
+                    {
+                        name: 'Cтатус работы :',
+                        Категория: 'Объект',
+                        data: Helper.typeObject(item.status)
+                    },
+                )
+                axios.get(`http://localhost:3000/objects/${item.id_obj_contract}`).then(response => {
+                    this.rows.push(
+                        {
+                            name: 'Номер договора :',
+                            Категория: 'Договор',
+                            data: response.data.id_contract
+                        },
+                        {
+                            name: 'Дата заключения :',
+                            Категория: 'Договор',
+                            data: response.data.data
+                        },
+                        {
+                            name: 'Номер партнера :',
+                            Категория: 'Договор',
+                            data: response.data.id_partner
+                        },
+                        {
+                            name: 'Ссылки на контракт :',
+                            Категория: 'Договор',
+                            data: response.data.links
+                        },
+                        {
+                            name: 'Арендная плата :',
+                            Категория: 'Договор',
+                            data: response.data.rent + " Руб."
+                        },
+                        {
+                            name: 'Тип размещения :',
+                            Категория: 'Договор',
+                            data: Helper.typeDefinion(response.data.placement)
+                        },
+                    )
+                    axios.get(`http://localhost:3000/objects_responsible/${response.data.responsible}`).then(response => {
+                        this.rows.push(
+                            {
+                                name: 'ФИО :',
+                                Категория: 'Ответственный',
+                                data: response.data.fio
+                            },
+                            {
+                                name: 'Номер телефона :',
+                                Категория: 'Ответственный',
+                                data: response.data.phone_number
+                            },
+                            {
+                                name: 'Электронная почта',
+                                Категория: 'Ответственный',
+                                data: response.data.email
+                            },
+                        )
+                    })
+                })
+                this.showLeftBar = true
+                this.closeLeftToolBar = true
+                this.openInfoObject(item)
             },
-            {
-              name: 'Адрес :',
-              Категория: 'Объект',
-              data: item.adress
-            },
-            {
-              name: 'Сслыки на объект :',
-              Категория: 'Объект',
-              data: item.links
-            },
-            {
-              name: 'Cтатус работы :',
-              Категория: 'Объект',
-              data: Helper.typeObject(item.status)
-            },
-            {
-              name: 'Номер договора :',
-              Категория: 'Договор',
-              data: response.data.id_contract
-            },
-            {
-              name: 'Дата заключения :',
-              Категория: 'Договор',
-              data: response.data.data
-            },
-            {
-              name: 'Номер партнера :',
-              Категория: 'Договор',
-              data: response.data.id_partner
-            },
-            {
-              name: 'Ссылки на контракт :',
-              Категория: 'Договор',
-              data: response.data.links
-            },
-            {
-              name: 'Арендная плата :',
-              Категория: 'Договор',
-              data: response.data.rent + " Руб."
-            },
-            {
-              name: 'Тип размещения :',
-              Категория: 'Договор',
-              data: Helper.typeDefinion(response.data.placement)
-            },
-            {
-              name: 'ФИО :',
-              Категория: 'Ответственный',
-              data: response.data.responsible
-            },
-          )
-        })
-        this.showLeftBar = true
-        this.closeLeftToolBar = true
-        this.openInfoObject(item)
-      },
-      getLineObjects() {
-        let coordinates = new Promise(function (resolve) {
-          axios.get('http://localhost:3000/line_objects').then(response => {
-            resolve(response.data)
-          })
-        })
-        coordinates.then(items => {
-          let coords = []
-          items.forEach(obj => {
-            coords.push({
-              id_line_object: obj.id_line_object,
-              name: obj.name,
-              id_contract: obj.id_contract,
-              position: obj.coordinates.coordinates,
-              placement: obj.placement,
-              status: obj.status
-            })
-          })
-          coords.map(arr => {
-            let coords2 = [{
-              id_line_object: arr.id_line_object,
-              name: arr.name,
-              id_contract: arr.id_contract,
-              placement: arr.placement,
-              status: arr.status,
-              position: []
-            }]
-            arr.position.map(item => {
-              for (let i in coords2) {
-                coords2[i].position.push({lat: item[0], lng: item[1]})
-              }
-            })
-            this.lineMarkers.push(coords2)
-          })
+            getLineObjects() {
+                let coordinates = new Promise(function (resolve) {
+                    axios.get('http://localhost:3000/line_objects').then(response => {
+                        resolve(response.data)
+                    })
+                })
+                coordinates.then(items => {
+                    let coords = []
+                    items.forEach(obj => {
+                        coords.push({
+                            id_line_object: obj.id_line_object,
+                            name: obj.name,
+                            id_contract: obj.id_contract,
+                            position: obj.coordinates.coordinates,
+                            placement: obj.placement,
+                            status: obj.status
+                        })
+                    })
+                    coords.map(arr => {
+                        let coords2 = [{
+                            id_line_object: arr.id_line_object,
+                            name: arr.name,
+                            id_contract: arr.id_contract,
+                            placement: arr.placement,
+                            status: arr.status,
+                            position: []
+                        }]
+                        arr.position.map(item => {
+                            for (let i in coords2) {
+                                coords2[i].position.push({lat: item[0], lng: item[1]})
+                            }
+                        })
+                        this.lineMarkers.push(coords2)
+                    })
 
-        })
-      },
-      getLineInfoClick(item) {
-        this.infoWinOpen = false
-        axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
-          this.rows = []
-          this.rows.push(
-            {
-              name: 'Номер линейного объекта :',
-              Категория: 'Объект',
-              data: item.id_line_object,
-              isSelected: true
+                })
             },
-            {
-              name: 'Название объекта :',
-              Категория: 'Объект',
-              data: item.name
+            getLineInfoClick(item) {
+                this.infoWinOpen = false
+                this.rows = []
+                this.rows.push(
+                    {
+                        name: 'Номер линейного объекта :',
+                        Категория: 'Объект',
+                        data: item.id_line_object
+                    },
+                    {
+                        name: 'Название объекта :',
+                        Категория: 'Объект',
+                        data: item.name
+                    },
+                    {
+                        name: 'Тип размещения :',
+                        Категория: 'Объект',
+                        data: Helper.typeDefinion(item.placement)
+                    },
+                    {
+                        name: 'Статус работы :',
+                        Категория: 'Объект',
+                        data: Helper.typeObject(item.status)
+                    }
+                    )
+                axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
+                    this.rows.push(
+                        {
+                            name: 'Номер контракта :',
+                            Категория: 'Договор',
+                            data: response.data.id_contract
+                        },
+                        {
+                            name: 'Дата заключения:',
+                            Категория: 'Договор',
+                            data: response.data.data
+                        },
+                        {
+                            name: 'Номер партнера :',
+                            Категория: 'Договор',
+                            data: response.data.id_partner
+                        },
+                        {
+                            name: 'Ссылки по договору:',
+                            Категория: 'Договор',
+                            data: response.data.links
+                        },
+                        {
+                            name: 'Арендная оплата :',
+                            Категория: 'Договор',
+                            data: response.data.rent + " Руб."
+                        }
+                    )
+                })
+                this.showLeftBar = true
+                this.closeLeftToolBar = true
             },
-            {
-              name: 'Тип размещения :',
-              Категория: 'Объект',
-              data: Helper.typeDefinion(item.placement)
+            close() {
+                this.showLeftBar = false
+                this.closeLeftToolBar = false
+                this.infoWinOpen = false
             },
-            {
-              name: 'Статус работы :',
-              Категория: 'Объект',
-              data: Helper.typeObject(item.status)
-            },
-            {
-              name: 'Номер контракта :',
-              Категория: 'Договор',
-              data: response.data.id_contract
-            },
-            {
-              name: 'Дата заключения:',
-              Категория: 'Договор',
-              data: response.data.data
-            },
-            {
-              name: 'Номер партнера :',
-              Категория: 'Договор',
-              data: response.data.id_partner
-            },
-            {
-              name: 'Ссылки по договору:',
-              Категория: 'Договор',
-              data: response.data.links
-            },
-            {
-              name: 'Арендная оплата :',
-              Категория: 'Договор',
-              data: response.data.rent + " Руб."
-            }
-          )
-        })
-        this.showLeftBar = true
-        this.closeLeftToolBar = true
-      },
-      close() {
-        this.showLeftBar = false
-        this.closeLeftToolBar = false
-        this.infoWinOpen = false
-      },
-      openInfoObject(item) {
-        this.infoWindowPos.lat = item.coordinates.coordinates[0]
-        this.infoWindowPos.lng = item.coordinates.coordinates[1]
-        this.infoContent = `<div class="info__window-text"> ${Helper.typeObjectItems(item.type)} </div>
+            openInfoObject(item) {
+                this.infoWindowPos.lat = item.coordinates.coordinates[0]
+                this.infoWindowPos.lng = item.coordinates.coordinates[1]
+                this.infoContent = `<div class="info__window-text"> ${Helper.typeObjectItems(item.type)} </div>
                             <div class="info__window-text"> ${item.name_obj}</div>
                             <div class="info__window-text"> ${item.adress}</div>`
-        this.infoWinOpen = true
-      },
-      infoWinOpenClose () {
-        this.showLeftBar = false
-        this.closeLeftToolBar = false
-        this.infoWinOpen = false
-      }
+                this.infoWinOpen = true
+            },
+            infoWinOpenClose() {
+                this.showLeftBar = false
+                this.closeLeftToolBar = false
+                this.infoWinOpen = false
+            }
+        }
     }
-  }
 </script>
 
 <style lang="scss">
@@ -427,12 +444,14 @@
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
     }
+
     .gm-style-iw.gm-style-iw-c {
-      padding: 12px!important;
-      padding-bottom: 0px!important;
+        padding: 12px !important;
+        padding-bottom: 0px !important;
     }
-  .info__window-text {
-    font-size: 14px;
-    padding-bottom: 5px;
-  }
+
+    .info__window-text {
+        font-size: 14px;
+        padding-bottom: 5px;
+    }
 </style>

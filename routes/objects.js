@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const objects = require("../models/objects/objects")
 const contract = require("../models/cotracts/contracts")
+const users_data = require("../models/users/users_data")
 
 //Get All Contracts
 router.get("/objects", (req, res) => {
@@ -27,7 +28,6 @@ router.get("/objects/:id", (req, res) => {
             res.send("error" + err)
         })
 })
-
 router.post("/objects", (req, res) => {
   if(!req.body.id_object) {
     res.status(400)
@@ -43,7 +43,6 @@ router.post("/objects", (req, res) => {
     })
   }
 })
-
 router.put("/objects/:id", (req, res) => {
   if(!req.body.id_object) {
     res.status(400)
@@ -71,7 +70,6 @@ router.put("/objects/:id", (req, res) => {
       .error(err => res.send(err))
   }
 })
-
 router.delete("/objects/:id", (req, res) => {
   objects.destroy({
     where: {
@@ -84,6 +82,19 @@ router.delete("/objects/:id", (req, res) => {
     .catch(err => {
       res.send("error: " + err)
     })
+})
+router.get("/objects_responsible/:id", (req, res) => {
+    users_data.findOne({
+        where: {
+            id_user: req.params.id
+        }
+    })
+        .then((user) => {
+            res.json(user)
+        })
+        .catch(err => {
+            res.send("error" + err)
+        })
 })
 
 module.exports = router
