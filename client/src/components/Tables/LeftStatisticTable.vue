@@ -14,29 +14,29 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      rows: {
-        type: Array
-      },
-    },
-    data () {
-      return {
-        headers: [
-          {
-            text: 'Наименования',
-            align: 'left',
-            value: 'name',
-          },
-          {
-            text: 'Данные',
-            align: 'left',
-            value: 'data',
-          },
-        ],
-      }
-    },
-  }
+    export default {
+        props: {
+            rows: {
+                type: Array
+            },
+        },
+        data() {
+            return {
+                headers: [
+                    {
+                        text: 'Наименования',
+                        align: 'left',
+                        value: 'name',
+                    },
+                    {
+                        text: 'Данные',
+                        align: 'left',
+                        value: 'data',
+                    },
+                ],
+            }
+        },
+    }
 </script>
 
 <style>
@@ -50,13 +50,16 @@
         border-radius: 0px;
         overflow: auto;
     }
+
     .leftTableStatic .v-icon.notranslate.fas.fa-times.theme--dark {
         display: none;
     }
-    .leftTableStatic th.text-left{
+
+    .leftTableStatic th.text-left {
         font-size: 16px;
         font-weight: 400;
     }
+
     .leftTableStatic td.text-left {
         font-size: 13px;
     }

@@ -40,5 +40,8 @@ export default {
   },
   disclosureCoordinates (coordinates) {
     return  coordinates.coordinates
+  },
+  calcDistance (p1, p2) {
+    return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2)).toFixed(2) + ' м.'
   }
 }
