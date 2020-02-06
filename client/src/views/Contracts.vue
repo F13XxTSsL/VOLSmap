@@ -343,7 +343,7 @@
           links: '',
           comments: '',
           rent: 0.0,
-          placement: this.itemsPlacement,
+          placement: '',
           responsible: this.responsible
         },
         defaultItem: {

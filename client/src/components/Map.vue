@@ -51,7 +51,7 @@
             item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
             {strokeColor: '#388E3C', strokeWeight: 4}"
                         :clickable="true"
-                        @click="getLineInfoClick(item)"
+                        @click="getLineInfoClick(item), distanceSum(item.position)"
                 />
             </div>
         </gmap-map>
@@ -305,7 +305,6 @@
             })
             this.lineMarkers.push(coords2)
           })
-
         })
       },
       getLineInfoClick(item) {
@@ -331,6 +330,11 @@
             name: 'Статус работы :',
             Категория: 'Объект',
             data: Helper.typeObject(item.status)
+          },
+          {
+            name: 'Колиство метров :',
+            Категория: 'Объект',
+            data: this.distance + ' м.'
           }
         )
         axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
@@ -390,24 +394,30 @@
         this.closeLeftToolBar = false
         this.infoWinOpen = false
       },
-      openInfoObjectLine(item) {
-        // 569.48 м. + 902.77 м. = 1 472,25 м - расстояние коричневой линии
-        for (let i = 0; i < item.position.length; i++) {
-          let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
-          let loc2 = new google.maps.LatLng(item.position[i+1].lat, item.position[i+1].lng)
-          this.distance = Helper.calcDistance(loc1, loc2)
-          console.log(this.distance)
+      distanceSum(item) {
+        this.distance = ''
+        let disnatce = []
+        let sum = 0.00
+        for (let i = 0; i < item.length; i++) {
+          sum = 0.00
+          let loc1 = new google.maps.LatLng(item[i].lat, item[i].lng)
+          let loc2 = new google.maps.LatLng(item[i + 1].lat, item[i + 1].lng)
+          disnatce.push(Helper.calcDistance(loc1, loc2))
+          for (let i = 0; i < disnatce.length; i++) {
+            sum += parseFloat(disnatce[i])
+          }
+          this.distance = (sum).toFixed(2)
         }
-        // let loc1 = new google.maps.LatLng(item.position[1].lat, item.position[1].lng)
-        // let loc2 = new google.maps.LatLng(item.position[2].lat, item.position[2].lng)
-        // let distance = Helper.calcDistance(loc1, loc2)
+      },
+      openInfoObjectLine(item) {
+        // 569.48 м. + 902.77 м. = 1 472,25 м.
         //876.04 м. + 1013.07 м. + 320.85 м. = 2 209,96‬ м.
         this.infoWindowPos.lat = item.position[0].lat
         this.infoWindowPos.lng = item.position[0].lng
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${this.distance}</div>
+                            <div class="info__window-text">${this.distance} м.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {
