@@ -42,6 +42,6 @@ export default {
     return  coordinates.coordinates
   },
   calcDistance (p1, p2) {
-    return google.maps.geometry.spherical.computeDistanceBetween(p1, p2)
+    return google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000
   }
 }

@@ -150,7 +150,7 @@
           lng: 38.967545
         },
         infoOptions: {},
-        distance: ''
+        distance: 0.0
       }
     },
     components: {
@@ -165,6 +165,44 @@
       this.getLineObjects()
     },
     methods: {
+      getDistance(lat1,lon1,lat2,lon2) {
+        let R = 6371; //Радиус земли в км
+        let dLat = this.deg2rad(lat2-lat1);
+        let dLon = this.deg2rad(lon2-lon1);
+        let a =
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        let d = R * c; // Distance in km
+        return d;
+      },
+      deg2rad (deg) {
+        return deg * (Math.PI/180)
+      },
+      distanceSum(item) {
+        let distance = 0
+        let sum = 0.00
+        for (let i = 0; i < item.length; i++) {
+          distance = this.getDistance(item[i].lat, item[i].lng, item[i + 1].lat, item[i + 1].lng)
+          sum += distance
+          this.distance = sum.toFixed(2)
+        }
+        // this.distance = ''
+        // let disnatce = []
+        // let sum = 0.00
+        // for (let i = 0; i < item.length; i++) {
+        //   sum = 0.00
+        //   let loc1 = new google.maps.LatLng(item[i].lat, item[i].lng)
+        //   let loc2 = new google.maps.LatLng(item[i + 1].lat, item[i + 1].lng)
+        //   disnatce.push(Helper.calcDistance(loc1, loc2))
+        //   for (let i = 0; i < disnatce.length; i++) {
+        //     sum += parseFloat(disnatce[i])
+        //   }
+        //   this.distance = (sum).toFixed(2)
+        // }
+      },
       getObjects() {
         axios.get('http://localhost:3000/objects').then(response => {
           this.initialize(response.data)
@@ -332,9 +370,9 @@
             data: Helper.typeObject(item.status)
           },
           {
-            name: 'Колиство метров :',
+            name: 'Количество метров :',
             Категория: 'Объект',
-            data: this.distance + ' м.'
+            data: this.distance + ' км.'
           }
         )
         axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
@@ -394,21 +432,6 @@
         this.closeLeftToolBar = false
         this.infoWinOpen = false
       },
-      distanceSum(item) {
-        this.distance = ''
-        let disnatce = []
-        let sum = 0.00
-        for (let i = 0; i < item.length; i++) {
-          sum = 0.00
-          let loc1 = new google.maps.LatLng(item[i].lat, item[i].lng)
-          let loc2 = new google.maps.LatLng(item[i + 1].lat, item[i + 1].lng)
-          disnatce.push(Helper.calcDistance(loc1, loc2))
-          for (let i = 0; i < disnatce.length; i++) {
-            sum += parseFloat(disnatce[i])
-          }
-          this.distance = (sum).toFixed(2)
-        }
-      },
       openInfoObjectLine(item) {
         // 569.48 м. + 902.77 м. = 1 472,25 м.
         //876.04 м. + 1013.07 м. + 320.85 м. = 2 209,96‬ м.
@@ -417,7 +440,7 @@
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${this.distance} м.</div>
+                            <div class="info__window-text">${this.distance} км.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {
