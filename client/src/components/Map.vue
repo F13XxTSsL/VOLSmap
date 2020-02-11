@@ -51,7 +51,7 @@
             item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
             {strokeColor: '#388E3C', strokeWeight: 4}"
                         :clickable="true"
-                        @click="getLineInfoClick(item), distanceSum(item.position)"
+                        @click="getLineInfoClick(item)"
                 />
             </div>
         </gmap-map>
@@ -180,28 +180,6 @@
       },
       deg2rad (deg) {
         return deg * (Math.PI/180)
-      },
-      distanceSum(item) {
-        let distance = 0
-        let sum = 0.00
-        for (let i = 0; i < item.length; i++) {
-          distance = this.getDistance(item[i].lat, item[i].lng, item[i + 1].lat, item[i + 1].lng)
-          sum += distance
-          this.distance = sum.toFixed(2)
-        }
-        // this.distance = ''
-        // let disnatce = []
-        // let sum = 0.00
-        // for (let i = 0; i < item.length; i++) {
-        //   sum = 0.00
-        //   let loc1 = new google.maps.LatLng(item[i].lat, item[i].lng)
-        //   let loc2 = new google.maps.LatLng(item[i + 1].lat, item[i + 1].lng)
-        //   disnatce.push(Helper.calcDistance(loc1, loc2))
-        //   for (let i = 0; i < disnatce.length; i++) {
-        //     sum += parseFloat(disnatce[i])
-        //   }
-        //   this.distance = (sum).toFixed(2)
-        // }
       },
       getObjects() {
         axios.get('http://localhost:3000/objects').then(response => {
