@@ -165,22 +165,6 @@
       this.getLineObjects()
     },
     methods: {
-      getDistance(lat1,lon1,lat2,lon2) {
-        let R = 6371; //Радиус земли в км
-        let dLat = this.deg2rad(lat2-lat1);
-        let dLon = this.deg2rad(lon2-lon1);
-        let a =
-          Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-          Math.sin(dLon/2) * Math.sin(dLon/2)
-        ;
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        let d = R * c; // Distance in km
-        return d;
-      },
-      deg2rad (deg) {
-        return deg * (Math.PI/180)
-      },
       getObjects() {
         axios.get('http://localhost:3000/objects').then(response => {
           this.initialize(response.data)
