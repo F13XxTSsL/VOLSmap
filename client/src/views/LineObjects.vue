@@ -384,6 +384,10 @@
             >
                 Добавить
             </v-btn>
+            <v-btn
+                @click="addNewLineObject"
+            >
+                Сохранить</v-btn>
         </v-container>
     </div>
 </template>
@@ -396,7 +400,7 @@
       return {
         lat: '',
         lng: '',
-        coordinates: [],
+        coordinates: [{lat: '', lng: ''}],
         search: '',
         dialogAdd: false,
         dialogEditWindow: false,
@@ -503,6 +507,17 @@
           })
         })
       },
+      addNewLineObject() {
+        let loc1 = 0.0
+        let loc2 = 0.0
+        this.coordinates.forEach(item => {
+          loc1 = item.lat
+          loc2 = item.lng
+        })
+        axios.post('http://localhost:3000/line_objects_all', {
+          coordinates: {type: "LINESTRING", coordinates: [loc1, loc2]},
+        })
+      }
       // atSelectedType(event) {
       //   this.selectedSpacer = event
       // },
