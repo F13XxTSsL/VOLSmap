@@ -22,6 +22,7 @@ router.post("/line_objects_all", (req, res) => {
   } else {
     lineObjectsAllData.create(req.body)
       .then((res) => {
+        console.log(req.body)
         res.send('Object Added')
       }).catch(err => {
       res.send("Error: " + err)

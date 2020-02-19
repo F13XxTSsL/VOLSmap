@@ -1,395 +1,398 @@
 <template>
-    <div class="line_objects margin__top ">
-        <v-container>
-            <v-card>
-                <v-card-title>
-                    <v-text-field
-                            v-model="search"
-                            label="Поиск линейные объекта"
-                            single-line
-                            hide-details
-                    />
-                </v-card-title>
-            </v-card>
-            <v-data-table
-                    :headers="headers"
-                    :items="rows"
-                    class="elevation-1"
-                    :search="search"
+  <div class="line_objects margin__top ">
+    <v-container>
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            label="Поиск линейные объекта"
+            single-line
+            hide-details
+          />
+        </v-card-title>
+      </v-card>
+      <v-data-table
+        :headers="headers"
+        :items="rows"
+        class="elevation-1"
+        :search="search"
+      >
+        <template v-slot:top>
+          <v-toolbar
+            flat
+            color="white"
+          >
+            <v-toolbar-title>Линейные объекты</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            />
+            <v-spacer />
+            <v-dialog
+              v-model="dialogAdd"
+              max-width="500px"
             >
-                <template v-slot:top>
-                    <v-toolbar
-                            flat
-                            color="white"
-                    >
-                        <v-toolbar-title>Линейные объекты</v-toolbar-title>
-                        <v-divider
-                                class="mx-4"
-                                inset
-                                vertical
-                        />
-                        <v-spacer/>
-                        <v-dialog
-                                v-model="dialogAdd"
-                                max-width="500px"
-                        >
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        color="primary"
-                                        dark
-                                        class="mb-2"
-                                        v-on="on"
-                                >
-                                    Добавить
-                                </v-btn>
-                            </template>
-                            <!--                            <v-card>-->
-                            <!--                                <v-card-title>-->
-                            <!--                                    <span class="headline">Добавление объекта</span>-->
-                            <!--                                </v-card-title>-->
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                >
+                  Добавить
+                </v-btn>
+              </template>
+              <!--                            <v-card>-->
+              <!--                                <v-card-title>-->
+              <!--                                    <span class="headline">Добавление объекта</span>-->
+              <!--                                </v-card-title>-->
 
-                            <!--                                <v-card-text>-->
-                            <!--                                    <v-container>-->
-                            <!--                                        <v-row>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="6"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.id_object"-->
-                            <!--                                                        label="Номер объекта"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="6"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.id_obj_contract"-->
-                            <!--                                                        label="Номер контракта"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.name_obj"-->
-                            <!--                                                        label="Имя объекта"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
+              <!--                                <v-card-text>-->
+              <!--                                    <v-container>-->
+              <!--                                        <v-row>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="6"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.id_object"-->
+              <!--                                                        label="Номер объекта"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="6"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.id_obj_contract"-->
+              <!--                                                        label="Номер контракта"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="12"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.name_obj"-->
+              <!--                                                        label="Имя объекта"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
 
-                            <!--                                            <v-col-->
-                            <!--                                                    class="d-flex"-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    md="12"-->
-                            <!--                                                    sm="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-select-->
-                            <!--                                                        :items="typeObjects"-->
-                            <!--                                                        item-text="text"-->
-                            <!--                                                        item-value="id"-->
-                            <!--                                                        label="Тип объекта"-->
-                            <!--                                                        @change="atSelectedType($event)"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    class="d-flex"-->
+              <!--                                                    cols="12"-->
+              <!--                                                    md="12"-->
+              <!--                                                    sm="12"-->
+              <!--                                            >-->
+              <!--                                                <v-select-->
+              <!--                                                        :items="typeObjects"-->
+              <!--                                                        item-text="text"-->
+              <!--                                                        item-value="id"-->
+              <!--                                                        label="Тип объекта"-->
+              <!--                                                        @change="atSelectedType($event)"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
 
-                            <!--                                            <v-col-->
-                            <!--                                                    class="d-flex"-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-select-->
-                            <!--                                                        :items="statusObjects"-->
-                            <!--                                                        item-text="text"-->
-                            <!--                                                        item-value="id"-->
-                            <!--                                                        label="Статус"-->
-                            <!--                                                        @change="atSelectedStatus($event)"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.data_for_exploitation"-->
-                            <!--                                                        label="Дата эксплуатации"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="6"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.coordinate_lat"-->
-                            <!--                                                        label="Широта"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="6"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.coordinate_lng"-->
-                            <!--                                                        label="Долгота"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.adress"-->
-                            <!--                                                        label="Адрес"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.links"-->
-                            <!--                                                        label="Ссылки"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                            <v-col-->
-                            <!--                                                    cols="12"-->
-                            <!--                                                    sm="6"-->
-                            <!--                                                    md="12"-->
-                            <!--                                            >-->
-                            <!--                                                <v-text-field-->
-                            <!--                                                        v-model="addItem.comments"-->
-                            <!--                                                        label="Комментарии"-->
-                            <!--                                                />-->
-                            <!--                                            </v-col>-->
-                            <!--                                        </v-row>-->
-                            <!--                                    </v-container>-->
-                            <!--                                </v-card-text>-->
+              <!--                                            <v-col-->
+              <!--                                                    class="d-flex"-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="12"-->
+              <!--                                            >-->
+              <!--                                                <v-select-->
+              <!--                                                        :items="statusObjects"-->
+              <!--                                                        item-text="text"-->
+              <!--                                                        item-value="id"-->
+              <!--                                                        label="Статус"-->
+              <!--                                                        @change="atSelectedStatus($event)"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="12"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.data_for_exploitation"-->
+              <!--                                                        label="Дата эксплуатации"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="6"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.coordinate_lat"-->
+              <!--                                                        label="Широта"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="6"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.coordinate_lng"-->
+              <!--                                                        label="Долгота"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="12"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.adress"-->
+              <!--                                                        label="Адрес"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="12"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.links"-->
+              <!--                                                        label="Ссылки"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                            <v-col-->
+              <!--                                                    cols="12"-->
+              <!--                                                    sm="6"-->
+              <!--                                                    md="12"-->
+              <!--                                            >-->
+              <!--                                                <v-text-field-->
+              <!--                                                        v-model="addItem.comments"-->
+              <!--                                                        label="Комментарии"-->
+              <!--                                                />-->
+              <!--                                            </v-col>-->
+              <!--                                        </v-row>-->
+              <!--                                    </v-container>-->
+              <!--                                </v-card-text>-->
 
-                            <!--                                <v-card-actions>-->
-                            <!--                                    <v-spacer/>-->
-                            <!--                                    <v-btn-->
-                            <!--                                            color="blue darken-1"-->
-                            <!--                                            text-->
-                            <!--                                            @click="close"-->
-                            <!--                                    >-->
-                            <!--                                        Назад-->
-                            <!--                                    </v-btn>-->
-                            <!--                                    <v-btn-->
-                            <!--                                            color="blue darken-1"-->
-                            <!--                                            text-->
-                            <!--                                            @click="saveAdd"-->
-                            <!--                                    >-->
-                            <!--                                        Добавить-->
-                            <!--                                    </v-btn>-->
-                            <!--                                </v-card-actions>-->
-                            <!--                            </v-card>-->
-                        </v-dialog>
-                        <!--                        <v-dialog-->
-                        <!--                                v-model="dialogEditWindow"-->
-                        <!--                                max-width="500px"-->
-                        <!--                        >-->
-                        <!--                            <v-card>-->
-                        <!--                                <v-card-title>-->
-                        <!--                                    <span class="headline">Редактирование объекта</span>-->
-                        <!--                                </v-card-title>-->
+              <!--                                <v-card-actions>-->
+              <!--                                    <v-spacer/>-->
+              <!--                                    <v-btn-->
+              <!--                                            color="blue darken-1"-->
+              <!--                                            text-->
+              <!--                                            @click="close"-->
+              <!--                                    >-->
+              <!--                                        Назад-->
+              <!--                                    </v-btn>-->
+              <!--                                    <v-btn-->
+              <!--                                            color="blue darken-1"-->
+              <!--                                            text-->
+              <!--                                            @click="saveAdd"-->
+              <!--                                    >-->
+              <!--                                        Добавить-->
+              <!--                                    </v-btn>-->
+              <!--                                </v-card-actions>-->
+              <!--                            </v-card>-->
+            </v-dialog>
+            <!--                        <v-dialog-->
+            <!--                                v-model="dialogEditWindow"-->
+            <!--                                max-width="500px"-->
+            <!--                        >-->
+            <!--                            <v-card>-->
+            <!--                                <v-card-title>-->
+            <!--                                    <span class="headline">Редактирование объекта</span>-->
+            <!--                                </v-card-title>-->
 
-                        <!--                                <v-card-text>-->
-                        <!--                                    <v-container>-->
-                        <!--                                        <v-row>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="6"-->
-                        <!--                                                    md="6"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.id_object"-->
-                        <!--                                                        label="Номер объекта"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="6"-->
-                        <!--                                                    md="6"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.id_obj_contract"-->
-                        <!--                                                        label="Номер контракта"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                                    md="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.name_obj"-->
-                        <!--                                                        label="Имя объекта"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                                    md="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.data_for_exploitation"-->
-                        <!--                                                        label="Дата эксплуатации"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                                    md="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.adress"-->
-                        <!--                                                        label="Адрес"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    class="d-flex"-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-select-->
-                        <!--                                                        :items="typeObjects"-->
-                        <!--                                                        item-text="text"-->
-                        <!--                                                        item-value="id"-->
-                        <!--                                                        label="Тип объекта"-->
-                        <!--                                                        @change="atSelectedType($event)"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    class="d-flex"-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-select-->
-                        <!--                                                        :items="statusObjects"-->
-                        <!--                                                        item-text="text"-->
-                        <!--                                                        item-value="id"-->
-                        <!--                                                        label="Статус"-->
-                        <!--                                                        @change="atSelectedStatus($event)"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="6"-->
-                        <!--                                                    md="6"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.coordinate_lat"-->
-                        <!--                                                        label="Широта"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="6"-->
-                        <!--                                                    md="6"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.coordinate_lng"-->
-                        <!--                                                        label="Долгота"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                                    md="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.links"-->
-                        <!--                                                        label="Ссылки"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                            <v-col-->
-                        <!--                                                    cols="12"-->
-                        <!--                                                    sm="12"-->
-                        <!--                                                    md="12"-->
-                        <!--                                            >-->
-                        <!--                                                <v-text-field-->
-                        <!--                                                        v-model="editItem.comments"-->
-                        <!--                                                        label="Комментарии"-->
-                        <!--                                                />-->
-                        <!--                                            </v-col>-->
-                        <!--                                        </v-row>-->
-                        <!--                                    </v-container>-->
-                        <!--                                </v-card-text>-->
+            <!--                                <v-card-text>-->
+            <!--                                    <v-container>-->
+            <!--                                        <v-row>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="6"-->
+            <!--                                                    md="6"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.id_object"-->
+            <!--                                                        label="Номер объекта"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="6"-->
+            <!--                                                    md="6"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.id_obj_contract"-->
+            <!--                                                        label="Номер контракта"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                                    md="12"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.name_obj"-->
+            <!--                                                        label="Имя объекта"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                                    md="12"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.data_for_exploitation"-->
+            <!--                                                        label="Дата эксплуатации"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                                    md="12"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.adress"-->
+            <!--                                                        label="Адрес"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    class="d-flex"-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                            >-->
+            <!--                                                <v-select-->
+            <!--                                                        :items="typeObjects"-->
+            <!--                                                        item-text="text"-->
+            <!--                                                        item-value="id"-->
+            <!--                                                        label="Тип объекта"-->
+            <!--                                                        @change="atSelectedType($event)"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    class="d-flex"-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                            >-->
+            <!--                                                <v-select-->
+            <!--                                                        :items="statusObjects"-->
+            <!--                                                        item-text="text"-->
+            <!--                                                        item-value="id"-->
+            <!--                                                        label="Статус"-->
+            <!--                                                        @change="atSelectedStatus($event)"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="6"-->
+            <!--                                                    md="6"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.coordinate_lat"-->
+            <!--                                                        label="Широта"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="6"-->
+            <!--                                                    md="6"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.coordinate_lng"-->
+            <!--                                                        label="Долгота"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                                    md="12"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.links"-->
+            <!--                                                        label="Ссылки"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                            <v-col-->
+            <!--                                                    cols="12"-->
+            <!--                                                    sm="12"-->
+            <!--                                                    md="12"-->
+            <!--                                            >-->
+            <!--                                                <v-text-field-->
+            <!--                                                        v-model="editItem.comments"-->
+            <!--                                                        label="Комментарии"-->
+            <!--                                                />-->
+            <!--                                            </v-col>-->
+            <!--                                        </v-row>-->
+            <!--                                    </v-container>-->
+            <!--                                </v-card-text>-->
 
-                        <!--                                <v-card-actions>-->
-                        <!--                                    <v-spacer/>-->
-                        <!--                                    <v-btn-->
-                        <!--                                            color="blue darken-1"-->
-                        <!--                                            text-->
-                        <!--                                            @click="close"-->
-                        <!--                                    >-->
-                        <!--                                        Назад-->
-                        <!--                                    </v-btn>-->
-                        <!--                                    <v-btn-->
-                        <!--                                            color="blue darken-1"-->
-                        <!--                                            text-->
-                        <!--                                            @click="editItemSave"-->
-                        <!--                                    >-->
-                        <!--                                        Сохранить-->
-                        <!--                                    </v-btn>-->
-                        <!--                                </v-card-actions>-->
-                        <!--                            </v-card>-->
-                        <!--                        </v-dialog>-->
-                    </v-toolbar>
-                </template>
-                <!--                <template v-slot:item.action="{ item }">-->
-                <!--                    <v-icon-->
-                <!--                            small-->
-                <!--                            class="mr-2"-->
-                <!--                            @click="dialogEdit(item)"-->
-                <!--                    >-->
-                <!--                        mdi-pencil-->
-                <!--                    </v-icon>-->
-                <!--                    <v-icon-->
-                <!--                            small-->
-                <!--                            @click="deleteItem(item)"-->
-                <!--                    >-->
-                <!--                        mdi-delete-->
-                <!--                    </v-icon>-->
-                <!--                </template>-->
-            </v-data-table>
-            <div
-                    class="line__coordinates"
-                    style="margin-top: 10px"
-            >
-                <div class="coordinates" :key="i" v-for="(coordinate, i) in coordinates">
-                    <v-text-field
-                            label="Долгота"
-                            v-model="coordinate.lat"
-                    />
-                    <v-text-field
-                            label="Широта"
-                            v-model="coordinate.lng"
-                    />
-                </div>
-            </div>
-            <v-btn
-                    small
-                    color="primary"
-                    @click="addInputsCoordinates"
-            >
-                Добавить
-            </v-btn>
-            <v-btn
-                @click="addNewLineObject"
-            >
-                Сохранить</v-btn>
-        </v-container>
-    </div>
+            <!--                                <v-card-actions>-->
+            <!--                                    <v-spacer/>-->
+            <!--                                    <v-btn-->
+            <!--                                            color="blue darken-1"-->
+            <!--                                            text-->
+            <!--                                            @click="close"-->
+            <!--                                    >-->
+            <!--                                        Назад-->
+            <!--                                    </v-btn>-->
+            <!--                                    <v-btn-->
+            <!--                                            color="blue darken-1"-->
+            <!--                                            text-->
+            <!--                                            @click="editItemSave"-->
+            <!--                                    >-->
+            <!--                                        Сохранить-->
+            <!--                                    </v-btn>-->
+            <!--                                </v-card-actions>-->
+            <!--                            </v-card>-->
+            <!--                        </v-dialog>-->
+          </v-toolbar>
+        </template>
+        <!--                <template v-slot:item.action="{ item }">-->
+        <!--                    <v-icon-->
+        <!--                            small-->
+        <!--                            class="mr-2"-->
+        <!--                            @click="dialogEdit(item)"-->
+        <!--                    >-->
+        <!--                        mdi-pencil-->
+        <!--                    </v-icon>-->
+        <!--                    <v-icon-->
+        <!--                            small-->
+        <!--                            @click="deleteItem(item)"-->
+        <!--                    >-->
+        <!--                        mdi-delete-->
+        <!--                    </v-icon>-->
+        <!--                </template>-->
+      </v-data-table>
+      <div
+        class="line__coordinates"
+        style="margin-top: 10px"
+      >
+        <div
+          class="coordinates"
+        >
+          <v-text-field
+            label="Долгота"
+            v-model="coordinateLat"
+          />
+          <v-text-field
+            label="Широта"
+            v-model="coordinateLng"
+          />
+        </div>
+      </div>
+      <v-btn
+        small
+        color="primary"
+        @click="addInputsCoordinates"
+      >
+        Добавить
+      </v-btn>
+      <v-btn
+        @click="addNewLineObject"
+      >
+        Сохранить
+      </v-btn>
+    </v-container>
+  </div>
 </template>
 <script>
   import axios from 'axios'
@@ -468,7 +471,9 @@
           placement: this.itemsPlacement
         },
         selectedSpacer: '',
-        selectedSpacer2: ''
+        selectedSpacer2: '',
+        coordinateLat: 0,
+        coordinateLng: 0
       }
     },
     watch: {
@@ -490,17 +495,15 @@
         })
       },
       initialize(data) {
-        let position = []
         data.map(item => {
-          position = item.coordinates
           this.rows.push({
             id_line_object: item.id_line_object,
             name: item.name,
             id_contract: item.id_contract,
             startPoint: item.id_point_one,
             endPoint: item.id_point_two,
-            distance: position,
-            status: Helper.typeObject(item.coordinates.coordinates),
+            distance: Helper.distanceCalc(item.coordinates.coordinates),
+            status: Helper.typeObject(item.status),
             placement: Helper.typeDefinion(item.placement),
             links: item.links,
             comments: item.comments
@@ -508,14 +511,11 @@
         })
       },
       addNewLineObject() {
-        let loc1 = 0.0
-        let loc2 = 0.0
-        this.coordinates.forEach(item => {
-          loc1 = item.lat
-          loc2 = item.lng
-        })
+          let result = []
+          result.push([this.coordinateLat, this.coordinateLng])
+          console.log(result)
         axios.post('http://localhost:3000/line_objects_all', {
-          coordinates: {type: "LINESTRING", coordinates: [loc1, loc2]},
+          coordinates: {type: "LINESTRING", coordinates: result},
         })
       }
       // atSelectedType(event) {
