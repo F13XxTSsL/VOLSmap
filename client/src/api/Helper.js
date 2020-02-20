@@ -1,5 +1,5 @@
 export default {
-  typeDefinion (type) {
+  typeDefinion(type) {
     if (type === 'indoor') {
       return type = 'В помещении'
     }
@@ -13,7 +13,7 @@ export default {
       return type = 'По земле'
     }
   },
-  typeObject (type) {
+  typeObject(type) {
     if (type === 'active') {
       return type = 'Активна'
     }
@@ -24,7 +24,7 @@ export default {
       return type = 'Отключена'
     }
   },
-  typeObjectItems (type) {
+  typeObjectItems(type) {
     if (type === 'BTS') {
       return type = 'Базовая станция'
     }
@@ -38,21 +38,37 @@ export default {
       return type = 'Муфта'
     }
   },
-  disclosureCoordinates (coordinates) {
-    return  coordinates.coordinates
+  disclosureCoordinates(coordinates) {
+    return coordinates.coordinates
   },
-  rad (x) {
+  getDistancePoint(p1, p2) {
+    const R = 6378137; // Earth’s mean radius in meter
+    const dLat = this.rad(p2.lat() - p1.lat());
+    const dLong = this.rad(p2.lng() - p1.lng());
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.rad(p1.lat())) * Math.cos(this.rad(p2.lat())) *
+      Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d; // returns the distance in meter
+  },
+  rad(x) {
     return x * Math.PI / 180;
   },
-  getDistancePoint (p1, p2) {
-      const R = 6378137; // Earth’s mean radius in meter
-      const dLat = this.rad(p2.lat() - p1.lat());
-      const dLong = this.rad(p2.lng() - p1.lng());
-      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(this.rad(p1.lat())) * Math.cos(this.rad(p2.lat())) *
-        Math.sin(dLong / 2) * Math.sin(dLong / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const d = R * c;
-      return d; // returns the distance in meter
-  }
+  getDistancePointTable(lat1, lon1, lat2, lon2) {
+    let R = 6371; // Radius of the earth in km
+    let dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    let dLon = this.deg2rad(lon2 - lon1);
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    ;
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c; // Distance in km
+    return d;
+  },
+  deg2rad(deg) {
+    return deg * Math.PI / 180;
+  },
 }

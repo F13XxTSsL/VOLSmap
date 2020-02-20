@@ -396,9 +396,13 @@
 </template>
 <script>
   import axios from 'axios'
+  import {gmapApi} from 'vue2-google-maps';
   import Helper from "../api/Helper";
 
   export default {
+    computed: {
+      google: gmapApi
+    },
     data() {
       return {
         lat: '',
@@ -473,7 +477,8 @@
         selectedSpacer: '',
         selectedSpacer2: '',
         coordinateLat: 0,
-        coordinateLng: 0
+        coordinateLng: 0,
+        sumDistanceTable: 0
       }
     },
     watch: {
@@ -489,36 +494,14 @@
         this.coordinates.push({lat: '', lng: ''})
       },
       getObjects() {
-        axios.get('http://localhost:3000/line_objects_all').then(response => {
-          this.initialize(response.data)
-        })
-      },
-      initialize(data) {
-        this.getLineObjects(data)
-        data.map(item => {
-          this.rows.push({
-            id_line_object: item.id_line_object,
-            name: item.name,
-            id_contract: item.id_contract,
-            startPoint: item.id_point_one,
-            endPoint: item.id_point_two,
-            distance: 0,
-            status: Helper.typeObject(item.status),
-            placement: Helper.typeDefinion(item.placement),
-            links: item.links,
-            comments: item.comments
+        const data = new Promise(function (resolve) {
+          axios.get('http://localhost:3000/line_objects_all').then(response => {
+            resolve(response.data)
           })
         })
-      },
-      getLineObjects(data) {
-        let arrayItems= []
-        let distanceSum = 0
-        let coordinates = new Promise(function (resolve) {
-          resolve(data)
-        })
-        coordinates.then(items => {
+        data.then(data => {
           let coords = []
-          items.forEach(item => {
+          data.map(item => {
             coords.push({
               position: item.coordinates.coordinates
             })
@@ -532,20 +515,34 @@
                 coords2[i].position.push({lat: item[0], lng: item[1]})
               }
             })
-            coords2.forEach(item => {
-              for (let i = 0; i < item.position.length - 1; i++) {
-              }
+            let position = new Promise(function (resolve) {
+              resolve(coords2[0].position)
             })
-            // for (let i = 0; i < item.position.length - 1; i++) {
-            //   let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
-            //   let loc2 = new google.maps.LatLng(item.position[i+1].lat, item.position[i+1].lng)
-            //   let distance = Helper.getDistancePoint(loc1, loc2)
-            //   arrayItems.push(distance)
-            //   distanceSum = arrayItems.reduce((total, amount) => total + amount)
-            // }
+            let arrayItems= []
+            let distanceSum = 0
+            position.then(item => {
+              for (let i = 0; i < item.length - 1; i++) {
+                arrayItems.push(Helper.getDistancePointTable(item[i].lat, item[i].lng, item[i + 1].lat, item[i + 1].lng))
+                distanceSum = arrayItems.reduce((total, amount) => total + amount)
+              }
+              return this.sumDistanceTable = distanceSum
+            })
+          })
+          data.map(item => {
+            this.rows.push({
+              id_line_object: item.id_line_object,
+              name: item.name,
+              id_contract: item.id_contract,
+              startPoint: item.id_point_one,
+              endPoint: item.id_point_two,
+              distance: this.sumDistanceTable,
+              status: Helper.typeObject(item.status),
+              placement: Helper.typeDefinion(item.placement),
+              links: item.links,
+              comments: item.comments
+            })
           })
         })
-        return distanceSum
       },
       addNewLineObject() {
         let result = []

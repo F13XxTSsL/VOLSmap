@@ -411,7 +411,7 @@
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${distanceSum.toFixed(2)} м.</div>
+                            <div class="info__window-text">${distanceSum.toFixed(0)} м.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {
