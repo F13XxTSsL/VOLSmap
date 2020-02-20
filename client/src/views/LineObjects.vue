@@ -362,35 +362,35 @@
         <!--                    </v-icon>-->
         <!--                </template>-->
       </v-data-table>
-      <div
-        class="line__coordinates"
-        style="margin-top: 10px"
-      >
-        <div
-          class="coordinates"
-        >
-          <v-text-field
-            label="Долгота"
-            v-model="coordinateLat"
-          />
-          <v-text-field
-            label="Широта"
-            v-model="coordinateLng"
-          />
-        </div>
-      </div>
-      <v-btn
-        small
-        color="primary"
-        @click="addInputsCoordinates"
-      >
-        Добавить
-      </v-btn>
-      <v-btn
-        @click="addNewLineObject"
-      >
-        Сохранить
-      </v-btn>
+      <!--      <div-->
+      <!--        class="line__coordinates"-->
+      <!--        style="margin-top: 10px"-->
+      <!--      >-->
+      <!--        <div-->
+      <!--          class="coordinates"-->
+      <!--        >-->
+      <!--          <v-text-field-->
+      <!--            label="Долгота"-->
+      <!--            v-model="coordinateLat"-->
+      <!--          />-->
+      <!--          <v-text-field-->
+      <!--            label="Широта"-->
+      <!--            v-model="coordinateLng"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--      </div>-->
+      <!--      <v-btn-->
+      <!--        small-->
+      <!--        color="primary"-->
+      <!--        @click="addInputsCoordinates"-->
+      <!--      >-->
+      <!--        Добавить-->
+      <!--      </v-btn>-->
+      <!--      <v-btn-->
+      <!--        @click="addNewLineObject"-->
+      <!--      >-->
+      <!--        Сохранить-->
+      <!--      </v-btn>-->
     </v-container>
   </div>
 </template>
@@ -487,7 +487,6 @@
     methods: {
       addInputsCoordinates() {
         this.coordinates.push({lat: '', lng: ''})
-        console.log(this.coordinates)
       },
       getObjects() {
         axios.get('http://localhost:3000/line_objects_all').then(response => {
@@ -502,7 +501,7 @@
             id_contract: item.id_contract,
             startPoint: item.id_point_one,
             endPoint: item.id_point_two,
-            distance: Helper.distanceCalc(item.coordinates.coordinates),
+            distance: 0,
             status: Helper.typeObject(item.status),
             placement: Helper.typeDefinion(item.placement),
             links: item.links,
@@ -513,7 +512,6 @@
       addNewLineObject() {
           let result = []
           result.push([this.coordinateLat, this.coordinateLng])
-          console.log(result)
         axios.post('http://localhost:3000/line_objects_all', {
           coordinates: {type: "LINESTRING", coordinates: result},
         })

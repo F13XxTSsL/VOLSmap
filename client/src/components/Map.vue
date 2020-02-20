@@ -1,18 +1,18 @@
 <template>
-    <div class="map__wrapper">
-        <gmap-map
-                id="map"
-                :options="optionsMap"
-                :center="centerMap"
-                :clickable="true"
-        >
-            <gmap-marker
-                    :key="item.id_object"
-                    v-for="item in markers"
-                    :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
-                    :clickable="true"
-                    @click="getPointInfoClick(item)"
-                    :icon="item.status === 'error' ?
+  <div class="map__wrapper">
+    <gmap-map
+      id="map"
+      :options="optionsMap"
+      :center="centerMap"
+      :clickable="true"
+    >
+      <gmap-marker
+        :key="item.id_object"
+        v-for="item in markers"
+        :position="{lat:item.coordinates.coordinates[0], lng:item.coordinates.coordinates[1]}"
+        :clickable="true"
+        @click="getPointInfoClick(item)"
+        :icon="item.status === 'error' ?
           {url: require('../assets/bs_error.png'),
            size: {width: 40, height: 40, f: 'px', b: 'px'},
            scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}
@@ -25,60 +25,60 @@
             {url: require('../assets/bs.png'),
              size: {width: 40, height: 40, f: 'px', b: 'px'},
              scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}}"
-                    :animation="4"
-            />
+        :animation="4"
+      />
 
-            <gmap-info-window
-                    class="info__window"
-                    :options="infoOptions"
-                    :position="infoWindowPos"
-                    :opened="infoWinOpen"
-                    @closeclick="infoWinOpenClose"
-            >
-                <div v-html="infoContent"/>
-            </gmap-info-window>
+      <gmap-info-window
+        class="info__window"
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpenClose"
+      >
+        <div v-html="infoContent" />
+      </gmap-info-window>
 
-            <div
-                    :key="index[items]"
-                    v-for="(items, index) in lineMarkers"
-            >
-                <gmap-polyline
-                        :key="item.id"
-                        v-for="item in items"
-                        :path.sync="item.position"
-                        :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
+      <div
+        :key="index[items]"
+        v-for="(items, index) in lineMarkers"
+      >
+        <gmap-polyline
+          :key="item.id"
+          v-for="item in items"
+          :path.sync="item.position"
+          :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
             item.placement === 'prop' ? {strokeColor: '#FFD600', strokeWeight: 4} :
             item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
             {strokeColor: '#388E3C', strokeWeight: 4}"
-                        :clickable="true"
-                        @click="getLineInfoClick(item)"
-                />
-            </div>
-        </gmap-map>
-        <transition name="slide-fade">
-            <LeftStatisticTable
-                    :rows="rows"
-                    v-show="showLeftBar"
-                    class="LeftToolbar"
-            />
-        </transition>
-        <transition name="slide-fade">
-            <div
-                    v-show="closeLeftToolBar"
-                    class="close"
-                    @click="close"
-            >
-                <v-icon
-                        dark
-                        class="fas fa-caret-left"
-                />
-            </div>
-        </transition>
-        <h1 class="title_volsmap">
-            VOLSmap
-        </h1>
-        <Help/>
-    </div>
+          :clickable="true"
+          @click="getLineInfoClick(item)"
+        />
+      </div>
+    </gmap-map>
+    <transition name="slide-fade">
+      <LeftStatisticTable
+        :rows="rows"
+        v-show="showLeftBar"
+        class="LeftToolbar"
+      />
+    </transition>
+    <transition name="slide-fade">
+      <div
+        v-show="closeLeftToolBar"
+        class="close"
+        @click="close"
+      >
+        <v-icon
+          dark
+          class="fas fa-caret-left"
+        />
+      </div>
+    </transition>
+    <h1 class="title_volsmap">
+      VOLSmap
+    </h1>
+    <Help />
+  </div>
 </template>
 
 <script>
@@ -397,12 +397,24 @@
       openInfoObjectLine(item) {
         // 569.48 м. + 902.77 м. = 1 472,25 м.
         //876.04 м. + 1013.07 м. + 320.85 м. = 2 209,96‬ м.
+        let arrayItems= []
+        let distanceSum = 0
+        for (let i = 0, j = 1; i < item.position.length, i < j; i++, j++) {
+          let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
+          let loc2 = new google.maps.LatLng(item.position[j].lat, item.position[j].lng)
+          let distance = Helper.getDistancePoint(loc1, loc2)
+          arrayItems.push(distance)
+        }
+        // for (let i = 0; i < arrayItems.length; i++) {
+        //   console.log(arrayItems[i])
+        //   distanceSum += parseFloat(arrayItems[i])
+        // }
         this.infoWindowPos.lat = item.position[0].lat
         this.infoWindowPos.lng = item.position[0].lng
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${this.distance} км.</div>
+                            <div class="info__window-text">${distanceSum.toFixed(2)} км.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {

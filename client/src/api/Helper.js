@@ -44,24 +44,18 @@ export default {
   calcDistance (p1, p2) {
     return google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000
   },
-  formulaCalcDistnace (lat1,lon1,lat2,lon2) {
-    let R = 6371; //Радиус земли в км
-    let dLat = this.deg2rad(lat2-lat1);
-    let dLon = this.deg2rad(lon2-lon1);
-    let a =
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-    ;
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    let d = R * c; // Distance in km
-    return d;
+  rad (x) {
+    return x * Math.PI / 180;
   },
-  deg2rad (deg) {
-    return deg * (Math.PI/180)
-  },
-  distanceCalc (coordinates) {
-    console.log(coordinates)
-
+  getDistancePoint (p1, p2) {
+      const R = 6378137; // Earth’s mean radius in meter
+      const dLat = this.rad(p2.lat() - p1.lat());
+      const dLong = this.rad(p2.lng() - p1.lng());
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(this.rad(p1.lat())) * Math.cos(this.rad(p2.lat())) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c;
+      return d; // returns the distance in meter
   }
 }
