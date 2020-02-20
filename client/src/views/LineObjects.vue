@@ -495,7 +495,10 @@
         })
       },
       initialize(data) {
+        let arrayItems = []
+        let distanceSum = 0
         data.map(item => {
+          let position = item.coordinates.coordinates
           this.rows.push({
             id_line_object: item.id_line_object,
             name: item.name,
@@ -508,49 +511,41 @@
             links: item.links,
             comments: item.comments
           })
+          this.getLineObjects(position)
         })
       },
-      getLineObjects(data) {
-        let coordinates = new Promise(function (resolve) {
-            resolve(data)
-        })
-        coordinates.then(items => {
-          let coords = []
-          items.forEach(item => {
-            coords.push({
-              position: item.coordinates.coordinates
-            })
-          })
-          coords.map(arr => {
-            let coords2 = [{
-              position: []
-            }]
-            arr.position.map(item => {
-              for (let i in coords2) {
-                coords2[i].position.push({lat: item[0], lng: item[1]})
-              }
-            })
-            let array = ''
-            for (let i = 0; i < coords2.length; i++) {
-              array = coords2[i].position
-              for (let i = 0, j = 1; i < array.length, i < j; i++, j++) {
-                let loc1 = new google.maps.LatLng(array[i].lat, array[i].lng)
-                let loc2 = new google.maps.LatLng(array[j].lat, array[j].lng)
-                let distance = Helper.getDistancePoint(loc1, loc2)
-                console.log(distance)
-              }
-            }
-
-              // for (let i = 0, j = 1; i < item.position.length, i < j; i++, j++) {
-              //   let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
-              //   let loc2 = new google.maps.LatLng(item.position[j].lat, item.position[j].lng)
-              //   let distance = Helper.getDistancePoint(loc1, loc2)
-              //   arrayItems.push(distance)
-              //   distanceSum = arrayItems.reduce((total, amount) => total + amount)
-              //   console.log(distanceSum)
-              // }
-            })
-        })
+      getLineObjects(position) {
+        for (let i = 0; i < position.length - 1; i++) {
+          console.log(position[i][0], position[i][1])
+          let loc1 = new google.maps.LatLng(position[i][0], position[i][1])
+          // let loc2 = new google.maps.LatLng(position[i+1][0], position[i+1][1])
+          // let distance = Helper.getDistancePoint(loc1, loc2)
+          // console.log(distance)
+          // arrayItems.push(distance)
+          // distanceSum = arrayItems.reduce((total, amount) => total + amount)
+          // console.log(distanceSum)
+        }
+        // let coordinates = new Promise(function (resolve) {
+        //     resolve(data)
+        // })
+        // coordinates.then(items => {
+        //   let coords = []
+        //   items.forEach(item => {
+        //     coords.push({
+        //       position: item.coordinates.coordinates
+        //     })
+        //   })
+        //   coords.map(arr => {
+        //     let coords2 = [{
+        //       position: []
+        //     }]
+        //     arr.position.map(item => {
+        //       for (let i in coords2) {
+        //         coords2[i].position.push([item[0], item[1]])
+        //       }
+        //     })
+        //     })
+        // })
       },
       addNewLineObject() {
           let result = []

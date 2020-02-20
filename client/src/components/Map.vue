@@ -399,20 +399,19 @@
         //876.04 м. + 1013.07 м. + 320.85 м. = 2 209,96‬ м.
         let arrayItems= []
         let distanceSum = 0
-        for (let i = 0, j = 1; i < item.position.length, i < j; i++, j++) {
+        for (let i = 0; i < item.position.length - 1; i++) {
           let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
-          let loc2 = new google.maps.LatLng(item.position[j].lat, item.position[j].lng)
+          let loc2 = new google.maps.LatLng(item.position[i+1].lat, item.position[i+1].lng)
           let distance = Helper.getDistancePoint(loc1, loc2)
           arrayItems.push(distance)
           distanceSum = arrayItems.reduce((total, amount) => total + amount)
-          this.distance = distanceSum
         }
         this.infoWindowPos.lat = item.position[0].lat
         this.infoWindowPos.lng = item.position[0].lng
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${distanceSum.toFixed(2)} км.</div>
+                            <div class="info__window-text">${distanceSum.toFixed(2)} м.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {
