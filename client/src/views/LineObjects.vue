@@ -28,7 +28,7 @@
               inset
               vertical
             />
-            <v-spacer />
+            <v-spacer/>
             <v-dialog
               v-model="dialogAdd"
               max-width="500px"
@@ -491,14 +491,11 @@
       getObjects() {
         axios.get('http://localhost:3000/line_objects_all').then(response => {
           this.initialize(response.data)
-          this.getLineObjects(response.data)
         })
       },
       initialize(data) {
-        let arrayItems = []
-        let distanceSum = 0
+        this.getLineObjects(data)
         data.map(item => {
-          let position = item.coordinates.coordinates
           this.rows.push({
             id_line_object: item.id_line_object,
             name: item.name,
@@ -511,45 +508,48 @@
             links: item.links,
             comments: item.comments
           })
-          this.getLineObjects(position)
         })
       },
-      getLineObjects(position) {
-        for (let i = 0; i < position.length - 1; i++) {
-          console.log(position[i][0], position[i][1])
-          let loc1 = new google.maps.LatLng(position[i][0], position[i][1])
-          // let loc2 = new google.maps.LatLng(position[i+1][0], position[i+1][1])
-          // let distance = Helper.getDistancePoint(loc1, loc2)
-          // console.log(distance)
-          // arrayItems.push(distance)
-          // distanceSum = arrayItems.reduce((total, amount) => total + amount)
-          // console.log(distanceSum)
-        }
-        // let coordinates = new Promise(function (resolve) {
-        //     resolve(data)
-        // })
-        // coordinates.then(items => {
-        //   let coords = []
-        //   items.forEach(item => {
-        //     coords.push({
-        //       position: item.coordinates.coordinates
-        //     })
-        //   })
-        //   coords.map(arr => {
-        //     let coords2 = [{
-        //       position: []
-        //     }]
-        //     arr.position.map(item => {
-        //       for (let i in coords2) {
-        //         coords2[i].position.push([item[0], item[1]])
-        //       }
-        //     })
-        //     })
-        // })
+      getLineObjects(data) {
+        let arrayItems= []
+        let distanceSum = 0
+        let coordinates = new Promise(function (resolve) {
+          resolve(data)
+        })
+        coordinates.then(items => {
+          let coords = []
+          items.forEach(item => {
+            coords.push({
+              position: item.coordinates.coordinates
+            })
+          })
+          coords.map(arr => {
+            let coords2 = [{
+              position: []
+            }]
+            arr.position.map(item => {
+              for (let i in coords2) {
+                coords2[i].position.push({lat: item[0], lng: item[1]})
+              }
+            })
+            coords2.forEach(item => {
+              for (let i = 0; i < item.position.length - 1; i++) {
+              }
+            })
+            // for (let i = 0; i < item.position.length - 1; i++) {
+            //   let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
+            //   let loc2 = new google.maps.LatLng(item.position[i+1].lat, item.position[i+1].lng)
+            //   let distance = Helper.getDistancePoint(loc1, loc2)
+            //   arrayItems.push(distance)
+            //   distanceSum = arrayItems.reduce((total, amount) => total + amount)
+            // }
+          })
+        })
+        return distanceSum
       },
       addNewLineObject() {
-          let result = []
-          result.push([this.coordinateLat, this.coordinateLng])
+        let result = []
+        result.push([this.coordinateLat, this.coordinateLng])
         axios.post('http://localhost:3000/line_objects_all', {
           coordinates: {type: "LINESTRING", coordinates: result},
         })
@@ -653,18 +653,18 @@
   }
 </script>
 <style>
-    .container {
-        position: relative;
-    }
+  .container {
+    position: relative;
+  }
 
-    .v-progress-circular {
-        position: absolute;
-        z-index: 50;
-        display: flex;
-        align-self: center;
-        width: 100%;
-        top: 40%;
-    }
+  .v-progress-circular {
+    position: absolute;
+    z-index: 50;
+    display: flex;
+    align-self: center;
+    width: 100%;
+    top: 40%;
+  }
 </style>
 
 

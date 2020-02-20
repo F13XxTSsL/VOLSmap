@@ -41,9 +41,6 @@ export default {
   disclosureCoordinates (coordinates) {
     return  coordinates.coordinates
   },
-  calcDistance (p1, p2) {
-    return google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000
-  },
   rad (x) {
     return x * Math.PI / 180;
   },
