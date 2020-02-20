@@ -334,7 +334,7 @@
           {
             name: 'Количество метров :',
             Категория: 'Объект',
-            data: this.distance + ' км.'
+            data: this.distance.toFixed(2) + ' км.'
           }
         )
         axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {
@@ -404,11 +404,9 @@
           let loc2 = new google.maps.LatLng(item.position[j].lat, item.position[j].lng)
           let distance = Helper.getDistancePoint(loc1, loc2)
           arrayItems.push(distance)
+          distanceSum = arrayItems.reduce((total, amount) => total + amount)
+          this.distance = distanceSum
         }
-        // for (let i = 0; i < arrayItems.length; i++) {
-        //   console.log(arrayItems[i])
-        //   distanceSum += parseFloat(arrayItems[i])
-        // }
         this.infoWindowPos.lat = item.position[0].lat
         this.infoWindowPos.lng = item.position[0].lng
         this.infoContent = `

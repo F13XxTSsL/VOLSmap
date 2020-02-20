@@ -491,6 +491,7 @@
       getObjects() {
         axios.get('http://localhost:3000/line_objects_all').then(response => {
           this.initialize(response.data)
+          this.getLineObjects(response.data)
         })
       },
       initialize(data) {
@@ -507,6 +508,48 @@
             links: item.links,
             comments: item.comments
           })
+        })
+      },
+      getLineObjects(data) {
+        let coordinates = new Promise(function (resolve) {
+            resolve(data)
+        })
+        coordinates.then(items => {
+          let coords = []
+          items.forEach(item => {
+            coords.push({
+              position: item.coordinates.coordinates
+            })
+          })
+          coords.map(arr => {
+            let coords2 = [{
+              position: []
+            }]
+            arr.position.map(item => {
+              for (let i in coords2) {
+                coords2[i].position.push({lat: item[0], lng: item[1]})
+              }
+            })
+            let array = ''
+            for (let i = 0; i < coords2.length; i++) {
+              array = coords2[i].position
+              for (let i = 0, j = 1; i < array.length, i < j; i++, j++) {
+                let loc1 = new google.maps.LatLng(array[i].lat, array[i].lng)
+                let loc2 = new google.maps.LatLng(array[j].lat, array[j].lng)
+                let distance = Helper.getDistancePoint(loc1, loc2)
+                console.log(distance)
+              }
+            }
+
+              // for (let i = 0, j = 1; i < item.position.length, i < j; i++, j++) {
+              //   let loc1 = new google.maps.LatLng(item.position[i].lat, item.position[i].lng)
+              //   let loc2 = new google.maps.LatLng(item.position[j].lat, item.position[j].lng)
+              //   let distance = Helper.getDistancePoint(loc1, loc2)
+              //   arrayItems.push(distance)
+              //   distanceSum = arrayItems.reduce((total, amount) => total + amount)
+              //   console.log(distanceSum)
+              // }
+            })
         })
       },
       addNewLineObject() {
