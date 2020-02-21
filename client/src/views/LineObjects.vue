@@ -16,6 +16,7 @@
         :items="rows"
         class="elevation-1"
         :search="search"
+        id="exportable"
       >
         <template v-slot:top>
           <v-toolbar
@@ -28,7 +29,7 @@
               inset
               vertical
             />
-            <v-spacer />
+            <v-spacer/>
             <v-dialog
               v-model="dialogAdd"
               max-width="500px"
@@ -41,6 +42,15 @@
                   v-on="on"
                 >
                   Добавить
+                </v-btn>
+                <v-btn
+                  color="#FF9800"
+                  dark
+                  class="mb-2"
+                  @click="exportExcel"
+                  style="margin-right: 20px"
+                >
+                  Экспорт
                 </v-btn>
               </template>
               <!--                            <v-card>-->
@@ -346,51 +356,22 @@
             <!--                        </v-dialog>-->
           </v-toolbar>
         </template>
-        <!--                <template v-slot:item.action="{ item }">-->
-        <!--                    <v-icon-->
-        <!--                            small-->
-        <!--                            class="mr-2"-->
-        <!--                            @click="dialogEdit(item)"-->
-        <!--                    >-->
-        <!--                        mdi-pencil-->
-        <!--                    </v-icon>-->
-        <!--                    <v-icon-->
-        <!--                            small-->
-        <!--                            @click="deleteItem(item)"-->
-        <!--                    >-->
-        <!--                        mdi-delete-->
-        <!--                    </v-icon>-->
-        <!--                </template>-->
+        <template v-slot:item.action="{ item }">
+<!--          <v-icon-->
+<!--            small-->
+<!--            class="mr-2"-->
+<!--            @click="dialogEdit(item)"-->
+<!--          >-->
+<!--            mdi-pencil-->
+<!--          </v-icon>-->
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
       </v-data-table>
-      <!--      <div-->
-      <!--        class="line__coordinates"-->
-      <!--        style="margin-top: 10px"-->
-      <!--      >-->
-      <!--        <div-->
-      <!--          class="coordinates"-->
-      <!--        >-->
-      <!--          <v-text-field-->
-      <!--            label="Долгота"-->
-      <!--            v-model="coordinateLat"-->
-      <!--          />-->
-      <!--          <v-text-field-->
-      <!--            label="Широта"-->
-      <!--            v-model="coordinateLng"-->
-      <!--          />-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <v-btn-->
-      <!--        small-->
-      <!--        color="primary"-->
-      <!--        @click="addInputsCoordinates"-->
-      <!--      >-->
-      <!--        Добавить-->
-      <!--      </v-btn>-->
-      <!--      <v-btn-->
-      <!--        @click="addNewLineObject"-->
-      <!--      >-->
-      <!--        Сохранить-->
-      <!--      </v-btn>-->
     </v-container>
   </div>
 </template>
@@ -398,6 +379,7 @@
   import axios from 'axios'
   import {gmapApi} from 'vue2-google-maps';
   import Helper from "../api/Helper";
+  import FileSaver from 'file-saver'
 
   export default {
     computed: {
@@ -407,7 +389,6 @@
       return {
         lat: '',
         lng: '',
-        coordinates: [{lat: '', lng: ''}],
         search: '',
         dialogAdd: false,
         dialogEditWindow: false,
@@ -433,7 +414,7 @@
           {text: 'Комментарии', value: 'comments', sortable: false},
           {text: 'Статус работы', value: 'status', sortable: false},
           {text: 'Тип прокладки', value: 'placement', sortable: false},
-          // {text: 'Действия', value: 'action', sortable: false}
+          {text: 'Действия', value: 'action', sortable: false}
         ],
         rows: [],
         addIndex: -1,
@@ -475,10 +456,7 @@
           placement: this.itemsPlacement
         },
         selectedSpacer: '',
-        selectedSpacer2: '',
-        coordinateLat: 0,
-        coordinateLng: 0,
-        sumDistanceTable: 0
+        selectedSpacer2: ''
       }
     },
     watch: {
@@ -490,9 +468,6 @@
       this.getObjects()
     },
     methods: {
-      addInputsCoordinates() {
-        this.coordinates.push({lat: '', lng: ''})
-      },
       getObjects() {
         const data = new Promise(function (resolve) {
           axios.get('http://localhost:3000/line_objects_all').then(response => {
@@ -516,109 +491,112 @@
           })
         })
       },
-      addNewLineObject() {
-        let result = []
-        result.push([this.coordinateLat, this.coordinateLng])
-        axios.post('http://localhost:3000/line_objects_all', {
-          coordinates: {type: "LINESTRING", coordinates: result},
-        })
+      deleteItem(item) {
+        const index = this.rows.indexOf(item)
+        const result = confirm('Вы уверены, что хотите удалить запись?') && this.rows.splice(index, 1)
+        if (result) {
+          axios.delete(`http://localhost:3000/line_objects_all/${item.id_line_object}`)
+        }
+      },
+      exportExcel() {
+        let idTable = document.getElementById('exportable')
+        let doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>`
+          doc += idTable.innerHTML
+        FileSaver.saveAs(new Blob([doc], {
+          encoding: 'UTF-8',
+          type: 'application/octet-stream'
+        }), `line_objects.xls`)
       }
-      // atSelectedType(event) {
-      //   this.selectedSpacer = event
-      // },
-      // atSelectedStatus(event) {
-      //   this.selectedSpacer2 = event
-      // },
-      // dialogEdit(item) {
-      //   this.dialogEditWindow = true
-      //   this.editItem.id_object = item.id_object
-      //   this.editItem.type = this.selectedSpacer
-      //   this.editItem.id_obj_contract = item.id_obj_contract
-      //   this.editItem.comments = item.comments
-      //   this.editItem.status = this.selectedSpacer2
-      //   this.editItem.coordinate_lat = item.coordinates[0]
-      //   this.editItem.coordinate_lng = item.coordinates[1]
-      //   this.editItem.name_obj = item.name_obj
-      //   this.editItem.data_for_exploitation = item.data_for_exploitation
-      //   this.editItem.adress = item.adress
-      //   this.editItem.links = item.links
-      // },
-      // editItemSave() {
-      //   axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
-      //     {
-      //       id_object: this.editItem.id_object,
-      //       type: this.selectedSpacer,
-      //       coordinates: {type: "Point", coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]},
-      //       id_obj_contract: this.editItem.id_obj_contract,
-      //       comments: this.editItem.comments,
-      //       rent: this.editItem.rent,
-      //       status: this.selectedSpacer2,
-      //       name_obj: this.editItem.name_obj,
-      //       data_for_exploitation: this.editItem.data_for_exploitation,
-      //       adress: this.editItem.adress,
-      //       links: this.editItem.links,
-      //     },
-      //   ).then((res) => {
-      //     this.editItem.id_object = this.defaultItem.id_object
-      //     this.editItem.type = this.selectedSpacer
-      //     this.editItem.id_obj_contract = this.defaultItem.id_obj_contract
-      //     this.editItem.comments = this.defaultItem.comments
-      //     this.editItem.status = this.selectedSpacer2
-      //     this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
-      //     this.editItem.coordinate_lng = this.defaultItem.coordinate_lng
-      //     this.editItem.name_obj = this.defaultItem.name_obj
-      //     this.editItem.data_for_exploitation = this.defaultItem.data_for_exploitation
-      //     this.editItem.adress = this.defaultItem.adress
-      //     this.editItem.links = this.defaultItem.links
-      //   }).catch(err => console.log(err))
-      //   this.dialogEditWindow = false
-      //
-      // },
-      // deleteItem(item) {
-      //   const index = this.rows.indexOf(item)
-      //   const result = confirm('Вы уверены, что хотите удалить запись?') && this.rows.splice(index, 1)
-      //   if (result) {
-      //     axios.delete(`http://localhost:3000/objects/${item.id_object}`)
-      //   }
-      //
-      // },
-      // close() {
-      //   this.dialogAdd = false
-      //   this.dialogEditWindow = false
-      //   setTimeout(() => {
-      //     this.addItem = Object.assign({}, this.defaultItem)
-      //     this.addIndex = -1
-      //   }, 300)
-      // },
-      // saveAdd() {
-      //   axios.post('http://localhost:3000/objects', {
-      //     id_object: this.addItem.id_object,
-      //     type: this.selectedSpacer,
-      //     coordinates: {type: "Point", coordinates: [this.addItem.coordinate_lat, this.addItem.coordinate_lng]},
-      //     id_obj_contract: this.addItem.id_obj_contract,
-      //     comments: this.addItem.comments,
-      //     status: this.selectedSpacer2,
-      //     name_obj: this.addItem.name_obj,
-      //     data_for_exploitation: this.addItem.data_for_exploitation,
-      //     adress: this.addItem.adress,
-      //     links: this.addItem.links
-      //   }).then((res) => {
-      //     this.addItem.id_object = this.editItem.id_object,
-      //       this.addItem.type = '',
-      //       this.addItem.id_obj_contract = 0,
-      //       this.addItem.comments = '',
-      //       this.addItem.status = ''
-      //     this.addItem.name_obj = ''
-      //     this.addItem.data_for_exploitation = ''
-      //     this.addItem.adress = ''
-      //     this.addItem.links = ''
-      //
-      //   }).catch((err) => {
-      //     console.log(err)
-      //   })
-      //   this.close()
-      // },
-    },
+    }
+    // atSelectedType(event) {
+    //   this.selectedSpacer = event
+    // },
+    // atSelectedStatus(event) {
+    //   this.selectedSpacer2 = event
+    // },
+    // dialogEdit(item) {
+    //   this.dialogEditWindow = true
+    //   this.editItem.id_object = item.id_object
+    //   this.editItem.type = this.selectedSpacer
+    //   this.editItem.id_obj_contract = item.id_obj_contract
+    //   this.editItem.comments = item.comments
+    //   this.editItem.status = this.selectedSpacer2
+    //   this.editItem.coordinate_lat = item.coordinates[0]
+    //   this.editItem.coordinate_lng = item.coordinates[1]
+    //   this.editItem.name_obj = item.name_obj
+    //   this.editItem.data_for_exploitation = item.data_for_exploitation
+    //   this.editItem.adress = item.adress
+    //   this.editItem.links = item.links
+    // },
+    // editItemSave() {
+    //   axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
+    //     {
+    //       id_object: this.editItem.id_object,
+    //       type: this.selectedSpacer,
+    //       coordinates: {type: "Point", coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]},
+    //       id_obj_contract: this.editItem.id_obj_contract,
+    //       comments: this.editItem.comments,
+    //       rent: this.editItem.rent,
+    //       status: this.selectedSpacer2,
+    //       name_obj: this.editItem.name_obj,
+    //       data_for_exploitation: this.editItem.data_for_exploitation,
+    //       adress: this.editItem.adress,
+    //       links: this.editItem.links,
+    //     },
+    //   ).then((res) => {
+    //     this.editItem.id_object = this.defaultItem.id_object
+    //     this.editItem.type = this.selectedSpacer
+    //     this.editItem.id_obj_contract = this.defaultItem.id_obj_contract
+    //     this.editItem.comments = this.defaultItem.comments
+    //     this.editItem.status = this.selectedSpacer2
+    //     this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
+    //     this.editItem.coordinate_lng = this.defaultItem.coordinate_lng
+    //     this.editItem.name_obj = this.defaultItem.name_obj
+    //     this.editItem.data_for_exploitation = this.defaultItem.data_for_exploitation
+    //     this.editItem.adress = this.defaultItem.adress
+    //     this.editItem.links = this.defaultItem.links
+    //   }).catch(err => console.log(err))
+    //   this.dialogEditWindow = false
+    //
+    // },
+    //
+    // },
+    // close() {
+    //   this.dialogAdd = false
+    //   this.dialogEditWindow = false
+    //   setTimeout(() => {
+    //     this.addItem = Object.assign({}, this.defaultItem)
+    //     this.addIndex = -1
+    //   }, 300)
+    // },
+    // saveAdd() {
+    //   axios.post('http://localhost:3000/objects', {
+    //     id_object: this.addItem.id_object,
+    //     type: this.selectedSpacer,
+    //     coordinates: {type: "Point", coordinates: [this.addItem.coordinate_lat, this.addItem.coordinate_lng]},
+    //     id_obj_contract: this.addItem.id_obj_contract,
+    //     comments: this.addItem.comments,
+    //     status: this.selectedSpacer2,
+    //     name_obj: this.addItem.name_obj,
+    //     data_for_exploitation: this.addItem.data_for_exploitation,
+    //     adress: this.addItem.adress,
+    //     links: this.addItem.links
+    //   }).then((res) => {
+    //     this.addItem.id_object = this.editItem.id_object,
+    //       this.addItem.type = '',
+    //       this.addItem.id_obj_contract = 0,
+    //       this.addItem.comments = '',
+    //       this.addItem.status = ''
+    //     this.addItem.name_obj = ''
+    //     this.addItem.data_for_exploitation = ''
+    //     this.addItem.adress = ''
+    //     this.addItem.links = ''
+    //
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
+    //   this.close()
+    // },
   }
 </script>
 <style>

@@ -28,4 +28,18 @@ router.post("/line_objects_all", (req, res) => {
   }
 })
 
+router.delete("/line_objects_all/:id", (req, res) => {
+  lineObjectsAllData.destroy({
+    where: {
+      id_line_object: req.params.id
+    }
+  })
+  .then((res) => {
+    res.send('Objects Deleted!')
+  })
+  .catch(err => {
+    res.send("error: " + err)
+  })
+})
+
 module.exports = router
