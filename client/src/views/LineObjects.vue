@@ -28,7 +28,7 @@
               inset
               vertical
             />
-            <v-spacer/>
+            <v-spacer />
             <v-dialog
               v-model="dialogAdd"
               max-width="500px"
@@ -500,46 +500,18 @@
           })
         })
         data.then(data => {
-          let coords = []
-          data.map(item => {
-            coords.push({
-              position: item.coordinates.coordinates
-            })
-          })
-          coords.map(arr => {
-            let coords2 = [{
-              position: []
-            }]
-            arr.position.map(item => {
-              for (let i in coords2) {
-                coords2[i].position.push({lat: item[0], lng: item[1]})
-              }
-            })
-            let position = new Promise(function (resolve) {
-              resolve(coords2[0].position)
-            })
-            let arrayItems= []
-            let distanceSum = 0
-            position.then(item => {
-              for (let i = 0; i < item.length - 1; i++) {
-                arrayItems.push(Helper.getDistancePointTable(item[i].lat, item[i].lng, item[i + 1].lat, item[i + 1].lng))
-                distanceSum = arrayItems.reduce((total, amount) => total + amount)
-              }
-              return this.sumDistanceTable = distanceSum
-            })
-          })
           data.map(item => {
             this.rows.push({
               id_line_object: item.id_line_object,
               name: item.name,
-              id_contract: item.id_contract,
+              distance: Helper.translateCoordinates(item.coordinates.coordinates).toFixed(3) + ' м.',
               startPoint: item.id_point_one,
               endPoint: item.id_point_two,
-              distance: this.sumDistanceTable,
-              status: Helper.typeObject(item.status),
-              placement: Helper.typeDefinion(item.placement),
+              id_contract: item.id_contract,
               links: item.links,
-              comments: item.comments
+              comments: item.comments,
+              status: Helper.typeObject(item.status),
+              placement: Helper.typeDefinion(item.placement)
             })
           })
         })

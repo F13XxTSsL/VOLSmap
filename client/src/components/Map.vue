@@ -330,11 +330,6 @@
             name: 'Статус работы :',
             Категория: 'Объект',
             data: Helper.typeObject(item.status)
-          },
-          {
-            name: 'Количество метров :',
-            Категория: 'Объект',
-            data: this.distance.toFixed(2) + ' км.'
           }
         )
         axios.get(`http://localhost:3000/objects/${item.id_line_object}`).then(response => {

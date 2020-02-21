@@ -71,4 +71,17 @@ export default {
   deg2rad(deg) {
     return deg * Math.PI / 180;
   },
+  translateCoordinates(data) {
+    let arrCoordLatLng = []
+    data.forEach(item => [
+      arrCoordLatLng.push({lat: item[0], lng: item[1]})
+    ])
+    let sumCoordLatLng = 0
+    let newArrCoordLatLng = []
+    for (let i = 0; i < arrCoordLatLng.length - 1; i++) {
+      newArrCoordLatLng.push(this.getDistancePointTable(arrCoordLatLng[i].lat, arrCoordLatLng[i].lng, arrCoordLatLng[i+1].lat, arrCoordLatLng[i+1].lng))
+      sumCoordLatLng = newArrCoordLatLng.reduce((total, amount) => total + amount)
+    }
+   return sumCoordLatLng
+  }
 }
