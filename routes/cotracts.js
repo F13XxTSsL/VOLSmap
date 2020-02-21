@@ -73,4 +73,18 @@ router.put("/contracts/:id", (req, res) => {
   }
 })
 
+router.get("/contracts/:id", (req, res) => {
+  profile.findOne({
+    where: {
+      id_user: req.params.id
+    }
+  })
+  .then((user) => {
+    res.json(user)
+  })
+  .catch(err => {
+    res.send("error" + err)
+  })
+})
+
 module.exports = router

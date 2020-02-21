@@ -299,7 +299,6 @@
 <script>
   import axios from 'axios'
   import Helper from "../api/Helper";
-  import API from "../api/API";
 
   export default {
     data() {
@@ -314,12 +313,12 @@
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'Номер контракта', align: 'left', sortable: false, value: 'id_contract',},
+          {text: 'ID контракта', align: 'left', sortable: false, value: 'id_contract',},
           {text: 'Дата', sortable: false, value: 'data',},
-          {text: 'Номер партнера', value: 'id_partner', sortable: false},
+          {text: 'ID партнера', value: 'id_partner', sortable: false},
           {text: 'Ссылки', value: 'links', sortable: false},
           {text: 'Комментарии', value: 'comments', sortable: false},
-          {text: 'Арендная плата', value: 'rent', sortable: false},
+          {text: 'Оплата', value: 'rent', sortable: false},
           {text: 'Cпособ прокладки', value: 'placement', sortable: false},
           {text: 'Ответственный', value: 'responsible', sortable: false},
           {text: 'Действия', value: 'action', sortable: false}
@@ -357,14 +356,8 @@
           placement: this.itemsPlacement,
           responsible: this.responsible
         },
-        selectedSpacer: '',
-        nameResponsible: ''
+        selectedSpacer: ''
       }
-    },
-    watch: {
-      dialog(val) {
-        val || this.close()
-      },
     },
     mounted() {
       this.getPartners()
@@ -376,16 +369,19 @@
         })
       },
       initialize(data) {
+        this.rows = []
         data.map(item => {
-          this.rows.push({
-            id_contract: item.id_contract,
-            data: item.data,
-            id_partner: item.id_partner,
-            links: item.links,
-            comments: item.comments,
-            rent: item.rent,
-            placement: Helper.typeDefinion(item.placement),
-            responsible: item.responsible
+          axios.get(`http://localhost:3000/contracts/${item.responsible}`).then(response => {
+            this.rows.push({
+              id_contract: item.id_contract,
+              data: item.data,
+              id_partner: item.id_partner,
+              links: item.links,
+              comments: item.comments,
+              rent: item.rent,
+              placement: Helper.typeDefinion(item.placement),
+              responsible: response.data.fio
+            })
           })
         })
       },
@@ -434,6 +430,7 @@
         if (result) {
           axios.delete(`http://localhost:3000/contracts/${item.id_contract}`)
         }
+
       },
       close() {
         this.dialogAdd = false
