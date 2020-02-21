@@ -261,7 +261,7 @@
                 dialogAdd: false,
                 dialogEditWindow: false,
                 headers: [
-                    {text: 'ID партнера', align: 'left', sortable: false, value: 'id_partner',},
+                    {text: 'Номер партнера', align: 'left', sortable: false, value: 'id_partner',},
                     {text: 'Наименование', sortable: false, value: 'name',},
                     {text: 'ИНН', value: 'INN', sortable: false},
                     {text: 'Контакты', value: 'contacts', sortable: false},

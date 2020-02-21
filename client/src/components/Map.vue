@@ -390,8 +390,6 @@
         this.infoWinOpen = false
       },
       openInfoObjectLine(item) {
-        // 569.48 м. + 902.77 м. = 1 472,25 м.
-        //876.04 м. + 1013.07 м. + 320.85 м. = 2 209,96‬ м.
         let arrayItems= []
         let distanceSum = 0
         for (let i = 0; i < item.position.length - 1; i++) {
@@ -406,7 +404,7 @@
         this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
-                            <div class="info__window-text">${distanceSum.toFixed(0)} м.</div>
+                            <div class="info__window-text">${distanceSum.toFixed(2)} м.</div>
                                 `
         this.infoOptions = {
           pixelOffset: {

@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const user = require("../models/users/users")
+const user_data = require("../models/users/users_data")
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const bCrypt = require('bcrypt')
@@ -31,5 +32,19 @@ router.post("/login", (req, res) => {
         .catch(err => {
             res.status(400).json({error: err})
         })
+})
+
+router.get("/profile/:id", (req, res) => {
+    user_data.findOne({
+        where: {
+            id_user: req.params.id
+        }
+    })
+    .then((user) => {
+        res.json(user)
+    })
+    .catch(err => {
+        res.send("error" + err)
+    })
 })
 module.exports = router

@@ -1,304 +1,305 @@
 <template>
-    <div class="contracts margin__top ">
-        <v-container>
-            <v-card>
-                <v-card-title>
-                    <v-text-field
-                            v-model="search"
-                            label="Поиск контракта"
-                            single-line
-                            hide-details
-                    />
-                </v-card-title>
-            </v-card>
-            <v-data-table
-                    :headers="headers"
-                    :items="rows"
-                    class="elevation-1"
-                    :search="search"
+  <div class="contracts margin__top ">
+    <v-container>
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            label="Поиск контракта"
+            single-line
+            hide-details
+          />
+        </v-card-title>
+      </v-card>
+      <v-data-table
+        :headers="headers"
+        :items="rows"
+        class="elevation-1"
+        :search="search"
+      >
+        <template v-slot:top>
+          <v-toolbar
+            flat
+            color="white"
+          >
+            <v-toolbar-title>Контракты</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            />
+            <v-spacer/>
+            <v-dialog
+              v-model="dialogAdd"
+              max-width="500px"
             >
-                <template v-slot:top>
-                    <v-toolbar
-                            flat
-                            color="white"
-                    >
-                        <v-toolbar-title>Контракты</v-toolbar-title>
-                        <v-divider
-                                class="mx-4"
-                                inset
-                                vertical
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                >
+                  Добавить
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Добавление контракта</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.id_contract"
+                          label="Номер контракта"
                         />
-                        <v-spacer/>
-                        <v-dialog
-                                v-model="dialogAdd"
-                                max-width="500px"
-                        >
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        color="primary"
-                                        dark
-                                        class="mb-2"
-                                        v-on="on"
-                                >
-                                    Добавить
-                                </v-btn>
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Добавление контракта</span>
-                                </v-card-title>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.id_partner"
+                          label="Номер партнера"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="addItem.links"
+                          label="Ссылки"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="addItem.comments"
+                          label="Комментарии"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="addItem.responsible"
+                          label="Ответственный"
+                        />
+                      </v-col>
+                      <v-col
+                        class="d-flex"
+                        cols="12"
+                        sm="12"
+                      >
+                        <v-select
+                          :items="itemsPlacement"
+                          item-text="text"
+                          item-value="id"
+                          label="Способ прокладки"
+                          @change="atSelected($event)"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.rent"
+                          label="Оплата"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="addItem.data"
+                          label="Дата"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.id_contract"
-                                                        label="Номер контракта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.id_partner"
-                                                        label="Номер партнера"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.links"
-                                                        label="Ссылки"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.comments"
-                                                        label="Комментарии"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.responsible"
-                                                        label="Ответственный"
-                                                />
-                                            </v-col>
-                                                <v-col
-                                                        class="d-flex"
-                                                        cols="12"
-                                                        sm="12"
-                                                >
-                                                    <v-select
-                                                            :items="itemsPlacement"
-                                                            item-text="text"
-                                                            item-value="id"
-                                                            label="Способ прокладки"
-                                                            @change="atSelected($event)"
-                                                    />
-                                                </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.rent"
-                                                        label="Оплата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.data"
-                                                        label="Дата"
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                <v-card-actions>
+                  <v-spacer/>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="saveAdd"
+                  >
+                    Добавить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog
+              v-model="dialogEditWindow"
+              max-width="500px"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Редактирование контракта</span>
+                </v-card-title>
 
-                                <v-card-actions>
-                                    <v-spacer/>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="close"
-                                    >
-                                        Назад
-                                    </v-btn>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="saveAdd"
-                                    >
-                                        Добавить
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                        <v-dialog
-                                v-model="dialogEditWindow"
-                                max-width="500px"
-                        >
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Редактирование контракта</span>
-                                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.id_contract"
+                          label="Номер контракта"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.id_partner"
+                          label="Номер партнера"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="editItem.links"
+                          label="Ссылки"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="editItem.comments"
+                          label="Комментарии"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="editItem.responsible"
+                          label="Ответственный"
+                        />
+                      </v-col>
+                      <v-col
+                        class="d-flex"
+                        cols="12"
+                        sm="12"
+                      >
+                        <v-select
+                          :items="itemsPlacement"
+                          item-text="text"
+                          item-value="id"
+                          label="Способ прокладки"
+                          @change="atSelected($event)"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.rent"
+                          label="Оплата"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editItem.data"
+                          label="Дата"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.id_contract"
-                                                        label="Номер контракта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.id_partner"
-                                                        label="Номер партнера"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.links"
-                                                        label="Ссылки"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                sm="12"
-                                                md="12"
-                                        >
-                                            <v-text-field
-                                                    v-model="editItem.comments"
-                                                    label="Комментарии"
-                                            />
-                                        </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.responsible"
-                                                        label="Ответственный"
-                                                />
-                                            </v-col>
-                                                <v-col
-                                                        class="d-flex"
-                                                        cols="12"
-                                                        sm="12"
-                                                >
-                                                    <v-select
-                                                            :items="itemsPlacement"
-                                                            item-text="text"
-                                                            item-value="id"
-                                                            label="Способ прокладки"
-                                                            @change="atSelected($event)"
-                                                    />
-                                                </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.rent"
-                                                        label="Оплата"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.data"
-                                                        label="Дата"
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
-
-                                <v-card-actions>
-                                    <v-spacer/>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="close"
-                                    >
-                                        Назад
-                                    </v-btn>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="editItemSave"
-                                    >
-                                        Сохранить
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.action="{ item }">
-                    <v-icon
-                            small
-                            class="mr-2"
-                            @click="dialogEdit(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                            small
-                            @click="deleteItem(item)"
-                    >
-                        mdi-delete
-                    </v-icon>
-                </template>
-            </v-data-table>
-        </v-container>
-    </div>
+                <v-card-actions>
+                  <v-spacer/>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
+                    Назад
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="editItemSave"
+                  >
+                    Сохранить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="dialogEdit(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-container>
+  </div>
 </template>
 <script>
   import axios from 'axios'
   import Helper from "../api/Helper";
+  import API from "../api/API";
 
   export default {
     data() {
@@ -313,12 +314,12 @@
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'ID контракта', align: 'left', sortable: false, value: 'id_contract',},
+          {text: 'Номер контракта', align: 'left', sortable: false, value: 'id_contract',},
           {text: 'Дата', sortable: false, value: 'data',},
-          {text: 'ID партнера', value: 'id_partner', sortable: false},
+          {text: 'Номер партнера', value: 'id_partner', sortable: false},
           {text: 'Ссылки', value: 'links', sortable: false},
           {text: 'Комментарии', value: 'comments', sortable: false},
-          {text: 'Оплата', value: 'rent', sortable: false},
+          {text: 'Арендная плата', value: 'rent', sortable: false},
           {text: 'Cпособ прокладки', value: 'placement', sortable: false},
           {text: 'Ответственный', value: 'responsible', sortable: false},
           {text: 'Действия', value: 'action', sortable: false}
@@ -356,7 +357,8 @@
           placement: this.itemsPlacement,
           responsible: this.responsible
         },
-        selectedSpacer: ''
+        selectedSpacer: '',
+        nameResponsible: ''
       }
     },
     watch: {
@@ -432,7 +434,6 @@
         if (result) {
           axios.delete(`http://localhost:3000/contracts/${item.id_contract}`)
         }
-
       },
       close() {
         this.dialogAdd = false
@@ -470,16 +471,16 @@
   }
 </script>
 <style>
-    .container {
-        position: relative;
-    }
+  .container {
+    position: relative;
+  }
 
-    .v-progress-circular {
-        position: absolute;
-        z-index: 50;
-        display: flex;
-        align-self: center;
-        width: 100%;
-        top: 40%;
-    }
+  .v-progress-circular {
+    position: absolute;
+    z-index: 50;
+    display: flex;
+    align-self: center;
+    width: 100%;
+    top: 40%;
+  }
 </style>

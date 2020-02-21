@@ -56,7 +56,7 @@ export default {
     return x * Math.PI / 180;
   },
   getDistancePointTable(lat1, lon1, lat2, lon2) {
-    let R = 6371; // Radius of the earth in km
+    let R = 6378137; // Radius of the earth in km
     let dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
     let dLon = this.deg2rad(lon2 - lon1);
     let a =

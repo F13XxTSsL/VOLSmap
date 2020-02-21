@@ -504,7 +504,7 @@
             this.rows.push({
               id_line_object: item.id_line_object,
               name: item.name,
-              distance: Helper.translateCoordinates(item.coordinates.coordinates).toFixed(3) + ' м.',
+              distance: (Helper.translateCoordinates(item.coordinates.coordinates)).toFixed(2) + ' м.',
               startPoint: item.id_point_one,
               endPoint: item.id_point_two,
               id_contract: item.id_contract,
