@@ -39,7 +39,7 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     .leftTableStatic {
         width: 500px;
         z-index: 100;
@@ -49,6 +49,9 @@
         top: 80px;
         border-radius: 0px;
         overflow: auto;
+        &::-webkit-scrollbar { width: 5px; height: 3px;}
+        &::-webkit-scrollbar-track {  background: rgba(255, 255, 255, 0.48);}
+        &::-webkit-scrollbar-thumb { height: 10px; background-color: rgba(0, 0, 0, 0.77); border: none;}
     }
 
     .leftTableStatic .v-icon.notranslate.fas.fa-times.theme--dark {
@@ -62,6 +65,9 @@
 
     .leftTableStatic td.text-left {
         font-size: 13px;
+    }
+    .theme--dark.v-data-table tbody tr {
+        transition: all 0.3s;
     }
 
 </style>

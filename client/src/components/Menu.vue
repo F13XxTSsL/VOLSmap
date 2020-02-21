@@ -118,6 +118,7 @@
         margin-left: 40px;
         cursor: pointer;
         transition: all 0.3s;
+        font-size: 14px;
     }
 
     .menu li:hover {
