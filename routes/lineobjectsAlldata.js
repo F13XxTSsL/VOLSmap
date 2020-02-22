@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const lineObjectsAllData = require("../models/lineobjects/lineobjectsAllData")
+const object = require("../models/objects/objects")
 
 router.get("/line_objects_all", (req, res) => {
   lineObjectsAllData.findAll()
@@ -40,6 +41,34 @@ router.delete("/line_objects_all/:id", (req, res) => {
   .catch(err => {
     res.send("error: " + err)
   })
+})
+
+router.get("/line_objects_all_one/:id", (req, res) => {
+  object.findOne({
+    where: {
+      id_object: req.params.id
+    }
+  })
+      .then((object) => {
+        res.json(object)
+      })
+      .catch(err => {
+        res.send("error" + err)
+      })
+})
+
+router.get("/line_objects_all_two/:id", (req, res) => {
+  object.findOne({
+    where: {
+      id_object: req.params.id
+    }
+  })
+      .then((object) => {
+        res.json(object)
+      })
+      .catch(err => {
+        res.send("error" + err)
+      })
 })
 
 module.exports = router

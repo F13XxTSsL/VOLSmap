@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const contracts = require("../models/cotracts/contracts")
 const profile = require("../models/users/users_data")
+const partners = require("../models/partners/partners")
 
 //Get All Contracts
 router.get("/contracts", (req, res) => {
@@ -73,7 +74,7 @@ router.put("/contracts/:id", (req, res) => {
   }
 })
 
-router.get("/contracts/:id", (req, res) => {
+router.get("/contracts_responsible/:id", (req, res) => {
   profile.findOne({
     where: {
       id_user: req.params.id
@@ -85,6 +86,20 @@ router.get("/contracts/:id", (req, res) => {
   .catch(err => {
     res.send("error" + err)
   })
+})
+
+router.get("/contracts_partner/:id", (req, res) => {
+  partners.findOne({
+    where: {
+      id_partner: req.params.id
+    }
+  })
+      .then((partner) => {
+        res.json(partner)
+      })
+      .catch(err => {
+        res.send("error" + err)
+      })
 })
 
 module.exports = router
