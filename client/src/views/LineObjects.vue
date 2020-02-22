@@ -409,7 +409,7 @@
           {text: 'Расстояние (км)', value: 'distance', sortable: false},
           {text: 'Начало', value: 'startPoint', sortable: false},
           {text: 'Конец', value: 'endPoint', sortable: false},
-          {text: 'Номер контракта', value: 'id_contract', sortable: false},
+          {text: 'Номер договора', value: 'id_contract', sortable: false},
           {text: 'Ссылки', value: 'links', sortable: false},
           {text: 'Комментарии', value: 'comments', sortable: false},
           {text: 'Статус работы', value: 'status', sortable: false},

@@ -5,7 +5,7 @@
         <v-card-title>
           <v-text-field
             v-model="search"
-            label="Поиск контракта"
+            label="Поиск договора"
             single-line
             hide-details
           />
@@ -22,7 +22,7 @@
             flat
             color="white"
           >
-            <v-toolbar-title>Контракты</v-toolbar-title>
+            <v-toolbar-title>Договоры</v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -45,7 +45,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">Добавление контракта</span>
+                  <span class="headline">Добавление договора</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -58,7 +58,7 @@
                       >
                         <v-text-field
                           v-model="addItem.id_contract"
-                          label="Номер контракта"
+                          label="Номер договора"
                         />
                       </v-col>
                       <v-col
@@ -68,7 +68,7 @@
                       >
                         <v-text-field
                           v-model="addItem.id_partner"
-                          label="Номер партнера"
+                          label="Наименование контрагента"
                         />
                       </v-col>
                       <v-col
@@ -163,7 +163,7 @@
             >
               <v-card>
                 <v-card-title>
-                  <span class="headline">Редактирование контракта</span>
+                  <span class="headline">Редактирование договора</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -176,7 +176,7 @@
                       >
                         <v-text-field
                           v-model="editItem.id_contract"
-                          label="Номер контракта"
+                          label="Номер договора"
                         />
                       </v-col>
                       <v-col
@@ -186,7 +186,7 @@
                       >
                         <v-text-field
                           v-model="editItem.id_partner"
-                          label="Номер партнера"
+                          label="Наименование контрагента"
                         />
                       </v-col>
                       <v-col
@@ -313,9 +313,9 @@
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'ID контракта', align: 'left', sortable: false, value: 'id_contract',},
+          {text: 'Номер договора', align: 'left', sortable: false, value: 'id_contract',},
           {text: 'Дата', sortable: false, value: 'data',},
-          {text: 'ID партнера', value: 'id_partner', sortable: false},
+          {text: 'Наименование контрагента', value: 'id_partner', sortable: false},
           {text: 'Ссылки', value: 'links', sortable: false},
           {text: 'Комментарии', value: 'comments', sortable: false},
           {text: 'Оплата', value: 'rent', sortable: false},

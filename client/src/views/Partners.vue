@@ -5,7 +5,7 @@
         <v-card-title>
           <v-text-field
             v-model="search"
-            label="Поиск партнера"
+            label="Поиск контрагента"
             single-line
             hide-details
           />
@@ -22,7 +22,7 @@
             flat
             color="white"
           >
-            <v-toolbar-title>Партнеры</v-toolbar-title>
+            <v-toolbar-title>Контрагенты</v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -45,7 +45,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">Добавление партнера</span>
+                  <span class="headline">Добавление контрагента</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -58,7 +58,7 @@
                       >
                         <v-text-field
                           v-model="addItem.id_partner"
-                          label="Номер партнера"
+                          label="Номер контрагента"
                         />
                       </v-col>
                       <v-col
@@ -140,7 +140,7 @@
             >
               <v-card>
                 <v-card-title>
-                  <span class="headline">Редактирование партнера</span>
+                  <span class="headline">Редактирование контрагента</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -153,7 +153,7 @@
                       >
                         <v-text-field
                           v-model="editItem.id_partner"
-                          label="Номер партнера"
+                          label="Номер контрагента"
                         />
                       </v-col>
                       <v-col
@@ -261,7 +261,7 @@
                 dialogAdd: false,
                 dialogEditWindow: false,
                 headers: [
-                    {text: 'Номер партнера', align: 'left', sortable: false, value: 'id_partner',},
+                    {text: 'Номер контрагента', align: 'left', sortable: false, value: 'id_partner',},
                     {text: 'Наименование', sortable: false, value: 'name',},
                     {text: 'ИНН', value: 'INN', sortable: false},
                     {text: 'Контакты', value: 'contacts', sortable: false},

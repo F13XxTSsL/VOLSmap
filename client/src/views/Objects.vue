@@ -68,7 +68,7 @@
                       >
                         <v-text-field
                           v-model="addItem.id_obj_contract"
-                          label="Номер контракта"
+                          label="Номер договора"
                         />
                       </v-col>
                       <v-col
@@ -117,7 +117,7 @@
                       >
                         <v-text-field
                           v-model="addItem.data_for_exploitation"
-                          label="Дата эксплуатации"
+                          label="Дата ввода в эксплуатацию"
                         />
                       </v-col>
                       <v-col
@@ -222,7 +222,7 @@
                       >
                         <v-text-field
                           v-model="editItem.id_obj_contract"
-                          label="Номер контракта"
+                          label="Номер договора"
                         />
                       </v-col>
                       <v-col
@@ -242,7 +242,7 @@
                       >
                         <v-text-field
                           v-model="editItem.data_for_exploitation"
-                          label="Дата эксплуатации"
+                          label="Дата ввода в эксплуатацию"
                         />
                       </v-col>
                       <v-col
@@ -390,8 +390,8 @@
           {text: 'Номер объекта', align: 'left', sortable: false, value: 'id_object',},
           {text: 'Тип объекта', sortable: false, value: 'type',},
           {text: 'Имя объекта', value: 'name_obj', sortable: false},
-          {text: 'Дата эксплуатации', value: 'data_for_exploitation', sortable: false},
-          {text: 'Номер контракта', value: 'id_obj_contract', sortable: false},
+          {text: 'Дата ввода в эксплуатацию', value: 'data_for_exploitation', sortable: false},
+          {text: 'Номер договора', value: 'id_obj_contract', sortable: false},
           {text: 'Адрес', value: 'adress', sortable: false},
           {text: 'Ссылки', value: 'links', sortable: false},
           {text: 'Комментарии', value: 'comments', sortable: false},
@@ -469,7 +469,6 @@
             id_obj_contract: item.id_obj_contract,
             comments: item.comments,
             status: Helper.typeObject(item.status),
-            statusClass: item.status === 'active',
             name_obj: item.name_obj,
             data_for_exploitation: item.data_for_exploitation,
             adress: item.adress,

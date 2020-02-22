@@ -43,8 +43,8 @@
         <div v-if="auth === 'admin'">
             <nav class="menu grey darken-3">
                 <router-link tag="li" to="/home"><v-icon dark class="icon fas fa-globe"></v-icon>Карта</router-link>
-                <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Партнеры</router-link>
-                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Контракты</router-link>
+                <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Котрагенты</router-link>
+                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договоры</router-link>
                 <router-link tag="li" to="/objects"><v-icon dark class="icon fas fa-satellite-dish"></v-icon>Объекты</router-link>
                 <router-link tag="li" to="/line_objects"><v-icon dark class="icon fas fa-satellite"></v-icon>Линейные объекты</router-link>
                 <router-link tag="li" to="/"><span @click="logOut"><v-icon dark class="icon fas fa-sign-out-alt"></v-icon>Выйти</span></router-link>
@@ -53,8 +53,8 @@
         <div v-else-if="auth === 'operator'">
             <nav class="menu grey darken-3">
                 <router-link tag="li" to="/home"><v-icon dark class="icon fas fa-globe"></v-icon>Карта</router-link>
-                <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Партнеры</router-link>
-                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Контракты</router-link>
+                <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Котрагенты</router-link>
+                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договоры</router-link>
                 <router-link tag="li" to="/">
                     <span @click="logOut"><v-icon dark class="icon fas fa-sign-out-alt"></v-icon>Выйти</span>
                 </router-link>

@@ -3,6 +3,7 @@ const router = express.Router()
 const objects = require("../models/objects/objects")
 const contract = require("../models/cotracts/contracts")
 const users_data = require("../models/users/users_data")
+const partners = require("../models/partners/partners")
 
 //Get All Contracts
 router.get("/objects", (req, res) => {
@@ -15,7 +16,7 @@ router.get("/objects", (req, res) => {
         })
 
 })
-router.get("/objects/:id", (req, res) => {
+router.get("/objects_contract/:id", (req, res) => {
     contract.findOne({
         where: {
             id_contract: req.params.id
@@ -23,6 +24,19 @@ router.get("/objects/:id", (req, res) => {
     })
         .then((contract) => {
             res.json(contract)
+        })
+        .catch(err => {
+            res.send("error" + err)
+        })
+})
+router.get("/objects_partner/:id", (req, res) => {
+    partners.findOne({
+        where: {
+            id_partner: req.params.id
+        }
+    })
+        .then((partners) => {
+            res.json(partners)
         })
         .catch(err => {
             res.send("error" + err)

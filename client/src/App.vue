@@ -26,7 +26,4 @@ export default {
     overflow: hidden;
     &::-webkit-scrollbar { display: none}
   }
-  .theme--light.v-data-table tbody tr {
-    transition: all 0.3s;
-  }
 </style>
