@@ -246,16 +246,19 @@
                     {id: 'error', text: 'Отключен'},
                 ],
                 headers: [
-                    {text: 'Номер объекта', value: 'id_line_object', align: 'left', sortable: false,},
+                    {text: '№', value: 'id_line_object', sortable: false, align: 'left', class: 'object',},
                     {text: 'Имя объекта', value: 'name', sortable: false},
-                    {text: 'Расстояние (км)', value: 'distance', sortable: false},
+                    {text: 'Расстояние (м)', value: 'distance', sortable: false},
+                    {text: 'Арендная плата', value: 'rent', sortable: false},
+                    {text: 'Стоимость за 1 м', value: 'cost_rent'},
                     {text: 'Начало', value: 'startPoint', sortable: false},
                     {text: 'Конец', value: 'endPoint', sortable: false},
-                    {text: 'Номер договора', value: 'id_contract', sortable: false},
+                    {text: '№ договора', value: 'id_contract', sortable: false},
                     {text: 'Ссылки', value: 'links', sortable: false},
                     {text: 'Комментарии', value: 'comments', sortable: false},
                     {text: 'Статус работы', value: 'status', sortable: false},
                     {text: 'Тип прокладки', value: 'placement', sortable: false},
+                    {text: 'Ответственный', value: 'responsible', sortable: false},
                     {text: 'Действия', value: 'action', sortable: false}
                 ],
                 rows: [],
@@ -265,6 +268,8 @@
                     id_line_object: 0,
                     name: '',
                     distance: 0,
+                    rent: 0,
+                    cost_rent: 0,
                     startPoint: 0,
                     endPoint: 0,
                     id_contract: 0,
@@ -320,17 +325,25 @@
                     data.map(item => {
                         axios.get(`http://localhost:3000/line_objects_all_one/${item.id_point_one}`).then(one => {
                             axios.get(`http://localhost:3000/line_objects_all_two/${item.id_point_two}`).then(two => {
-                                this.rows.push({
-                                    id_line_object: item.id_line_object,
-                                    name: item.name,
-                                    distance: (Helper.translateCoordinates(item.coordinates.coordinates)).toFixed(2) + ' м.',
-                                    startPoint: one.data.name_obj,
-                                    endPoint: two.data.name_obj,
-                                    id_contract: item.id_contract,
-                                    links: item.links,
-                                    comments: item.comments,
-                                    status: Helper.typeObject(item.status),
-                                    placement: Helper.typeDefinion(item.placement)
+                                axios.get(`http://localhost:3000/line_objects_all_rent/${item.id_contract}`).then(contract => {
+                                    axios.get(`http://localhost:3000/line_objects_all_responsible/${contract.data.responsible}`).then(responsible => {
+                                        this.rows.push({
+                                            id_line_object: item.id_line_object,
+                                            name: item.name,
+                                            distance: (Helper.translateCoordinates(item.coordinates.coordinates)).toFixed(2) + ' м.',
+                                            rent: contract.data.rent + ' руб.',
+                                            cost_rent: (contract.data.rent / (Helper.translateCoordinates(item.coordinates.coordinates))).toFixed(2) + ' руб.',
+                                            startPoint: one.data.name_obj,
+                                            endPoint: two.data.name_obj,
+                                            id_contract: item.id_contract,
+                                            links: item.links,
+                                            comments: item.comments,
+                                            status: Helper.typeObject(item.status),
+                                            placement: Helper.typeDefinion(item.placement),
+                                            responsible: responsible.data.fio
+
+                                        })
+                                    })
                                 })
                             })
                         })
@@ -410,6 +423,12 @@
         align-self: center;
         width: 100%;
         top: 40%;
+    }
+
+    .object {
+        background-color: #F06292;
+        color: #fff !important;
+        font-weight: 400;
     }
 </style>
 

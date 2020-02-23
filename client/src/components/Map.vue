@@ -401,7 +401,7 @@
                           data: contract.data.links
                       },
                       {
-                          name: 'Арендная оплата :',
+                          name: 'Арендная плата :',
                           Категория: 'Договор',
                           data: contract.data.rent + " Руб."
                       }

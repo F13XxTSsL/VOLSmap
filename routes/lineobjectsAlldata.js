@@ -2,6 +2,8 @@ const express = require("express")
 const router = express.Router()
 const lineObjectsAllData = require("../models/lineobjects/lineobjectsAllData")
 const object = require("../models/objects/objects")
+const contract = require("../models/cotracts/contracts")
+const users_data = require("../models/users/users_data")
 
 router.get("/line_objects_all", (req, res) => {
   lineObjectsAllData.findAll()
@@ -69,6 +71,34 @@ router.get("/line_objects_all_two/:id", (req, res) => {
       .catch(err => {
         res.send("error" + err)
       })
+})
+
+router.get("/line_objects_all_rent/:id", (req, res) => {
+  contract.findOne({
+    where: {
+      id_contract: req.params.id
+    }
+  })
+      .then((rent) => {
+        res.json(rent)
+      })
+      .catch(err => {
+        res.send("error" + err)
+      })
+})
+
+router.get("/line_objects_all_responsible/:id", (req, res) => {
+    users_data.findOne({
+        where: {
+            id_user: req.params.id
+        }
+    })
+        .then((responsible) => {
+            res.json(responsible)
+        })
+        .catch(err => {
+            res.send("error" + err)
+        })
 })
 
 module.exports = router
