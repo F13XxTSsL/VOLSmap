@@ -1,7 +1,7 @@
 <template>
     <div class="objects margin__top ">
         <v-container>
-            <div class="loader" v-if="rows.length > 2 ? false : true">
+            <div class="loader" v-if="rows.length >= 0 ? false : true">
                 <v-progress-circular
                         :size="70"
                         :width="7"
@@ -61,7 +61,7 @@
                                     <v-container>
                                         <v-row>
                                             <v-col
-                                                    cols="12"
+                                                    cols="6"
                                                     sm="6"
                                                     md="6"
                                             >
@@ -71,13 +71,16 @@
                                                 />
                                             </v-col>
                                             <v-col
-                                                    cols="12"
+                                                    class="d-flex"
+                                                    cols="6"
                                                     sm="6"
-                                                    md="6"
                                             >
-                                                <v-text-field
-                                                        v-model="addItem.id_obj_contract"
+                                                <v-select
+                                                        :items="numberContract"
+                                                        item-text="name"
+                                                        item-value="id"
                                                         label="Номер договора"
+                                                        @change="atSelectedNumberContract($event)"
                                                 />
                                             </v-col>
                                             <v-col
@@ -232,6 +235,7 @@
                                                 <v-text-field
                                                         v-model="editItem.id_obj_contract"
                                                         label="Номер договора"
+                                                        disabled
                                                 />
                                             </v-col>
                                             <v-col
@@ -444,7 +448,6 @@
                 defaultItem: {
                     id_object: 0,
                     type: this.typeObjects,
-                    id_obj_contract: 0,
                     comments: '',
                     status: this.statusObjects,
                     coordinate_lat: 0,
@@ -455,7 +458,9 @@
                     links: ''
                 },
                 selectedSpacer: '',
-                selectedSpacer2: ''
+                selectedSpacer2: '',
+                selectedNumberContract: '',
+                numberContract: []
             }
         },
         watch: {
@@ -464,6 +469,11 @@
             },
         },
         mounted() {
+            axios.get('http://localhost:3000/objects_contract').then(response => {
+                response.data.forEach(item => {
+                    this.numberContract.push(item.id_contract)
+                })
+            })
             this.getObjects()
         },
         methods: {
@@ -476,7 +486,7 @@
                 data.map(item => {
                     this.rows = []
                     if (item.type === 'BTS' || item.type === 'Controller' || item.type === 'Switch') {
-                        axios.get(`http://localhost:3000/line_objects_contract/${item.id_obj_contract}`).then(contract => {
+                        axios.get(`http://localhost:3000/objects_contract/${item.id_obj_contract}`).then(contract => {
                             axios.get(`http://localhost:3000/objects_responsible/${contract.data.responsible}`).then(responsible => {
                                 this.rows.push({
                                     id_object: item.id_object,
@@ -513,11 +523,14 @@
             atSelectedStatus(event) {
                 this.selectedSpacer2 = event
             },
+            atSelectedNumberContract(event) {
+              this.selectedNumberContract = event
+            },
             dialogEdit(item) {
                 this.dialogEditWindow = true
                 this.editItem.id_object = item.id_object
-                this.editItem.type = this.selectedSpacer
                 this.editItem.id_obj_contract = item.id_obj_contract
+                this.editItem.type = this.selectedSpacer
                 this.editItem.comments = item.comments
                 this.editItem.status = this.selectedSpacer2
                 this.editItem.coordinate_lat = item.coordinates[0]
@@ -536,7 +549,6 @@
                             type: "Point",
                             coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
                         },
-                        id_obj_contract: this.editItem.id_obj_contract,
                         comments: this.editItem.comments,
                         rent: this.editItem.rent,
                         status: this.selectedSpacer2,
@@ -548,7 +560,6 @@
                 ).then((res) => {
                     this.editItem.id_object = this.defaultItem.id_object
                     this.editItem.type = this.selectedSpacer
-                    this.editItem.id_obj_contract = this.defaultItem.id_obj_contract
                     this.editItem.comments = this.defaultItem.comments
                     this.editItem.status = this.selectedSpacer2
                     this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
@@ -585,7 +596,7 @@
                         type: "Point",
                         coordinates: [this.addItem.coordinate_lat, this.addItem.coordinate_lng]
                     },
-                    id_obj_contract: this.addItem.id_obj_contract,
+                    id_obj_contract: this.selectedNumberContract,
                     comments: this.addItem.comments,
                     status: this.selectedSpacer2,
                     name_obj: this.addItem.name_obj,
@@ -595,7 +606,7 @@
                 }).then((res) => {
                     this.addItem.id_object = this.editItem.id_object,
                         this.addItem.type = '',
-                        this.addItem.id_obj_contract = 0,
+                        this.addItem.id_obj_contract =  this.selectedNumberContract,
                         this.addItem.comments = '',
                         this.addItem.status = ''
                     this.addItem.name_obj = ''

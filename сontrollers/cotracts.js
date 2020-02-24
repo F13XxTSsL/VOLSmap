@@ -24,6 +24,16 @@ router.get("/contracts_partners", (req, res) => {
         res.send("error: " + err)
       })
 })
+
+router.get("/contracts_responsible", (req, res) => {
+    profile.findAll()
+        .then(profile => {
+            res.json(profile)
+        })
+        .catch(err => {
+            res.send("error: " + err)
+        })
+})
 //ADD Contracts
 router.post("/contracts", (req, res) => {
   if (!req.body.id_contract) {

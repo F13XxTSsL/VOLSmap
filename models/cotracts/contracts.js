@@ -12,6 +12,7 @@ module.exports = db.sequelize.define(
         },
         id_partner: {
             type: Sequelize.INTEGER,
+            foreignKey: true
         },
         links: {
             type: Sequelize.STRING
@@ -26,7 +27,8 @@ module.exports = db.sequelize.define(
             type: Sequelize.STRING
         },
         responsible: {
-          type: Sequelize.STRING
+            type: Sequelize.STRING,
+            foreignKey: true
         }
     }, {
         timestamps: false

@@ -16,6 +16,18 @@ router.get("/objects", (req, res) => {
         })
 
 })
+
+router.get("/objects_contract", (req, res) => {
+    contract.findAll()
+        .then(contract => {
+            res.json(contract)
+        })
+        .catch(err => {
+            res.send("error: " + err)
+        })
+
+})
+
 router.get("/objects_contract/:id", (req, res) => {
     contract.findOne({
         where: {
@@ -68,7 +80,6 @@ router.put("/objects/:id", (req, res) => {
       {id_object: req.body.id_object,
         type: req.body.type,
         coordinates: req.body.coordinates,
-        id_obj_contract: req.body.id_obj_contract,
         comments: req.body.comments,
         status: req.body.status,
         name_obj: req.body.name_obj,
