@@ -129,7 +129,7 @@
                     text
                     @click="saveAdd"
                   >
-                    Сохранить
+                    Добавить
                   </v-btn>
                 </v-card-actions>
               </v-card>

@@ -5,7 +5,7 @@
                 <v-progress-circular
                         :size="70"
                         :width="7"
-                        color="purple"
+                        color="darken"
                         indeterminate
                 />
             </div>
@@ -474,24 +474,37 @@
             },
             initialize(data) {
                 data.map(item => {
-                    axios.get(`http://localhost:3000/line_objects_contract/${item.id_obj_contract}`).then(contract => {
-                        axios.get(`http://localhost:3000/objects_responsible/${contract.data.responsible}`).then(responsible => {
-                            this.rows.push({
-                                id_object: item.id_object,
-                                type: Helper.typeObjectItems(item.type),
-                                coordinates: Helper.disclosureCoordinates(item.coordinates),
-                                id_obj_contract: item.id_obj_contract,
-                                rent: contract.data.rent + ' руб.',
-                                comments: item.comments,
-                                status: Helper.typeObject(item.status),
-                                name_obj: item.name_obj,
-                                data_for_exploitation: item.data_for_exploitation,
-                                adress: item.adress,
-                                links: item.links,
-                                responsible: responsible.data.fio
+                    this.rows = []
+                    if (item.type === 'BTS' || item.type === 'Controller' || item.type === 'Switch') {
+                        axios.get(`http://localhost:3000/line_objects_contract/${item.id_obj_contract}`).then(contract => {
+                            axios.get(`http://localhost:3000/objects_responsible/${contract.data.responsible}`).then(responsible => {
+                                this.rows.push({
+                                    id_object: item.id_object,
+                                    type: Helper.typeObjectItems(item.type),
+                                    coordinates: Helper.disclosureCoordinates(item.coordinates),
+                                    id_obj_contract: item.id_obj_contract,
+                                    rent: contract.data.rent + ' руб.',
+                                    comments: item.comments,
+                                    status: Helper.typeObject(item.status),
+                                    name_obj: item.name_obj,
+                                    data_for_exploitation: item.data_for_exploitation,
+                                    adress: item.adress,
+                                    links: item.links,
+                                    responsible: responsible.data.fio
+                                })
                             })
                         })
-                    })
+                    } else {
+                        this.rows.push({
+                            id_object: item.id_object,
+                            type: Helper.typeObjectItems(item.type),
+                            coordinates: Helper.disclosureCoordinates(item.coordinates),
+                            comments: item.comments,
+                            name_obj: item.name_obj,
+                            adress: item.adress
+                        })
+                    }
+
                 })
             },
             atSelectedType(event) {
