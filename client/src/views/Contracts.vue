@@ -354,7 +354,7 @@
                     links: '',
                     comments: '',
                     rent: 0,
-                    placement: this.selectedSpacer,
+                    placement: '',
                     responsible: this.selectedSpacerResponsibleNames
                 },
                 defaultItem: {
@@ -363,7 +363,7 @@
                     links: '',
                     comments: '',
                     rent: 0,
-                    placement: this.selectedSpacer,
+                    placement: '',
                     responsible: this.selectedSpacerResponsibleNames
                 },
                 selectedSpacer: '',
@@ -435,9 +435,10 @@
                 this.editItem.id_partner = item.id_partner
                 this.editItem.links = item.links
                 this.editItem.comments = item.comments
-                this.editItem.rent = item.rent
+                this.editItem.rent =item.rent
                 this.editItem.placement = Helper.revertTypeDefinion(item.placement)
                 this.editItem.responsible = responsibleSelect
+
 
                 this.editResponsibleNames = responsibleSelect
                 this.editItemsPlacement = Helper.revertTypeDefinion(item.placement)
@@ -449,9 +450,9 @@
                         data: this.editItem.data,
                         links: this.editItem.links,
                         comments: this.editItem.comments,
-                        rent: this.editItem.rent,
-                        placement: this.selectedSpacer,
-                        responsible: this.selectedSpacerResponsibleNames
+                        rent: parseFloat(this.editItem.rent),
+                        placement: this.selectedSpacer ? this.selectedSpacer : this.editItem.placement,
+                        responsible: this.selectedSpacerResponsibleNames ? this.selectedSpacerResponsibleNames : this.editItem.responsible
                     },
                 ).then((res) => {
                     this.editItem.id_contract = this.defaultItem.id_contract
