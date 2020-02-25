@@ -277,6 +277,7 @@
                                                         :items="typeObjects"
                                                         item-text="text"
                                                         item-value="id"
+                                                        v-model="selectedTypeObjects"
                                                         label="Тип объекта"
                                                         @change="atSelectedType($event)"
                                                 />
@@ -290,6 +291,7 @@
                                                         :items="statusObjects"
                                                         item-text="text"
                                                         item-value="id"
+                                                        v-model="selectedStatusObjects"
                                                         label="Статус"
                                                         @change="atSelectedStatus($event)"
                                                 />
@@ -418,12 +420,14 @@
                 rows: [],
                 addIndex: -1,
                 editIndex: -1,
+                // 45.035376,38.946572
+                // ул. 1-я Линия
                 addItem: {
                     id_object: 0,
-                    type: this.typeObjects,
+                    type: '',
                     id_obj_contract: 0,
                     comments: '',
-                    status: this.statusObjects,
+                    status: '',
                     coordinate_lat: this.coordinate_lat,
                     coordinate_lng: this.coordinate_lng,
                     name_obj: '',
@@ -434,10 +438,10 @@
                 },
                 editItem: {
                     id_object: 0,
-                    type: this.typeObjects,
+                    type: '',
                     id_obj_contract: 0,
                     comments: '',
-                    status: this.statusObjects,
+                    status: '',
                     coordinate_lat: this.coordinate_lat,
                     coordinate_lng: this.coordinate_lng,
                     name_obj: '',
@@ -447,9 +451,9 @@
                 },
                 defaultItem: {
                     id_object: 0,
-                    type: this.typeObjects,
+                    type: '',
                     comments: '',
-                    status: this.statusObjects,
+                    status: '',
                     coordinate_lat: 0,
                     coordinate_lng: 0,
                     name_obj: '',
@@ -460,7 +464,9 @@
                 selectedSpacer: '',
                 selectedSpacer2: '',
                 selectedNumberContract: '',
-                numberContract: []
+                numberContract: [],
+                selectedTypeObjects: '',
+                selectedStatusObjects: ''
             }
         },
         watch: {
@@ -530,28 +536,31 @@
                 this.dialogEditWindow = true
                 this.editItem.id_object = item.id_object
                 this.editItem.id_obj_contract = item.id_obj_contract
-                this.editItem.type = this.selectedSpacer
+                this.editItem.type = Helper.revertTypeObjectItems(item.type)
                 this.editItem.comments = item.comments
-                this.editItem.status = this.selectedSpacer2
+                this.editItem.status = Helper.revertTypeObject(item.status)
                 this.editItem.coordinate_lat = item.coordinates[0]
                 this.editItem.coordinate_lng = item.coordinates[1]
                 this.editItem.name_obj = item.name_obj
                 this.editItem.data_for_exploitation = item.data_for_exploitation
                 this.editItem.adress = item.adress
                 this.editItem.links = item.links
+
+                this.selectedStatusObjects = Helper.revertTypeObject(item.status)
+                this.selectedTypeObjects = Helper.revertTypeObjectItems(item.type)
             },
             editItemSave() {
                 axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
                     {
                         id_object: this.editItem.id_object,
-                        type: this.selectedSpacer,
+                        type: this.selectedSpacer ? this.selectedSpacer : this.editItem.type,
                         coordinates: {
                             type: "Point",
                             coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
                         },
                         comments: this.editItem.comments,
                         rent: this.editItem.rent,
-                        status: this.selectedSpacer2,
+                        status: this.selectedSpacer2 ? this.selectedSpacer2 : this.editItem.status,
                         name_obj: this.editItem.name_obj,
                         data_for_exploitation: this.editItem.data_for_exploitation,
                         adress: this.editItem.adress,

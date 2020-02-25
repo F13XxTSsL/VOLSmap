@@ -38,6 +38,17 @@ export default {
       return type = 'Отключена'
     }
   },
+  revertTypeObject(type) {
+    if (type === 'Активна') {
+      return type = 'active'
+    }
+    if (type === 'Строительство') {
+      return type = 'construction'
+    }
+    if (type === 'Отключена') {
+      return type = 'error'
+    }
+  },
   typeObjectItems(type) {
     if (type === 'BTS') {
       return type = 'Базовая станция'
@@ -50,6 +61,20 @@ export default {
     }
     if (type === 'Coupling') {
       return type = 'Муфта'
+    }
+  },
+  revertTypeObjectItems(type) {
+    if (type === 'Базовая станция') {
+      return type = 'BTS'
+    }
+    if (type === 'Коммутатор') {
+      return type = 'Switch'
+    }
+    if (type === 'Контроллер') {
+      return type = 'Controller'
+    }
+    if (type === 'Муфта') {
+      return type = 'Coupling'
     }
   },
   disclosureCoordinates(coordinates) {
