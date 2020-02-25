@@ -420,8 +420,6 @@
                 rows: [],
                 addIndex: -1,
                 editIndex: -1,
-                // 45.035376,38.946572
-                // ул. 1-я Линия
                 addItem: {
                     id_object: 0,
                     type: '',

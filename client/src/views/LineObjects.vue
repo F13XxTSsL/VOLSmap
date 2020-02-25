@@ -70,6 +70,13 @@
                   <v-card-text>
                     <v-container>
                       <v-row>
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field
+                            v-model="addItem.name"
+                            label="Имя объекта"
+                          />
+                        </v-col>
+
                         <v-col cols="12" sm="6" md="6">
                           <v-text-field
                             v-model="addItem.id_line_object"
@@ -87,6 +94,7 @@
                             item-text="name"
                             item-value="id"
                             label="Номер договора"
+                            v-model="selectedNumberPointTwo"
                             @change="atSelectedNumberContract($event)"
                           />
                         </v-col>
@@ -101,6 +109,7 @@
                             item-text="name"
                             item-value="id"
                             label="Начало пути"
+                            v-model="selectedNumberPointOne"
                             @change="atSelectedNumberPointOne($event)"
                           />
                         </v-col>
@@ -146,6 +155,25 @@
                             label="Статус"
                             @change="atSelectedStatus($event)"
                           />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          class="coords"
+                        >
+                          <div :key="i" v-for="(item, i) in itemCoords">Точка {{i}} - Широта: <span style="color: green">{{item[0]}}</span> Долгота:  <span style="color: green">{{item[1]}}</span></div>
+                          <div class="item_coord" style="margin-top: 20px;">
+                            <v-text-field
+                              v-model="itemCoordLat"
+                              label="Широта"
+                            />
+                            <v-text-field
+                              v-model="itemCoordLng"
+                              label="Долгота"
+                              style="margin-left: 20px;"
+                            />
+                            <v-icon class="btn-coords" color="green" @click="addCoords">mdi-plus</v-icon>
+                          </div>
                         </v-col>
 
                       </v-row>
@@ -197,8 +225,6 @@
     },
     data() {
       return {
-        lat: '',
-        lng: '',
         search: '',
         dialogAdd: false,
         dialogEditWindow: false,
@@ -238,20 +264,21 @@
           distance: 0,
           rent: 0,
           cost_rent: 0,
-          id_point_one: 0,
-          id_point_two: 0,
+          startPoint: 0,
+          endPoint: 0,
           id_contract: 0,
           links: '',
           comments: '',
           status: this.statusObjects,
-          placement: this.itemsPlacement
+          placement: this.itemsPlacement,
+          coordinates: {}
         },
         editItem: {
           id_line_object: 0,
           name: '',
           distance: 0,
-          id_point_one: 0,
-          id_point_two: 0,
+          startPoint: 0,
+          endPoint: 0,
           id_contract: 0,
           links: '',
           comments: '',
@@ -262,8 +289,8 @@
           id_line_object: 0,
           name: '',
           distance: 0,
-          id_point_one: 0,
-          id_point_two: 0,
+          startPoint: 0,
+          endPoint: 0,
           id_contract: 0,
           links: '',
           comments: '',
@@ -278,7 +305,11 @@
         selectedStatusObjects: '',
         numberContract: [],
         numberPointOne: [],
-        numberPointTwo: []
+        numberPointTwo: [],
+        arrayCoords: [],
+        itemCoords: [],
+        itemCoordLat: '',
+        itemCoordLng: ''
       }
     },
     watch: {
@@ -325,26 +356,26 @@
         })
         data.then(data => {
           data.map(item => {
-            console.log(item)
+            this.rows = []
             axios.get(`http://localhost:3000/line_objects_all_one/${item.id_point_one}`).then(one => {
               axios.get(`http://localhost:3000/line_objects_all_two/${item.id_point_two}`).then(two => {
                 axios.get(`http://localhost:3000/line_objects_all_rent/${item.id_contract}`).then(contract => {
-                  // axios.get(`http://localhost:3000/line_objects_all_responsible/${contract.data.responsible}`).then(responsible => {
+                  axios.get(`http://localhost:3000/line_objects_all_responsible/${contract.data.responsible}`).then(responsible => {
                   this.rows.push({
                     id_line_object: item.id_line_object,
                     name: item.name,
                     distance: (Helper.translateCoordinates(item.coordinates.coordinates)).toFixed(2) + ' м.',
                     rent: contract.data.rent + ' руб.',
                     cost_rent: (contract.data.rent / (Helper.translateCoordinates(item.coordinates.coordinates))).toFixed(2) + ' руб.',
-                    id_point_one: one.data.name_obj,
-                    id_point_two: two.data.name_obj,
+                    startPoint: one.data.name_obj ,
+                    endPoint: two.data.name_obj,
                     id_contract: item.id_contract,
                     links: item.links,
                     comments: item.comments,
                     status: Helper.typeObject(item.status),
                     placement: Helper.typeDefinion(item.placement),
-                    // responsible: responsible.data.fio
-                    // })
+                    responsible: responsible.data.fio
+                    })
                   })
                 })
               })
@@ -352,30 +383,40 @@
           })
         })
       },
+      addCoords() {
+        this.itemCoords.push([this.itemCoordLat, this.itemCoordLng])
+        this.itemCoordLat = ''
+        this.itemCoordLng = ''
+      },
       addLineObj() {
-        axios.post('http://localhost:3000/line_objects_all', {
-          id_line_object: this.addItem.id_line_object,
-          type: this.selectedTypeObjects,
-          id_contract: this.selectedNumberContract,
-          id_point_one: this.selectedNumberPointOne,
-          id_point_two: this.selectedNumberPointTwo,
-          comments: this.addItem.comments,
-          status: this.selectedStatusObjects,
-          name_obj: this.addItem.name_obj,
-          links: this.addItem.links
-        }).then((res) => {
-          this.addItem.id_line_object = this.editItem.id_line_object,
-            this.addItem.type = '',
-            this.addItem.id_contract = 0,
-            this.addItem.comments = '',
-            this.addItem.status = ''
-          this.addItem.name_obj = ''
-          this.addItem.links = ''
+          axios.post('http://localhost:3000/line_objects_all', {
+            id_line_object: this.addItem.id_line_object,
+            name: this.addItem.name,
+            type: this.selectedTypeObjects,
+            id_contract: this.selectedNumberContract,
+            id_point_one: this.selectedNumberPointOne,
+            id_point_two: this.selectedNumberPointTwo,
+            comments: this.addItem.comments,
+            status: this.selectedStatusObjects,
+            links: this.addItem.links,
+            coordinates: {
+              type: "LineString",
+              coordinates: this.itemCoords
+            },
+          }).then((res) => {
+            this.addItem.id_line_object = this.editItem.id_line_object,
+              this.addItem.type = '',
+              this.addItem.id_contract = 0,
+              this.addItem.comments = '',
+              this.addItem.status = ''
+              this.addItem.name_obj = ''
+              this.addItem.links = ''
 
-        }).catch((err) => {
-          console.log(err)
-        })
-        this.close()
+          }).catch((err) => {
+            console.log(err)
+          })
+          this.close()
+
       },
       deleteItem(item) {
         const index = this.rows.indexOf(item)
@@ -468,6 +509,11 @@
     width: 100%;
     top: 40%;
   }
+
+  .item_coord {
+    display: flex;
+  }
+
 
   /*.object {*/
   /*    background-color: #F06292;*/
