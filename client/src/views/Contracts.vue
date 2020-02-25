@@ -1,6 +1,15 @@
 <template>
     <div class="contracts margin__top ">
         <v-container>
+            <div class="loader" v-if="rows.length<1">
+                <v-progress-circular
+                  :size="70"
+                  :width="7"
+                  color="darken"
+                  indeterminate
+                />
+            </div>
+            <div v-else>
             <v-card>
                 <v-card-title>
                     <v-text-field
@@ -305,6 +314,7 @@
                     </v-icon>
                 </template>
             </v-data-table>
+            </div>
         </v-container>
     </div>
 </template>

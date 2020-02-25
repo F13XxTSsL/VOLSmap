@@ -15,7 +15,28 @@ router.get("/line_objects_all", (req, res) => {
     })
 })
 
+router.get("/line_objects_all_contract", (req, res) => {
+  contract.findAll()
+  .then(contract => {
+    res.json(contract)
+  })
+  .catch(err => {
+    res.send("error: " + err)
+  })
+})
+
+router.get("/line_objects_all_object", (req, res) => {
+  object.findAll()
+  .then(object => {
+    res.json(object)
+  })
+  .catch(err => {
+    res.send("error: " + err)
+  })
+})
+
 router.post("/line_objects_all", (req, res) => {
+  console.log(req.body)
   if(!req.body) {
     res.status(400)
     res.json({

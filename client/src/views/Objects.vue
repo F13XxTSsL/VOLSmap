@@ -1,7 +1,7 @@
 <template>
     <div class="objects margin__top ">
         <v-container>
-            <div class="loader" v-if="rows.length >= 0 ? false : true">
+            <div class="loader" v-if="rows.length<1">
                 <v-progress-circular
                         :size="70"
                         :width="7"
@@ -9,7 +9,7 @@
                         indeterminate
                 />
             </div>
-          <div class="table" v-else>
+          <div v-else>
             <v-card>
                 <v-card-title>
                     <v-text-field
