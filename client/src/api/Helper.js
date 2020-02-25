@@ -13,6 +13,20 @@ export default {
       return type = 'По земле'
     }
   },
+  revertTypeDefinion(type) {
+    if (type === 'В помещении') {
+      return type = 'indoor'
+    }
+    if (type === 'В канализации') {
+      return type = 'sewage'
+    }
+    if (type === 'На опорах') {
+      return type = 'prop'
+    }
+    if (type === 'По земле') {
+      return type = 'roof'
+    }
+  },
   typeObject(type) {
     if (type === 'active') {
       return type = 'Активна'

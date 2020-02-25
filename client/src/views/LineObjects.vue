@@ -425,11 +425,11 @@
         top: 40%;
     }
 
-    .object {
-        background-color: #F06292;
-        color: #fff !important;
-        font-weight: 400;
-    }
+    /*.object {*/
+    /*    background-color: #F06292;*/
+    /*    color: #fff !important;*/
+    /*    font-weight: 400;*/
+    /*}*/
 </style>
 
 

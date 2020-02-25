@@ -95,13 +95,16 @@
                                                 />
                                             </v-col>
                                             <v-col
+                                                    class="d-flex"
                                                     cols="12"
                                                     sm="12"
-                                                    md="12"
                                             >
-                                                <v-text-field
-                                                        v-model="addItem.responsible"
+                                                <v-select
+                                                        :items="responsibleNames"
+                                                        item-text="name"
+                                                        item-value="id"
                                                         label="Ответственный"
+                                                        @change="atSelectedResponsibleNames($event)"
                                                 />
                                             </v-col>
                                             <v-col
@@ -190,6 +193,7 @@
                                                 <v-text-field
                                                         v-model="editItem.id_partner"
                                                         label="Наименование контрагента"
+                                                        disabled
                                                 />
                                             </v-col>
                                             <v-col
@@ -213,13 +217,17 @@
                                                 />
                                             </v-col>
                                             <v-col
+                                                    class="d-flex"
                                                     cols="12"
                                                     sm="12"
-                                                    md="12"
                                             >
-                                                <v-text-field
-                                                        v-model="editItem.responsible"
+                                                <v-select
+                                                        :items="responsibleNames"
+                                                        item-text="name"
+                                                        item-value="id"
+                                                        v-model="editResponsibleNames"
                                                         label="Ответственный"
+                                                        @change="atSelectedResponsibleNames($event)"
                                                 />
                                             </v-col>
                                             <v-col
@@ -232,6 +240,7 @@
                                                         item-text="text"
                                                         item-value="id"
                                                         label="Способ прокладки"
+                                                        v-model="editItemsPlacement"
                                                         @change="atSelected($event)"
                                                 />
                                             </v-col>
@@ -335,33 +344,35 @@
                     id_partner: 0,
                     links: '',
                     comments: '',
-                    rent: 0.0,
-                    placement: this.itemsPlacement,
-                    responsible: this.responsible
+                    rent: 0,
+                    placement: '',
+                    responsible: ''
                 },
                 editItem: {
                     id_contract: 0,
                     data: '',
-                    id_partner: 0,
                     links: '',
                     comments: '',
-                    rent: 0.0,
+                    rent: 0,
                     placement: '',
-                    responsible: this.responsible
+                    responsible: this.selectedSpacerResponsibleNames
                 },
                 defaultItem: {
                     id_contract: 0,
                     data: '',
-                    id_partner: 0,
                     links: '',
                     comments: '',
-                    rent: 0.0,
-                    placement: this.itemsPlacement,
-                    responsible: this.responsible
+                    rent: 0,
+                    placement: '',
+                    responsible: this.selectedSpacerResponsibleNames
                 },
                 selectedSpacer: '',
                 selectedSpacerNames: '',
-                partnersNames: []
+                selectedSpacerResponsibleNames: '',
+                partnersNames: [],
+                responsibleNames: [],
+                editResponsibleNames: '',
+                editItemsPlacement: ''
             }
         },
         mounted() {
@@ -369,6 +380,11 @@
             axios.get('http://localhost:3000/contracts_partners').then(partners => {
                 partners.data.forEach(item => {
                     this.partnersNames.push({id: item.id_partner, name: item.name})
+                })
+            })
+            axios.get('http://localhost:3000/contracts_responsible').then(responsible => {
+                responsible.data.forEach(item => {
+                    this.responsibleNames.push({id: item.id_user, name: item.fio})
                 })
             })
         },
@@ -389,7 +405,7 @@
                                 id_partner: partner.data.name,
                                 links: item.links,
                                 comments: item.comments,
-                                rent: item.rent,
+                                rent: item.rent + ' руб.',
                                 placement: Helper.typeDefinion(item.placement),
                                 responsible: responsible.data.fio
                             })
@@ -400,40 +416,51 @@
             atSelectedPartnersNames(event) {
                 this.selectedSpacerNames = event
             },
+            atSelectedResponsibleNames(event) {
+                this.selectedSpacerResponsibleNames = event
+            },
             atSelected(event) {
                 this.selectedSpacer = event
             },
             dialogEdit(item) {
+                let responsibleSelect = ''
+                this.responsibleNames.forEach(val => {
+                    if (val.name === item.responsible) {
+                        responsibleSelect = val.id
+                    }
+                })
                 this.dialogEditWindow = true
                 this.editItem.id_contract = item.id_contract
                 this.editItem.data = item.data
                 this.editItem.id_partner = item.id_partner
                 this.editItem.links = item.links
                 this.editItem.comments = item.comments
-                this.editItem.rent = item.rent
-                this.editItem.placement = item.placement
-                this.editItem.responsible = item.responsible
+                this.editItem.rent =item.rent
+                this.editItem.placement = Helper.revertTypeDefinion(item.placement)
+                this.editItem.responsible = responsibleSelect
+
+
+                this.editResponsibleNames = responsibleSelect
+                this.editItemsPlacement = Helper.revertTypeDefinion(item.placement)
             },
             editItemSave() {
                 axios.put(`http://localhost:3000/contracts/${this.editItem.id_contract}`,
                     {
                         id_contract: this.editItem.id_contract,
                         data: this.editItem.data,
-                        id_partner: this.selectedSpacerNames,
                         links: this.editItem.links,
                         comments: this.editItem.comments,
-                        rent: this.editItem.rent,
-                        placement: this.selectedSpacer,
-                        responsible: this.responsible
+                        rent: parseFloat(this.editItem.rent),
+                        placement: this.selectedSpacer ? this.selectedSpacer : this.editItem.placement,
+                        responsible: this.selectedSpacerResponsibleNames ? this.selectedSpacerResponsibleNames : this.editItem.responsible
                     },
                 ).then((res) => {
                     this.editItem.id_contract = this.defaultItem.id_contract
                     this.editItem.data = this.defaultItem.data
-                    this.editItem.id_partner = this.selectedSpacerNames
                     this.editItem.links = this.defaultItem.links
                     this.editItem.comments = this.defaultItem.comments
                     this.editItem.rent = this.defaultItem.rent
-                    this.editItem.placement = this.selectedSpacer
+                    this.editItem.placement = this.defaultItem.placement
                     this.editItem.responsible = this.defaultItem.responsible
                 }).catch(err => console.log(err))
                 this.dialogEditWindow = false
@@ -464,16 +491,15 @@
                     comments: this.addItem.comments,
                     rent: this.addItem.rent,
                     placement: this.selectedSpacer,
-                    responsible: this.addItem.responsible,
+                    responsible: this.selectedSpacerResponsibleNames,
                 }).then((res) => {
                     this.addItem.id_contract = this.editItem.id_contract,
                         this.addItem.data = '',
-                        this.addItem.id_partner = 0,
                         this.addItem.links = '',
                         this.addItem.comments = '',
                         this.addItem.rent = 0.0,
-                        this.addItem.placement = '',
-                        this.addItem.responsible = ''
+                        this.addItem.placement =  '',
+                        this.addItem.responsible =''
                 }).catch((err) => {
                     console.log(err)
                 })
