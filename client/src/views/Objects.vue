@@ -1,7 +1,7 @@
 <template>
     <div class="objects margin__top ">
         <v-container>
-            <div class="loader" v-if="rows.length<1">
+            <div class="loader" v-if="loader">
                 <v-progress-circular
                         :size="70"
                         :width="7"
@@ -464,7 +464,8 @@
                 selectedNumberContract: '',
                 numberContract: [],
                 selectedTypeObjects: '',
-                selectedStatusObjects: ''
+                selectedStatusObjects: '',
+                loader: true
             }
         },
         watch: {
@@ -506,6 +507,7 @@
                                     links: item.links,
                                     responsible: responsible.data.fio
                                 })
+                                this.loader = false
                             })
                         })
                     } else {
@@ -642,15 +644,6 @@
         width: 100%;
         top: 40%;
     }
-  .loader{
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 45%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 </style>
 
 

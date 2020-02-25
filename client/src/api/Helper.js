@@ -77,6 +77,22 @@ export default {
       return type = 'Coupling'
     }
   },
+  statusProfile(status) {
+    if (status === 'admin') {
+      return status = 'Администратор'
+    }
+    if (status === 'operator') {
+      return status = 'Оператор'
+    }
+  },
+  revertStatusProfile(status) {
+    if (status === 'Администратор') {
+      return status = 'admin'
+    }
+    if (status === 'Оператор') {
+      return status = 'operator'
+    }
+  },
   disclosureCoordinates(coordinates) {
     return coordinates.coordinates
   },

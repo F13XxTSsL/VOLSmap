@@ -1,7 +1,7 @@
 <template>
     <div class="contracts margin__top ">
         <v-container>
-            <div class="loader" v-if="rows.length<1">
+            <div class="loader" v-if="loader">
                 <v-progress-circular
                   :size="70"
                   :width="7"
@@ -382,7 +382,8 @@
                 partnersNames: [],
                 responsibleNames: [],
                 editResponsibleNames: '',
-                editItemsPlacement: ''
+                editItemsPlacement: '',
+                loader: true
             }
         },
         mounted() {
@@ -419,6 +420,7 @@
                                 placement: Helper.typeDefinion(item.placement),
                                 responsible: responsible.data.fio
                             })
+                            this.loader = false
                         })
                     })
                 })

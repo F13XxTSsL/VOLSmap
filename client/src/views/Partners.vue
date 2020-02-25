@@ -1,7 +1,7 @@
 <template>
   <div class="partners margin__top">
     <v-container>
-      <div class="loader" v-if="rows.length<1">
+      <div class="loader" v-if="loader">
         <v-progress-circular
           :size="70"
           :width="7"
@@ -305,7 +305,8 @@
                     contacts: '',
                     comments: '',
                     links: '',
-                }
+                },
+              loader: true
             }
         },
         watch: {
@@ -333,6 +334,7 @@
                         links: item.links
                     })
                 })
+              this.loader = false
             },
             dialogEdit(item) {
                 this.dialogEditWindow = true

@@ -1,7 +1,7 @@
 <template>
     <div class="contracts margin__top ">
         <v-container>
-            <div class="loader" v-if="rows.length<1">
+            <div class="loader" v-if="loader">
                 <v-progress-circular
                   :size="70"
                   :width="7"
@@ -97,9 +97,12 @@
                                                     sm="12"
                                                     md="12"
                                             >
-                                                <v-text-field
-                                                        v-model="addItem.profile_status"
-                                                        label="Статус профиля"
+                                                <v-select
+                                                  :items="statusProfile"
+                                                  item-text="text"
+                                                  item-value="id"
+                                                  label="Статус профиля"
+                                                  @change="atSelectedStatusProfile($event)"
                                                 />
                                             </v-col>
                                             <v-col
@@ -114,8 +117,8 @@
                                             </v-col>
                                             <v-col
                                                     class="d-flex"
-                                                    cols="12"
-                                                    sm="12"
+                                                    cols="6"
+                                                    sm="6"
                                             >
                                                 <v-text-field
                                                         v-model="addItem.phone_number"
@@ -123,7 +126,7 @@
                                                 />
                                             </v-col>
                                             <v-col
-                                                    cols="12"
+                                                    cols="6"
                                                     sm="6"
                                                     md="6"
                                             >
@@ -218,13 +221,17 @@
                                                 />
                                             </v-col>
                                             <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
+                                              cols="12"
+                                              sm="12"
+                                              md="12"
                                             >
-                                                <v-text-field
-                                                        v-model="editItem.profile_status"
-                                                        label="Статус профиля"
+                                                <v-select
+                                                  :items="statusProfile"
+                                                  item-text="text"
+                                                  item-value="id"
+                                                  label="Статус профиля"
+                                                  v-model="selectedStatusProfile"
+                                                  @change="atSelectedStatusProfile($event)"
                                                 />
                                             </v-col>
                                             <v-col
@@ -239,8 +246,8 @@
                                             </v-col>
                                             <v-col
                                                     class="d-flex"
-                                                    cols="12"
-                                                    sm="12"
+                                                    cols="6"
+                                                    sm="6"
                                             >
                                                 <v-text-field
                                                         v-model="editItem.phone_number"
@@ -248,7 +255,7 @@
                                                 />
                                             </v-col>
                                             <v-col
-                                                    cols="12"
+                                                    cols="6"
                                                     sm="6"
                                                     md="6"
                                             >
@@ -259,8 +266,8 @@
                                             </v-col>
                                             <v-col
                                                     cols="12"
-                                                    sm="6"
-                                                    md="6"
+                                                    sm="12"
+                                                    md="12"
                                             >
                                                 <v-text-field
                                                         v-model="editItem.position"
@@ -332,11 +339,9 @@
                 search: '',
                 dialogAdd: false,
                 dialogEditWindow: false,
-                itemsPlacement: [
-                    {id: 'indoor', text: 'В помещении'},
-                    {id: 'sewage', text: 'В канализации'},
-                    {id: 'prop', text: 'На опорах'},
-                    {id: 'roof', text: 'По земле'}
+                statusProfile: [
+                    {id: 'admin', text: 'Администратор'},
+                    {id: 'operator', text: 'Оператор'},
                 ],
                 headers: [
                     {text: 'Номер пользователя', align: 'left', sortable: false, value: 'id_user',},
@@ -359,7 +364,7 @@
                     password: '',
                     profile_status: '',
                     fio: '',
-                    phone_number: 0.0,
+                    phone_number: '+',
                     email: '',
                     position: '',
                     subdivision: ''
@@ -371,7 +376,7 @@
                     password: '',
                     profile_status: '',
                     fio: '',
-                    phone_number: 0.0,
+                    phone_number:'+',
                     email: '',
                     position: '',
                     subdivision: ''
@@ -382,13 +387,15 @@
                     password: '',
                     profile_status: '',
                     fio: '',
-                    phone_number: 0.0,
+                    phone_number: '+',
                     email: '',
                     position: '',
                     subdivision: ''
                 },
                 selectedSpacer: '',
-                selectedSpacerNames: ''
+                selectedSpacerNames: '',
+                selectedStatusProfile: '',
+                loader: true
             }
         },
         mounted() {
@@ -403,36 +410,37 @@
             initialize(data) {
                 this.rows = []
                 data.map(item => {
+                    console.log(item)
                     this.rows.push({
                         id_user: item.id_user,
                         login: item.login,
                         password: item.password,
-                        profile_status: item.profile_status,
+                        profile_status: Helper.statusProfile(item.profile_status),
                         fio: item.fio,
                         phone_number: item.phone_number,
                         email: item.email,
                         position: item.position,
                         subdivision: item.subdivision
                     })
+                    this.loader = false
                 })
             },
-            atSelectedPartnersNames(event) {
-                this.selectedSpacerNames = event
-            },
-            atSelected(event) {
-                this.selectedSpacer = event
+            atSelectedStatusProfile(event) {
+              this.selectedStatusProfile = event
             },
             dialogEdit(item) {
                 this.dialogEditWindow = true
                 this.editItem.id_user = item.id_user
                 this.editItem.login = item.login
                 this.editItem.password = item.password
-                this.editItem.profile_status = item.profile_status
+                this.editItem.profile_status = Helper.revertStatusProfile(item.profile_status)
                 this.editItem.fio = item.fio
                 this.editItem.phone_number = item.phone_number
                 this.editItem.email = item.email
                 this.editItem.position = item.position
                 this.editItem.subdivision = item.subdivision
+
+                this.selectedStatusProfile = Helper.revertStatusProfile(item.profile_status)
             },
             editItemSave() {
                 axios.put(`http://localhost:3000/profile_all/${this.editItem.id_user}`,
@@ -440,7 +448,7 @@
                         id_user: this.editItem.id_user,
                         login: this.editItem.login,
                         password: this.editItem.password,
-                        profile_status: this.editItem.profile_status,
+                        profile_status: this.selectedStatusProfile ? this.selectedStatusProfile : this.editItem.profile_status,
                         fio: this.editItem.fio,
                         phone_number: this.editItem.phone_number,
                         email:  this.editItem.email,
@@ -482,7 +490,7 @@
                     id_user: this.addItem.id_user,
                     login: this.addItem.login,
                     password:this.addItem.password,
-                    profile_status: this.addItem.profile_status,
+                    profile_status: this.selectedStatusProfile,
                     fio: this.addItem.fio,
                     phone_number: this.addItem.phone_number,
                     email:this.addItem.email,

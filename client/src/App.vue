@@ -26,4 +26,13 @@ export default {
     overflow: hidden;
     &::-webkit-scrollbar { display: none}
   }
+  .loader{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>

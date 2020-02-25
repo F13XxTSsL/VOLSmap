@@ -1,7 +1,7 @@
 <template>
   <div class="line_objects margin__top ">
     <v-container>
-      <div class="loader" v-if="rows.length<0">
+      <div class="loader" v-if="loader">
         <v-progress-circular
           :size="70"
           :width="7"
@@ -94,7 +94,6 @@
                             item-text="name"
                             item-value="id"
                             label="Номер договора"
-                            v-model="selectedNumberPointTwo"
                             @change="atSelectedNumberContract($event)"
                           />
                         </v-col>
@@ -109,7 +108,6 @@
                             item-text="name"
                             item-value="id"
                             label="Начало пути"
-                            v-model="selectedNumberPointOne"
                             @change="atSelectedNumberPointOne($event)"
                           />
                         </v-col>
@@ -225,6 +223,7 @@
     },
     data() {
       return {
+        loader: true,
         search: '',
         dialogAdd: false,
         dialogEditWindow: false,
@@ -327,8 +326,8 @@
 
       axios.get('http://localhost:3000/line_objects_all_object').then(response => {
         response.data.forEach(item => {
-          this.numberPointOne.push({id: item.id_object, name: item.name_obj})
-          this.numberPointTwo.push({id: item.id_object, name: item.name_obj})
+          this.numberPointOne.push({id: item.id_object, name: item.name_obj, lat: item.coordinates.coordinates[0], lng: item.coordinates.coordinates[1]})
+          this.numberPointTwo.push({id: item.id_object, name: item.name_obj, lat: item.coordinates.coordinates[0], lng: item.coordinates.coordinates[1]})
         })
       })
     },
@@ -376,6 +375,7 @@
                     placement: Helper.typeDefinion(item.placement),
                     responsible: responsible.data.fio
                     })
+                    this.loader = false
                   })
                 })
               })
