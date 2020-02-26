@@ -26,6 +26,7 @@
           class="elevation-1"
           :search="search"
           id="exportable"
+          hide-default-footer
         >
           <template v-slot:top>
             <v-toolbar
@@ -90,11 +91,11 @@
                           sm="6"
                         >
                           <v-autocomplete
-                            v-model="selectResponsibleNames"
+                            v-model="searchNumberContract"
                             :items="numberContract"
                             item-text="name"
                             item-value="id"
-                            :search-input.sync="searchResponsibleNames"
+                            :search-input.sync="searchNumberContract"
                             cache-items
                             flat
                             hide-no-data
@@ -110,7 +111,7 @@
                           sm="6"
                         >
                           <v-autocomplete
-                            v-model="selectNumberPointOne"
+                            v-model="selectedNumberPointOne"
                             :items="numberPointOne"
                             item-text="name"
                             item-value="id"
@@ -130,7 +131,7 @@
                           sm="6"
                         >
                           <v-autocomplete
-                            v-model="selectNumberPointTwo"
+                            v-model="selectedNumberPointTwo"
                             :items="numberPointTwo"
                             item-text="name"
                             item-value="id"
@@ -219,12 +220,22 @@
           <template v-slot:item.action="{ item }">
             <v-icon
               small
+              @click="dialogEdit(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              small
               @click="deleteItem(item)"
             >
               mdi-delete
             </v-icon>
           </template>
         </v-data-table>
+        <div class="footer-table">
+          <div class="average_title">Средняя стоимость:</div>
+          <div class="average_value">{{countAverage}} руб.</div>
+        </div>
       </div>
     </v-container>
   </div>
@@ -241,12 +252,10 @@
     },
     data() {
       return {
-        selectNumberPointOne: '',
         searchNumberPointOne: null,
-        selectNumberPointTwo: '',
         searchNumberPointTwo: null,
-        selectResponsibleNames: '',
-        searchResponsibleNames: null,
+        selectNumberContract: '',
+        searchNumberContract: null,
         loader: true,
         search: '',
         dialogAdd: false,
@@ -332,7 +341,8 @@
         arrayCoords: [],
         itemCoords: [],
         itemCoordLat: '',
-        itemCoordLng: ''
+        itemCoordLng: '',
+        countAverage: '0.00'
       }
     },
     watch: {
@@ -378,6 +388,8 @@
           })
         })
         data.then(data => {
+          let rentItems = []
+          this.countAverage = 0
           data.map(item => {
             this.rows = []
             axios.get(`http://localhost:3000/line_objects_all_one/${item.id_point_one}`).then(one => {
@@ -386,19 +398,23 @@
                   axios.get(`http://localhost:3000/line_objects_all_responsible/${contract.data.responsible}`).then(responsible => {
                   this.rows.push({
                     id_line_object: item.id_line_object,
-                    name: item.name,
+                    name: item.name ? item.name : '',
                     distance: (Helper.translateCoordinates(item.coordinates.coordinates)).toFixed(2) + ' м.',
                     rent: contract.data.rent + ' руб.',
                     cost_rent: (contract.data.rent / (Helper.translateCoordinates(item.coordinates.coordinates))).toFixed(2) + ' руб.',
-                    startPoint: one.data.name_obj ,
-                    endPoint: two.data.name_obj,
+                    startPoint: one.data ? one.data.name_obj : '',
+                    endPoint: two.data ? two.data.name_obj : '',
                     id_contract: item.id_contract,
                     links: item.links,
                     comments: item.comments,
                     status: Helper.typeObject(item.status),
-                    placement: Helper.typeDefinion(item.placement),
+                    placement: Helper.typeDefinion(contract.data.placement),
                     responsible: responsible.data.fio
                     })
+                    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+                    rentItems.push(parseFloat(contract.data.rent))
+                    let sumRentValue = rentItems.reduce(reducer)
+                    this.countAverage = sumRentValue.toFixed(2)
                     this.loader = false
                   })
                 })
@@ -418,8 +434,8 @@
             name: this.addItem.name,
             type: this.selectedTypeObjects,
             id_contract: this.selectedNumberContract,
-            id_point_one: this.selectedNumberPointOne,
-            id_point_two: this.selectedNumberPointTwo,
+            id_point_one: this.selectedNumberPointOne ? this.selectedNumberPointOne : null,
+            id_point_two: this.selectedNumberPointTwo ? this.selectedNumberPointTwo : null,
             comments: this.addItem.comments,
             status: this.selectedStatusObjects,
             links: this.addItem.links,
@@ -468,59 +484,60 @@
           type: 'application/octet-stream'
         }), `line_objects.xls`)
       },
+      dialogEdit(item) {
+        console.log(item)
+        // this.dialogEditWindow = true
+        // this.editItem.id_line_object = item.id_line_object
+        // this.editItem.id_obj_contract = item.id_obj_contract
+        // this.editItem.type = Helper.revertTypeObjectItems(item.type)
+        // this.editItem.comments = item.comments
+        // this.editItem.status = Helper.revertTypeObject(item.status)
+        // this.editItem.coordinate_lat = item.coordinates[0]
+        // this.editItem.coordinate_lng = item.coordinates[1]
+        // this.editItem.name_obj = item.name_obj
+        // this.editItem.data_for_exploitation = item.data_for_exploitation
+        // this.editItem.adress = item.adress
+        // this.editItem.links = item.links
+        //
+        // this.selectedStatusObjects = Helper.revertTypeObject(item.status)
+        // this.selectedTypeObjects = Helper.revertTypeObjectItems(item.type)
+      },
+      // editItemSave() {
+      //   axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
+      //     {
+      //       id_object: this.editItem.id_object,
+      //       type: this.selectedSpacer ? this.selectedSpacer : this.editItem.type,
+      //       coordinates: {
+      //         type: "Point",
+      //         coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
+      //       },
+      //       comments: this.editItem.comments,
+      //       rent: this.editItem.rent,
+      //       status: this.selectedSpacer2 ? this.selectedSpacer2 : this.editItem.status,
+      //       name_obj: this.editItem.name_obj,
+      //       data_for_exploitation: this.editItem.data_for_exploitation,
+      //       adress: this.editItem.adress,
+      //       links: this.editItem.links,
+      //     },
+      //   ).then((res) => {
+      //     this.editItem.id_object = this.defaultItem.id_object
+      //     this.editItem.type = this.selectedSpacer
+      //     this.editItem.comments = this.defaultItem.comments
+      //     this.editItem.status = this.selectedSpacer2
+      //     this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
+      //     this.editItem.coordinate_lng = this.defaultItem.coordinate_lng
+      //     this.editItem.name_obj = this.defaultItem.name_obj
+      //     this.editItem.data_for_exploitation = this.defaultItem.data_for_exploitation
+      //     this.editItem.adress = this.defaultItem.adress
+      //     this.editItem.links = this.defaultItem.links
+      //   }).catch(err => console.log(err))
+      //   this.dialogEditWindow = false
+      //
+      // },
     },
-    // dialogEdit(item) {
-    //   this.dialogEditWindow = true
-    //   this.editItem.id_line_object = item.id_line_object
-    //   this.editItem.id_obj_contract = item.id_obj_contract
-    //   this.editItem.type = Helper.revertTypeObjectItems(item.type)
-    //   this.editItem.comments = item.comments
-    //   this.editItem.status = Helper.revertTypeObject(item.status)
-    //   this.editItem.coordinate_lat = item.coordinates[0]
-    //   this.editItem.coordinate_lng = item.coordinates[1]
-    //   this.editItem.name_obj = item.name_obj
-    //   this.editItem.data_for_exploitation = item.data_for_exploitation
-    //   this.editItem.adress = item.adress
-    //   this.editItem.links = item.links
-    //
-    //   this.selectedStatusObjects = Helper.revertTypeObject(item.status)
-    //   // this.selectedTypeObjects = Helper.revertTypeObjectItems(item.type)
-    // },
-    // editItemSave() {
-    //   axios.put(`http://localhost:3000/objects/${this.editItem.id_object}`,
-    //     {
-    //       id_object: this.editItem.id_object,
-    //       type: this.selectedSpacer ? this.selectedSpacer : this.editItem.type,
-    //       coordinates: {
-    //         type: "Point",
-    //         coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
-    //       },
-    //       comments: this.editItem.comments,
-    //       rent: this.editItem.rent,
-    //       status: this.selectedSpacer2 ? this.selectedSpacer2 : this.editItem.status,
-    //       name_obj: this.editItem.name_obj,
-    //       data_for_exploitation: this.editItem.data_for_exploitation,
-    //       adress: this.editItem.adress,
-    //       links: this.editItem.links,
-    //     },
-    //   ).then((res) => {
-    //     this.editItem.id_object = this.defaultItem.id_object
-    //     this.editItem.type = this.selectedSpacer
-    //     this.editItem.comments = this.defaultItem.comments
-    //     this.editItem.status = this.selectedSpacer2
-    //     this.editItem.coordinate_lat = this.defaultItem.coordinate_lat
-    //     this.editItem.coordinate_lng = this.defaultItem.coordinate_lng
-    //     this.editItem.name_obj = this.defaultItem.name_obj
-    //     this.editItem.data_for_exploitation = this.defaultItem.data_for_exploitation
-    //     this.editItem.adress = this.defaultItem.adress
-    //     this.editItem.links = this.defaultItem.links
-    //   }).catch(err => console.log(err))
-    //   this.dialogEditWindow = false
-    //
-    // },
   }
 </script>
-<style>
+<style scoped>
   .container {
     position: relative;
   }
@@ -536,6 +553,9 @@
 
   .item_coord {
     display: flex;
+  }
+  .footer-table {
+    max-width: 443px;
   }
 
 

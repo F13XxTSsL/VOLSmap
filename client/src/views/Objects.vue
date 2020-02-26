@@ -25,6 +25,7 @@
                     :items="rows"
                     class="elevation-1"
                     :search="search"
+                    hide-default-footer
             >
                 <template v-slot:top>
                     <v-toolbar
@@ -76,11 +77,11 @@
                                                     sm="6"
                                             >
                                                 <v-autocomplete
-                                                  v-model="selectResponsibleNames"
+                                                  v-model="selectNumberContract"
                                                   :items="numberContract"
                                                   item-text="name"
                                                   item-value="id"
-                                                  :search-input.sync="searchResponsibleNames"
+                                                  :search-input.sync="searchNumberContract"
                                                   cache-items
                                                   flat
                                                   hide-no-data
@@ -381,6 +382,11 @@
                     </v-icon>
                 </template>
             </v-data-table>
+              <div class="footer-table">
+                  <div class="average_title">Средняя стоимость:</div>
+                  <div class="average_value">{{countAverage}} руб.</div>
+              </div>
+
           </div>
         </v-container>
     </div>
@@ -392,8 +398,8 @@
     export default {
         data() {
             return {
-                selectResponsibleNames: '',
-                searchResponsibleNames: null,
+                selectNumberContract: '',
+                searchNumberContract: null,
                 search: '',
                 dialogAdd: false,
                 dialogEditWindow: false,
@@ -471,7 +477,8 @@
                 numberContract: [],
                 selectedTypeObjects: '',
                 selectedStatusObjects: '',
-                loader: true
+                loader: true,
+                countAverage: '0.00'
             }
         },
         watch: {
@@ -494,7 +501,9 @@
                 })
             },
             initialize(data) {
-                data.map(item => {
+                let rentItems = []
+                this.countAverage = 0
+                data.map((item,i) => {
                     this.rows = []
                     if (item.type === 'BTS' || item.type === 'Controller' || item.type === 'Switch') {
                         axios.get(`http://localhost:3000/objects_contract/${item.id_obj_contract}`).then(contract => {
@@ -513,6 +522,10 @@
                                     links: item.links,
                                     responsible: responsible.data.fio
                                 })
+                                const reducer = (accumulator, currentValue) => accumulator + currentValue;
+                                rentItems.push(parseFloat(contract.data.rent))
+                                let sumRentValue = rentItems.reduce(reducer)
+                                this.countAverage = sumRentValue.toFixed(2)
                                 this.loader = false
                             })
                         })
