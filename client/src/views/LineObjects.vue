@@ -89,13 +89,19 @@
                           cols="6"
                           sm="6"
                         >
-                          <v-select
+                          <v-autocomplete
+                            v-model="selectResponsibleNames"
                             :items="numberContract"
                             item-text="name"
                             item-value="id"
-                            label="Номер договора"
+                            :search-input.sync="searchResponsibleNames"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
                             @change="atSelectedNumberContract($event)"
-                          />
+                            label="Номер договора"
+                          ></v-autocomplete>
                         </v-col>
 
                         <v-col
@@ -103,13 +109,19 @@
                           cols="6"
                           sm="6"
                         >
-                          <v-select
+                          <v-autocomplete
+                            v-model="selectNumberPointOne"
                             :items="numberPointOne"
                             item-text="name"
                             item-value="id"
-                            label="Начало пути"
+                            :search-input.sync="searchNumberPointOne"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
                             @change="atSelectedNumberPointOne($event)"
-                          />
+                            label="Начало пути"
+                          ></v-autocomplete>
                         </v-col>
 
                         <v-col
@@ -117,13 +129,19 @@
                           cols="6"
                           sm="6"
                         >
-                          <v-select
+                          <v-autocomplete
+                            v-model="selectNumberPointTwo"
                             :items="numberPointTwo"
                             item-text="name"
                             item-value="id"
-                            label="Конец пути"
+                            :search-input.sync="searchNumberPointTwo"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
                             @change="atSelectedNumberPointTwo($event)"
-                          />
+                            label="Конец пути"
+                          ></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="12" md="12">
@@ -223,6 +241,12 @@
     },
     data() {
       return {
+        selectNumberPointOne: '',
+        searchNumberPointOne: null,
+        selectNumberPointTwo: '',
+        searchNumberPointTwo: null,
+        selectResponsibleNames: '',
+        searchResponsibleNames: null,
         loader: true,
         search: '',
         dialogAdd: false,

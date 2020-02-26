@@ -75,13 +75,19 @@
                                                     cols="6"
                                                     sm="6"
                                             >
-                                                <v-select
-                                                        :items="numberContract"
-                                                        item-text="name"
-                                                        item-value="id"
-                                                        label="Номер договора"
-                                                        @change="atSelectedNumberContract($event)"
-                                                />
+                                                <v-autocomplete
+                                                  v-model="selectResponsibleNames"
+                                                  :items="numberContract"
+                                                  item-text="name"
+                                                  item-value="id"
+                                                  :search-input.sync="searchResponsibleNames"
+                                                  cache-items
+                                                  flat
+                                                  hide-no-data
+                                                  hide-details
+                                                  @change="atSelectedNumberContract($event)"
+                                                  label="Номер договора"
+                                                ></v-autocomplete>
                                             </v-col>
                                             <v-col
                                                     cols="12"
@@ -93,7 +99,6 @@
                                                         label="Имя объекта"
                                                 />
                                             </v-col>
-
                                             <v-col
                                                     class="d-flex"
                                                     cols="12"
@@ -108,7 +113,6 @@
                                                         @change="atSelectedType($event)"
                                                 />
                                             </v-col>
-
                                             <v-col
                                                     class="d-flex"
                                                     cols="12"
@@ -388,6 +392,8 @@
     export default {
         data() {
             return {
+                selectResponsibleNames: '',
+                searchResponsibleNames: null,
                 search: '',
                 dialogAdd: false,
                 dialogEditWindow: false,
