@@ -26,6 +26,23 @@
                     class="elevation-1"
                     :search="search"
             >
+                <template #item="rows">
+                    <tr>
+                        <td class="id_cell">{{ rows.item.id_user }}</td>
+                        <td class="links">{{ rows.item.login }}</td>
+                        <td class="comments">{{ rows.item.password }}</td>
+                        <td class="status">{{ rows.item.profile_status }}</td>
+                        <td class="responsible">{{ rows.item.fio }}</td>
+                        <td class="name_partner">{{ rows.item.phone_number }}</td>
+                        <td class="action_cell">{{ rows.item.email }}</td>
+                        <td class="placement">{{ rows.item.position }}</td>
+                        <td class="type">{{ rows.item.subdivision }}</td>
+                        <td class="action_cell">
+                            <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
+                            <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
+                        </td>
+                    </tr>
+                </template>
                 <template v-slot:top>
                     <v-toolbar
                             flat
@@ -309,21 +326,6 @@
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.action="{ item }">
-                    <v-icon
-                            small
-                            class="mr-2"
-                            @click="dialogEdit(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                            small
-                            @click="deleteItem(item)"
-                    >
-                        mdi-delete
-                    </v-icon>
-                </template>
             </v-data-table>
             </div>
         </v-container>
@@ -344,16 +346,16 @@
                     {id: 'operator', text: 'Оператор'},
                 ],
                 headers: [
-                    {text: 'Номер пользователя', align: 'left', sortable: false, value: 'id_user',},
-                    {text: 'Логин', sortable: false, value: 'login',},
-                    {text: 'Пароль', value: 'password', sortable: false},
-                    {text: 'Статус', value: 'profile_status', sortable: false},
-                    {text: 'ФИО', value: 'fio', sortable: false},
-                    {text: 'Телефон', value: 'phone_number', sortable: false},
-                    {text: 'Почта', value: 'email', sortable: false},
-                    {text: 'Позиция', value: 'position', sortable: false},
-                    {text: 'Отделение', value: 'subdivision', sortable: false},
-                    {text: 'Действия', value: 'action', sortable: false}
+                    {text: 'Номер пользователя', align: 'left', sortable: false, value: 'id_user', class:'id_cell'},
+                    {text: 'Логин', sortable: false, value: 'login', class:'links'},
+                    {text: 'Пароль', value: 'password', sortable: false, class:'comments'},
+                    {text: 'Статус', value: 'profile_status', sortable: false, class:'status'},
+                    {text: 'ФИО', value: 'fio', sortable: false, class:'responsible'},
+                    {text: 'Телефон', value: 'phone_number', sortable: false, class:'name_partner'},
+                    {text: 'Почта', value: 'email', sortable: false, class:'action_cell'},
+                    {text: 'Позиция', value: 'position', sortable: false, class:'placement'},
+                    {text: 'Отделение', value: 'subdivision', sortable: false, class:'type'},
+                    {text: 'Действия', value: 'action', sortable: false, class:'action_cell'}
                 ],
                 rows: [],
                 addIndex: -1,

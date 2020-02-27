@@ -30,6 +30,26 @@
           :search="search"
           hide-default-footer
         >
+          <template #item="rows">
+            <tr>
+              <td class="id_cell">{{ rows.item.id_object }}</td>
+              <td class="type">{{ rows.item.type }}</td>
+              <td class="name_partner">{{ rows.item.name_obj }}</td>
+              <td class="data_cell">{{ rows.item.data_for_exploitation }}</td>
+              <td class="id_cell">{{ rows.item.id_obj_contract }}</td>
+              <td class="rent_cell">{{ rows.item.rent }}</td>
+              <td class="adress">{{ rows.item.adress }}</td>
+              <td class="links">{{ rows.item.links }}</td>
+              <td class="comments">{{ rows.item.comments }}</td>
+              <td class="coords">{{ rows.item.coordinates[0] }} - {{ rows.item.coordinates[1] }}</td>
+              <td class="status">{{ rows.item.status }}</td>
+              <td class="responsible">{{ rows.item.responsible }}</td>
+              <td class="action_cell">
+                <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
+                <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
+              </td>
+            </tr>
+          </template>
           <template v-slot:top>
             <v-toolbar
               flat
@@ -385,23 +405,8 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.action="{ item }">
-            <v-icon
-              small
-              class="mr-2"
-              @click="dialogEdit(item)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
         </v-data-table>
-        <div class="footer-table">
+        <div class="footer-table rent_cell">
           <div class="average_title">
             Средняя стоимость:
           </div>
@@ -437,19 +442,19 @@
                     {id: 'error', text: 'Отключен'},
                 ],
                 headers: [
-                    {text: 'Номер объекта', align: 'left', sortable: false, value: 'id_object',},
-                    {text: 'Тип объекта', sortable: false, value: 'type',},
-                    {text: 'Имя объекта', value: 'name_obj', sortable: false},
-                    {text: 'Дата ввода в эксплуатацию', value: 'data_for_exploitation', sortable: false},
-                    {text: 'Номер договора', value: 'id_obj_contract', sortable: false},
-                    {text: 'Арендная плата', value: 'rent', sortable: false},
-                    {text: 'Адрес', value: 'adress', sortable: false},
-                    {text: 'Ссылки', value: 'links', sortable: false},
-                    {text: 'Комментарии', value: 'comments', sortable: false},
-                    {text: 'Координаты', sortable: false, value: 'coordinates',},
-                    {text: 'Статус работы', value: 'status', sortable: false},
-                    {text: 'Ответственный', value: 'responsible', sortable: false},
-                    {text: 'Действия', value: 'action', sortable: false},
+                    {text: 'Номер объекта', sortable: false, value: 'id_object', class: 'id_cell'},
+                    {text: 'Тип объекта', sortable: false, value: 'type', class: 'type'},
+                    {text: 'Имя объекта', value: 'name_obj', sortable: false, class: 'name_partner'},
+                    {text: 'Дата ввода в эксплуатацию', value: 'data_for_exploitation', sortable: false, class: 'data_cell'},
+                    {text: 'Номер договора', value: 'id_obj_contract', sortable: false, class: 'id_cell'},
+                    {text: 'Арендная плата', value: 'rent', sortable: false, class: 'rent_cell'},
+                    {text: 'Адрес', value: 'adress', sortable: false, class: 'adress'},
+                    {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
+                    {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
+                    {text: 'Координаты', sortable: false, value: 'coordinates', class: 'coords'},
+                    {text: 'Статус работы', value: 'status', sortable: false, class: 'status'},
+                    {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
+                    {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'},
                 ],
                 rows: [],
                 addIndex: -1,

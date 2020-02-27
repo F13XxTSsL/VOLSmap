@@ -44,7 +44,7 @@
             <nav class="menu grey darken-3">
                 <router-link tag="li" to="/home"><v-icon dark class="icon fas fa-globe"></v-icon>Карта</router-link>
                 <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Котрагенты</router-link>
-                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договоры</router-link>
+                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договора</router-link>
                 <router-link tag="li" to="/objects"><v-icon dark class="icon fas fa-satellite-dish"></v-icon>Объекты</router-link>
                 <router-link tag="li" to="/line_objects"><v-icon dark class="icon fas fa-satellite"></v-icon>Линейные объекты</router-link>
                 <router-link tag="li" to="/profiles"><v-icon dark class="icon fas fa-user"></v-icon>Пользователи</router-link>
@@ -55,7 +55,7 @@
             <nav class="menu grey darken-3">
                 <router-link tag="li" to="/home"><v-icon dark class="icon fas fa-globe"></v-icon>Карта</router-link>
                 <router-link tag="li" to="/partners"><v-icon dark class="icon fas fa-handshake"></v-icon>Котрагенты</router-link>
-                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договоры</router-link>
+                <router-link tag="li" to="/contracts"><v-icon dark class="icon fas fa-file-contract"></v-icon>Договора</router-link>
                 <router-link tag="li" to="/">
                     <span @click="logOut"><v-icon dark class="icon fas fa-sign-out-alt"></v-icon>Выйти</span>
                 </router-link>

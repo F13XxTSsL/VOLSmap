@@ -28,6 +28,28 @@
           id="exportable"
           hide-default-footer
         >
+
+          <template #item="rows">
+            <tr>
+              <td class="id_cell">{{ rows.item.id_line_object }}</td>
+              <td class="name_partner">{{ rows.item.name }}</td>
+              <td class="distance">{{ rows.item.distance }}</td>
+              <td class="rent_cell">{{ rows.item.rent }}</td>
+              <td class="rent_cell_one">{{ rows.item.cost_rent }}</td>
+              <td class="start_point">{{ rows.item.startPoint }}</td>
+              <td class="end_point">{{ rows.item.endPoint }}</td>
+              <td class="id_cell">{{ rows.item.id_contract }}</td>
+              <td class="links">{{ rows.item.links }}</td>
+              <td class="comments">{{ rows.item.comments }}</td>
+              <td class="status">{{ rows.item.status }}</td>
+              <td class="placement">{{ rows.item.placement }}</td>
+              <td class="responsible">{{ rows.item.responsible }}</td>
+              <td class="action_cell">
+                <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
+                <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
+              </td>
+            </tr>
+          </template>
           <template v-slot:top>
             <v-toolbar
               flat
@@ -217,22 +239,8 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.action="{ item }">
-            <v-icon
-              small
-              @click="dialogEdit(item)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
         </v-data-table>
-        <div class="footer-table">
+        <div class="footer-table rent_cell">
           <div class="average_title">Средняя стоимость:</div>
           <div class="average_value">{{countAverage}} руб.</div>
         </div>
@@ -245,7 +253,6 @@
   import {gmapApi} from 'vue2-google-maps';
   import Helper from "../api/Helper";
   import FileSaver from 'file-saver'
-
   export default {
     computed: {
       google: gmapApi
@@ -272,20 +279,20 @@
           {id: 'error', text: 'Отключен'},
         ],
         headers: [
-          {text: '№', value: 'id_line_object', sortable: false, align: 'left', class: 'object',},
-          {text: 'Имя объекта', value: 'name', sortable: false},
-          {text: 'Расстояние(м)', value: 'distance', sortable: false},
-          {text: 'Арендная плата', value: 'rent', sortable: false},
-          {text: 'Стоимость за 1(м)', value: 'cost_rent'},
-          {text: 'Начало', value: 'startPoint', sortable: false},
-          {text: 'Конец', value: 'endPoint', sortable: false},
-          {text: '№ договора', value: 'id_contract', sortable: false},
-          {text: 'Ссылки', value: 'links', sortable: false},
-          {text: 'Комментарии', value: 'comments', sortable: false},
-          {text: 'Статус работы', value: 'status', sortable: false},
-          {text: 'Тип прокладки', value: 'placement', sortable: false},
-          {text: 'Ответственный', value: 'responsible', sortable: false},
-          {text: 'Действия', value: 'action', sortable: false}
+          {text: '№', value: 'id_line_object', sortable: false, align: 'left', class: 'id_cell', backgroundColor: '#000'},
+          {text: 'Имя объекта', value: 'name', sortable: false, class: 'name_partner'},
+          {text: 'Расстояние(м)', value: 'distance', sortable: false, class: 'distance'},
+          {text: 'Арендная плата', value: 'rent', sortable: false, class: 'rent_cell'},
+          {text: 'Стоимость за 1(м)', value: 'cost_rent', class: 'rent_cell_one'},
+          {text: 'Начало', value: 'startPoint', sortable: false, class: 'start_point'},
+          {text: 'Конец', value: 'endPoint', sortable: false, class: 'end_point'},
+          {text: '№ договора', value: 'id_contract', sortable: false, class: 'id_cell'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
+          {text: 'Статус работы', value: 'status', sortable: false, class: 'status'},
+          {text: 'Тип прокладки', value: 'placement', sortable: false, class: 'placement'},
+          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'}
         ],
         rows: [],
         addIndex: -1,
@@ -557,7 +564,8 @@
     display: flex;
   }
   .footer-table {
-    max-width: 443px;
+    max-width: 467px;
+    padding-right: 41px;
   }
 
 

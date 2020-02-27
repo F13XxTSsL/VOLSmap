@@ -26,6 +26,22 @@
           class="elevation-1"
           :search="search"
         >
+          <template #item="rows">
+            <tr>
+              <td class="id_cell">{{ rows.item.id_contract }}</td>
+              <td class="name_partner">{{ rows.item.data }}</td>
+              <td class="inn_partner">{{ rows.item.id_partner }}</td>
+              <td class="links">{{ rows.item.links }}</td>
+              <td class="comments">{{ rows.item.comments }}</td>
+              <td class="rent_cell">{{ rows.item.rent }}</td>
+              <td class="placement">{{ rows.item.placement }}</td>
+              <td class="responsible">{{ rows.item.responsible }}</td>
+              <td class="action_cell">
+                <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
+                <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
+              </td>
+            </tr>
+          </template>
           <template v-slot:top>
             <v-toolbar
               flat
@@ -323,21 +339,6 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.action="{ item }">
-            <v-icon
-              small
-              class="mr-2"
-              @click="dialogEdit(item)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
         </v-data-table>
       </div>
     </v-container>
@@ -364,15 +365,15 @@
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'Номер договора', align: 'left', sortable: false, value: 'id_contract',},
-          {text: 'Дата', sortable: false, value: 'data',},
-          {text: 'Наименование контрагента', value: 'id_partner', sortable: false},
-          {text: 'Ссылки', value: 'links', sortable: false},
-          {text: 'Комментарии', value: 'comments', sortable: false},
-          {text: 'Оплата', value: 'rent', sortable: false},
-          {text: 'Cпособ прокладки', value: 'placement', sortable: false},
-          {text: 'Ответственный', value: 'responsible', sortable: false},
-          {text: 'Действия', value: 'action', sortable: false}
+          {text: 'Номер договора', sortable: false, value: 'id_contract', class: 'id_cell'},
+          {text: 'Дата', sortable: false, value: 'data', class: 'name_partner'},
+          {text: 'Наименование контрагента', value: 'id_partner', sortable: false, class: 'inn_partner'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
+          {text: 'Оплата', value: 'rent', sortable: false, class: 'rent_cell'},
+          {text: 'Cпособ прокладки', value: 'placement', sortable: false, class: 'placement'},
+          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'}
         ],
         rows: [],
         addIndex: -1,
