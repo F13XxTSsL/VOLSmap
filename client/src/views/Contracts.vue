@@ -211,11 +211,19 @@
                           sm="6"
                           md="6"
                         >
-                          <v-text-field
+                          <v-autocomplete
                             v-model="editItem.id_partner"
+                            :items="partnersNames"
+                            item-text="name"
+                            item-value="id"
+                            :search-input.sync="searchPartnersNames"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
+                            @change="atSelectedPartnersNames($event)"
                             label="Наименование контрагента"
-                            disabled
-                          />
+                          ></v-autocomplete>
                         </v-col>
                         <v-col
                           cols="12"
@@ -382,6 +390,7 @@
         editItem: {
           id_contract: 0,
           data: '',
+          id_partner: '',
           links: '',
           comments: '',
           rent: 0,
@@ -462,16 +471,21 @@
             responsibleSelect = val.id
           }
         })
+        let nameContractSelect = ''
+        this.partnersNames.forEach(val => {
+          if (val.name === item.id_partner) {
+            nameContractSelect = val.id
+          }
+        })
         this.dialogEditWindow = true
         this.editItem.id_contract = item.id_contract
         this.editItem.data = item.data
-        this.editItem.id_partner = item.id_partner
+        this.editItem.id_partner = nameContractSelect
         this.editItem.links = item.links
         this.editItem.comments = item.comments
         this.editItem.rent = item.rent
         this.editItem.placement = Helper.revertTypeDefinion(item.placement)
         this.editItem.responsible = responsibleSelect
-
 
         this.editResponsibleNames = responsibleSelect
         this.editItemsPlacement = Helper.revertTypeDefinion(item.placement)
@@ -481,6 +495,7 @@
           {
             id_contract: this.editItem.id_contract,
             data: this.editItem.data,
+            id_partner: this.selectedSpacerNames ? this.selectedSpacerNames: this.editItem.id_partner,
             links: this.editItem.links,
             comments: this.editItem.comments,
             rent: parseFloat(this.editItem.rent),

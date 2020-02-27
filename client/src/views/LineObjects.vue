@@ -414,7 +414,9 @@
                     const reducer = (accumulator, currentValue) => accumulator + currentValue;
                     rentItems.push(parseFloat(contract.data.rent))
                     let sumRentValue = rentItems.reduce(reducer)
-                    this.countAverage = sumRentValue.toFixed(2)
+                    let sumRentCount = rentItems.length
+                    let sumAverage = sumRentValue / sumRentCount
+                    this.countAverage = sumAverage.toFixed(2)
                     this.loader = false
                   })
                 })

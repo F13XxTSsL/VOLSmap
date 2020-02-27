@@ -1,395 +1,417 @@
 <template>
-    <div class="objects margin__top ">
-        <v-container>
-            <div class="loader" v-if="loader">
-                <v-progress-circular
-                        :size="70"
-                        :width="7"
-                        color="darken"
-                        indeterminate
-                />
-            </div>
-          <div v-else>
-            <v-card>
-                <v-card-title>
-                    <v-text-field
-                            v-model="search"
-                            label="Поиск объекта"
-                            single-line
-                            hide-details
-                    />
-                </v-card-title>
-            </v-card>
-            <v-data-table
-                    :headers="headers"
-                    :items="rows"
-                    class="elevation-1"
-                    :search="search"
-                    hide-default-footer
+  <div class="objects margin__top ">
+    <v-container>
+      <div
+        class="loader"
+        v-if="loader"
+      >
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          color="darken"
+          indeterminate
+        />
+      </div>
+      <div v-else>
+        <v-card>
+          <v-card-title>
+            <v-text-field
+              v-model="search"
+              label="Поиск объекта"
+              single-line
+              hide-details
+            />
+          </v-card-title>
+        </v-card>
+        <v-data-table
+          :headers="headers"
+          :items="rows"
+          class="elevation-1"
+          :search="search"
+          hide-default-footer
+        >
+          <template v-slot:top>
+            <v-toolbar
+              flat
+              color="white"
             >
-                <template v-slot:top>
-                    <v-toolbar
+              <v-toolbar-title>Объекты</v-toolbar-title>
+              <v-divider
+                class="mx-4"
+                inset
+                vertical
+              />
+              <v-spacer />
+              <v-dialog
+                v-model="dialogAdd"
+                max-width="500px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    color="primary"
+                    dark
+                    class="mb-2"
+                    v-on="on"
+                  >
+                    Добавить
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">Добавление объекта</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          md="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="typeObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Тип объекта"
+                            @change="atSelectedType($event)"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="6"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="addItem.id_object"
+                            label="Номер объекта"
+                          />
+                        </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="6"
+                          sm="6"
+                        >
+                          <v-autocomplete
+                            v-model="selectNumberContract"
+                            :items="numberContract"
+                            item-text="name"
+                            item-value="id"
+                            :search-input.sync="searchNumberContract"
+                            cache-items
                             flat
-                            color="white"
-                    >
-                        <v-toolbar-title>Объекты</v-toolbar-title>
-                        <v-divider
-                                class="mx-4"
-                                inset
-                                vertical
-                        />
-                        <v-spacer/>
-                        <v-dialog
-                                v-model="dialogAdd"
-                                max-width="500px"
+                            hide-no-data
+                            hide-details
+                            @change="atSelectedNumberContract($event)"
+                            label="Номер договора"
+                            :disabled="selectedSpacer === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="12"
                         >
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        color="primary"
-                                        dark
-                                        class="mb-2"
-                                        v-on="on"
-                                >
-                                    Добавить
-                                </v-btn>
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Добавление объекта</span>
-                                </v-card-title>
-
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col
-                                                    cols="6"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.id_object"
-                                                        label="Номер объекта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    class="d-flex"
-                                                    cols="6"
-                                                    sm="6"
-                                            >
-                                                <v-autocomplete
-                                                  v-model="selectNumberContract"
-                                                  :items="numberContract"
-                                                  item-text="name"
-                                                  item-value="id"
-                                                  :search-input.sync="searchNumberContract"
-                                                  cache-items
-                                                  flat
-                                                  hide-no-data
-                                                  hide-details
-                                                  @change="atSelectedNumberContract($event)"
-                                                  label="Номер договора"
-                                                ></v-autocomplete>
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.name_obj"
-                                                        label="Имя объекта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    class="d-flex"
-                                                    cols="12"
-                                                    md="12"
-                                                    sm="12"
-                                            >
-                                                <v-select
-                                                        :items="typeObjects"
-                                                        item-text="text"
-                                                        item-value="id"
-                                                        label="Тип объекта"
-                                                        @change="atSelectedType($event)"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    class="d-flex"
-                                                    cols="12"
-                                                    sm="12"
-                                            >
-                                                <v-select
-                                                        :items="statusObjects"
-                                                        item-text="text"
-                                                        item-value="id"
-                                                        label="Статус"
-                                                        @change="atSelectedStatus($event)"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.data_for_exploitation"
-                                                        label="Дата ввода в эксплуатацию"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.coordinate_lat"
-                                                        label="Широта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.coordinate_lng"
-                                                        label="Долгота"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.adress"
-                                                        label="Адрес"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.links"
-                                                        label="Ссылки"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="addItem.comments"
-                                                        label="Комментарии"
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
-
-                                <v-card-actions>
-                                    <v-spacer/>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="close"
-                                    >
-                                        Назад
-                                    </v-btn>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="saveAdd"
-                                    >
-                                        Добавить
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                        <v-dialog
-                                v-model="dialogEditWindow"
-                                max-width="500px"
+                          <v-text-field
+                            v-model="addItem.name_obj"
+                            label="Имя объекта"
+                          />
+                        </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
                         >
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Редактирование объекта</span>
-                                </v-card-title>
+                          <v-select
+                            :items="statusObjects"
+                            item-text="text"
+                            item-value="id"
+                            label="Статус"
+                            @change="atSelectedStatus($event)"
+                            :disabled="selectedSpacer === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="addItem.data_for_exploitation"
+                            label="Дата ввода в эксплуатацию"
+                            :disabled="selectedSpacer === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="addItem.coordinate_lat"
+                            label="Широта"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="addItem.coordinate_lng"
+                            label="Долгота"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="addItem.adress"
+                            label="Адрес"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="addItem.links"
+                            label="Ссылки"
+                            :disabled="selectedSpacer === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="addItem.comments"
+                            label="Комментарии"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.id_object"
-                                                        label="Номер объекта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.id_obj_contract"
-                                                        label="Номер договора"
-                                                        disabled
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.name_obj"
-                                                        label="Имя объекта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.data_for_exploitation"
-                                                        label="Дата ввода в эксплуатацию"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.adress"
-                                                        label="Адрес"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    class="d-flex"
-                                                    cols="12"
-                                                    sm="12"
-                                            >
-                                                <v-select
-                                                        :items="typeObjects"
-                                                        item-text="text"
-                                                        item-value="id"
-                                                        v-model="selectedTypeObjects"
-                                                        label="Тип объекта"
-                                                        @change="atSelectedType($event)"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    class="d-flex"
-                                                    cols="12"
-                                                    sm="12"
-                                            >
-                                                <v-select
-                                                        :items="statusObjects"
-                                                        item-text="text"
-                                                        item-value="id"
-                                                        v-model="selectedStatusObjects"
-                                                        label="Статус"
-                                                        @change="atSelectedStatus($event)"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.coordinate_lat"
-                                                        label="Широта"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="6"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.coordinate_lng"
-                                                        label="Долгота"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.links"
-                                                        label="Ссылки"
-                                                />
-                                            </v-col>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="12"
-                                                    md="12"
-                                            >
-                                                <v-text-field
-                                                        v-model="editItem.comments"
-                                                        label="Комментарии"
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
-
-                                <v-card-actions>
-                                    <v-spacer/>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="close"
-                                    >
-                                        Назад
-                                    </v-btn>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="editItemSave"
-                                    >
-                                        Сохранить
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.action="{ item }">
-                    <v-icon
-                            small
-                            class="mr-2"
-                            @click="dialogEdit(item)"
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="close"
                     >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                            small
-                            @click="deleteItem(item)"
+                      Назад
+                    </v-btn>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="saveAdd"
                     >
-                        mdi-delete
-                    </v-icon>
-                </template>
-            </v-data-table>
-              <div class="footer-table">
-                  <div class="average_title">Средняя стоимость:</div>
-                  <div class="average_value">{{countAverage}} руб.</div>
-              </div>
+                      Добавить
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                v-model="dialogEditWindow"
+                max-width="500px"
+              >
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">Редактирование объекта</span>
+                  </v-card-title>
 
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="typeObjects"
+                            item-text="text"
+                            item-value="id"
+                            v-model="selectedTypeObjects"
+                            label="Тип объекта"
+                            @change="atSelectedType($event)"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="editItem.id_object"
+                            label="Номер объекта"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-autocomplete
+                            v-model="editItem.id_obj_contract"
+                            :items="numberContract"
+                            item-text="name"
+                            item-value="id"
+                            :search-input.sync="searchNumberContract"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
+                            @change="atSelectedNumberContract($event)"
+                            label="Номер договора"
+                            :disabled="editItem.type === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="editItem.name_obj"
+                            label="Имя объекта"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="editItem.data_for_exploitation"
+                            label="Дата ввода в эксплуатацию"
+                            :disabled="editItem.type === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="editItem.adress"
+                            label="Адрес"
+                          />
+                        </v-col>
+                        <v-col
+                          class="d-flex"
+                          cols="12"
+                          sm="12"
+                        >
+                          <v-select
+                            :items="statusObjects"
+                            item-text="text"
+                            item-value="id"
+                            v-model="selectedStatusObjects"
+                            label="Статус"
+                            @change="atSelectedStatus($event)"
+                            :disabled="editItem.type === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="editItem.coordinate_lat"
+                            label="Широта"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                        >
+                          <v-text-field
+                            v-model="editItem.coordinate_lng"
+                            label="Долгота"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="editItem.links"
+                            label="Ссылки"
+                            :disabled="editItem.type === 'Coupling'"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                        >
+                          <v-text-field
+                            v-model="editItem.comments"
+                            label="Комментарии"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="close"
+                    >
+                      Назад
+                    </v-btn>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="editItemSave"
+                    >
+                      Сохранить
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-toolbar>
+          </template>
+          <template v-slot:item.action="{ item }">
+            <v-icon
+              small
+              class="mr-2"
+              @click="dialogEdit(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+          </template>
+        </v-data-table>
+        <div class="footer-table">
+          <div class="average_title">
+            Средняя стоимость:
           </div>
-        </v-container>
-    </div>
+          <div class="average_value">
+            {{ countAverage }} руб.
+          </div>
+        </div>
+      </div>
+    </v-container>
+  </div>
 </template>
 <script>
     import axios from 'axios'
@@ -525,7 +547,9 @@
                                 const reducer = (accumulator, currentValue) => accumulator + currentValue;
                                 rentItems.push(parseFloat(contract.data.rent))
                                 let sumRentValue = rentItems.reduce(reducer)
-                                this.countAverage = sumRentValue.toFixed(2)
+                                let sumRentCount = rentItems.length
+                                let resultAverage = sumRentValue / sumRentCount
+                                this.countAverage = resultAverage.toFixed(2)
                                 this.loader = false
                             })
                         })
@@ -577,6 +601,7 @@
                             type: "Point",
                             coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
                         },
+                        id_obj_contract: this.selectedNumberContract ? this.selectedNumberContract : this.editItem.id_obj_contract || null,
                         comments: this.editItem.comments,
                         rent: this.editItem.rent,
                         status: this.selectedSpacer2 ? this.selectedSpacer2 : this.editItem.status,
@@ -624,7 +649,7 @@
                         type: "Point",
                         coordinates: [this.addItem.coordinate_lat, this.addItem.coordinate_lng]
                     },
-                    id_obj_contract: this.selectedNumberContract,
+                    id_obj_contract: this.selectedNumberContract ? this.selectedNumberContract : null,
                     comments: this.addItem.comments,
                     status: this.selectedSpacer2,
                     name_obj: this.addItem.name_obj,
@@ -633,10 +658,10 @@
                     links: this.addItem.links
                 }).then((res) => {
                     this.addItem.id_object = this.editItem.id_object,
-                        this.addItem.type = '',
-                        this.addItem.id_obj_contract =  this.selectedNumberContract,
-                        this.addItem.comments = '',
-                        this.addItem.status = ''
+                    this.addItem.type = '',
+                    this.addItem.id_obj_contract = this.selectedNumberContract ? this.selectedNumberContract : null,
+                    this.addItem.comments = '',
+                    this.addItem.status = ''
                     this.addItem.name_obj = ''
                     this.addItem.data_for_exploitation = ''
                     this.addItem.adress = ''
