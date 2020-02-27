@@ -28,15 +28,15 @@
         >
           <template #item="rows">
             <tr>
-              <td class="id_cell">{{ rows.item.id_contract }}</td>
-              <td class="name_partner">{{ rows.item.data }}</td>
-              <td class="inn_partner">{{ rows.item.id_partner }}</td>
-              <td class="links">{{ rows.item.links }}</td>
-              <td class="comments">{{ rows.item.comments }}</td>
-              <td class="rent_cell">{{ rows.item.rent }}</td>
-              <td class="placement">{{ rows.item.placement }}</td>
-              <td class="responsible">{{ rows.item.responsible }}</td>
-              <td class="action_cell">
+              <td class="table-cell id_cell">{{ rows.item.id_contract }}</td>
+              <td class="table-cell name_partner">{{ rows.item.data }}</td>
+              <td class="table-cell inn_partner"><span @click="emitIdPartner(rows.item.id_partner)">{{ rows.item.id_partner }}</span></td>
+              <td class="table-cell links">{{ rows.item.links }}</td>
+              <td class="table-cell comments">{{ rows.item.comments }}</td>
+              <td class="table-cell rent_cell">{{ rows.item.rent }}</td>
+              <td class="table-cell placement">{{ rows.item.placement }}</td>
+              <td class="table-cell responsible">{{ rows.item.responsible }}</td>
+              <td class="table-cell action_cell">
                 <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
                 <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
               </td>
@@ -347,6 +347,8 @@
 <script>
   import axios from 'axios'
   import Helper from "../api/Helper";
+  import EventBus from "../components/EventBus";
+  import router from "../router";
 
   export default {
     data() {
@@ -365,15 +367,15 @@
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'Номер договора', sortable: false, value: 'id_contract', class: 'id_cell'},
-          {text: 'Дата', sortable: false, value: 'data', class: 'name_partner'},
-          {text: 'Наименование контрагента', value: 'id_partner', sortable: false, class: 'inn_partner'},
-          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
-          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
-          {text: 'Оплата', value: 'rent', sortable: false, class: 'rent_cell'},
-          {text: 'Cпособ прокладки', value: 'placement', sortable: false, class: 'placement'},
-          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
-          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'}
+          {text: 'Номер договора', sortable: false, value: 'id_contract', class: 'id_cell', align: 'center'},
+          {text: 'Дата', sortable: false, value: 'data', class: 'name_partner', align: 'center'},
+          {text: 'Наименование контрагента', value: 'id_partner', sortable: false, class: 'inn_partner', align: 'center'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links', align: 'center'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments', align: 'center'},
+          {text: 'Оплата', value: 'rent', sortable: false, class: 'rent_cell', align: 'center'},
+          {text: 'Cпособ прокладки', value: 'placement', sortable: false, class: 'placement', align: 'center'},
+          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible', align: 'center'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell', align: 'center'}
         ],
         rows: [],
         addIndex: -1,
@@ -431,6 +433,10 @@
       })
     },
     methods: {
+      emitIdPartner(id) {
+        EventBus.$emit('emitIdPartner', id)
+        router.push({name: 'partners'})
+      },
       getPartners() {
         axios.get('http://localhost:3000/contracts').then(response => {
           this.initialize(response.data)
@@ -496,7 +502,7 @@
           {
             id_contract: this.editItem.id_contract,
             data: this.editItem.data,
-            id_partner: this.selectedSpacerNames ? this.selectedSpacerNames: this.editItem.id_partner,
+            id_partner: this.selectedSpacerNames ? this.selectedSpacerNames : this.editItem.id_partner,
             links: this.editItem.links,
             comments: this.editItem.comments,
             rent: parseFloat(this.editItem.rent),
@@ -553,11 +559,11 @@
           console.log(err)
         })
         this.close()
-      },
+      }
     },
   }
 </script>
-<style>
+<style lang="scss" scoped>
   .container {
     position: relative;
   }
@@ -569,5 +575,13 @@
     align-self: center;
     width: 100%;
     top: 40%;
+  }
+
+  .inn_partner {
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(240, 244, 195, 0.6);
+    }
   }
 </style>

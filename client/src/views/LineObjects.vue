@@ -28,23 +28,22 @@
           id="exportable"
           hide-default-footer
         >
-
           <template #item="rows">
             <tr>
-              <td class="id_cell">{{ rows.item.id_line_object }}</td>
-              <td class="name_partner">{{ rows.item.name }}</td>
-              <td class="distance">{{ rows.item.distance }}</td>
-              <td class="rent_cell">{{ rows.item.rent }}</td>
-              <td class="rent_cell_one">{{ rows.item.cost_rent }}</td>
-              <td class="start_point">{{ rows.item.startPoint }}</td>
-              <td class="end_point">{{ rows.item.endPoint }}</td>
-              <td class="id_cell">{{ rows.item.id_contract }}</td>
-              <td class="links">{{ rows.item.links }}</td>
-              <td class="comments">{{ rows.item.comments }}</td>
-              <td class="status">{{ rows.item.status }}</td>
-              <td class="placement">{{ rows.item.placement }}</td>
-              <td class="responsible">{{ rows.item.responsible }}</td>
-              <td class="action_cell">
+              <td class="table-cell id_cell">{{ rows.item.id_line_object }}</td>
+              <td class="table-cell name_partner">{{ rows.item.name }}</td>
+              <td class="table-cell distance">{{ rows.item.distance }}</td>
+              <td class="table-cell rent_cell">{{ rows.item.rent }}</td>
+              <td class="table-cell rent_cell_one">{{ rows.item.cost_rent }}</td>
+              <td class="table-cell start_point">{{ rows.item.startPoint }}</td>
+              <td class="table-cell end_point">{{ rows.item.endPoint }}</td>
+              <td class="table-cell id_cell">{{ rows.item.id_contract }}</td>
+              <td class="table-cell links">{{ rows.item.links }}</td>
+              <td class="table-cell comments">{{ rows.item.comments }}</td>
+              <td class="table-cell status">{{ rows.item.status }}</td>
+              <td class="table-cell placement">{{ rows.item.placement }}</td>
+              <td class="table-cell responsible">{{ rows.item.responsible }}</td>
+              <td class="table-cell action_cell">
                 <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
                 <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
               </td>
@@ -279,20 +278,20 @@
           {id: 'error', text: 'Отключен'},
         ],
         headers: [
-          {text: '№', value: 'id_line_object', sortable: false, align: 'left', class: 'id_cell', backgroundColor: '#000'},
-          {text: 'Имя объекта', value: 'name', sortable: false, class: 'name_partner'},
-          {text: 'Расстояние(м)', value: 'distance', sortable: false, class: 'distance'},
-          {text: 'Арендная плата', value: 'rent', sortable: false, class: 'rent_cell'},
-          {text: 'Стоимость за 1(м)', value: 'cost_rent', class: 'rent_cell_one'},
-          {text: 'Начало', value: 'startPoint', sortable: false, class: 'start_point'},
-          {text: 'Конец', value: 'endPoint', sortable: false, class: 'end_point'},
-          {text: '№ договора', value: 'id_contract', sortable: false, class: 'id_cell'},
-          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
-          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
-          {text: 'Статус работы', value: 'status', sortable: false, class: 'status'},
-          {text: 'Тип прокладки', value: 'placement', sortable: false, class: 'placement'},
-          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
-          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'}
+          {text: '№', value: 'id_line_object', sortable: false, align: 'left', class: 'id_cell', align: 'center'},
+          {text: 'Имя объекта', value: 'name', sortable: false, class: 'name_partner', align: 'center'},
+          {text: 'Расстояние(м)', value: 'distance', sortable: false, class: 'distance', align: 'center'},
+          {text: 'Арендная плата', value: 'rent', sortable: false, class: 'rent_cell', align: 'center'},
+          {text: 'Стоимость за 1(м)', value: 'cost_rent', class: 'rent_cell_one', align: 'center'},
+          {text: 'Начало', value: 'startPoint', sortable: false, class: 'start_point', align: 'center'},
+          {text: 'Конец', value: 'endPoint', sortable: false, class: 'end_point', align: 'center'},
+          {text: '№ договора', value: 'id_contract', sortable: false, class: 'id_cell', align: 'center'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links', align: 'center'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments', align: 'center'},
+          {text: 'Статус работы', value: 'status', sortable: false, class: 'status', align: 'center'},
+          {text: 'Тип прокладки', value: 'placement', sortable: false, class: 'placement', align: 'center'},
+          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible', align: 'center'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell', align: 'center'}
         ],
         rows: [],
         addIndex: -1,
@@ -565,8 +564,9 @@
   }
   .footer-table {
     max-width: 467px;
-    padding-right: 41px;
+    padding-right: 29px;
   }
+
 
 
   /*.object {*/

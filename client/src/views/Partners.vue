@@ -29,13 +29,13 @@
         >
           <template #item="rows">
             <tr>
-              <td class="id_cell">{{ rows.item.id_partner }}</td>
-              <td class="name_partner">{{ rows.item.name }}</td>
-              <td class="inn_partner">{{ rows.item.INN }}</td>
+              <td class="table-cell id_cell">{{ rows.item.id_partner }}</td>
+              <td class="table-cell name_partner">{{ rows.item.name }}</td>
+              <td class="table-cell inn_partner">{{ rows.item.INN }}</td>
               <td class="contacts_partner">{{ rows.item.contacts }}</td>
-              <td class="comments">{{ rows.item.comments }}</td>
-              <td class="links">{{ rows.item.links }}</td>
-              <td class="action_cell">
+              <td class="table-cell comments">{{ rows.item.comments }}</td>
+              <td class="table-cell links">{{ rows.item.links }}</td>
+              <td class="table-cell action_cell">
                 <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }} mdi-pencil</v-icon>
                 <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete</v-icon>
               </td>
@@ -272,13 +272,13 @@
         dialogAdd: false,
         dialogEditWindow: false,
         headers: [
-          {text: 'Номер контрагента', sortable: false, value: 'id_partner', class: 'id_cell'},
-          {text: 'Наименование', sortable: false, value: 'name', class: 'name_partner'},
-          {text: 'ИНН', value: 'INN', sortable: false, class: 'inn_partner'},
+          {text: 'Номер контрагента', sortable: false, value: 'id_partner', class: 'id_cell', align: 'center'},
+          {text: 'Наименование', sortable: false, value: 'name', class: 'name_partner', align: 'center'},
+          {text: 'ИНН', value: 'INN', sortable: false, class: 'inn_partner', align: 'center'},
           {text: 'Контакты', value: 'contacts', sortable: false, class: 'contacts_partner'},
-          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
-          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
-          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments', align: 'center'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links', align: 'center'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell', align: 'center'},
         ],
         rows: [],
         addIndex: -1,
@@ -317,8 +317,15 @@
     },
     mounted() {
       this.getPartners()
+      this.onIdPartner()
     },
     methods: {
+      onIdPartner () {
+        this.search = ''
+        EventBus.$on('emitIdPartner', (id) => {
+          this.search = id
+        })
+      },
       getPartners() {
         axios.get('http://localhost:3000/partners').then(response => {
           this.initialize(response.data)
