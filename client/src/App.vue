@@ -22,8 +22,12 @@ export default {
   .margin__top {
     margin-top: 100px;
   }
+  .v-application {
+    font-family: 'Montserrat',sans-serif!important;
+  }
   body {
     overflow: hidden;
+
     &::-webkit-scrollbar { display: none}
   }
   .loader{
@@ -45,67 +49,26 @@ export default {
     max-width: 830px;
     border-radius: 0px 0px 5px 5px;
   }
-  .table-cell {
-    text-align: center;
-  }
   .v-application--is-ltr .v-data-table th {
     white-space: nowrap;
   }
-  .id_cell {
-    background-color: #FFE0B2;
+  thead {
+    tr {
+      background:  rgba(73, 138, 184, 0.8);
+      th {
+        span {
+          color: #fff;
+          font-size: 14px;
+          font-weight: 400;
+        }
+      }
+    }
   }
-  .name_partner {
-    background-color: #C8E6C9;
-  }
-  .inn_partner {
-    background-color: #F0F4C3;
-  }
-  .contacts_partner {
-    background-color: #B3E5FC;
-  }
-  .comments {
-    background-color: #D1C4E9;
-  }
-  .links {
-    background-color: #F8BBD0;
-  }
-  .action_cell {
-    background-color: #FFCDD2;
-  }
-  .data_cell {
-   background-color: #FFCCBC;
-  }
-  .rent_cell {
-    background-color: #FFF9C4;
-  }
-  .rent_cell_one {
-    background-color: #FFFDE7;
-  }
-  .placement {
-    background-color: #B2DFDB;
-  }
-  .responsible {
-    background-color: #D7CCC8;
-  }
-  .type {
-    background-color: #FFECB3;
-  }
-  .adress {
-    background-color: #B2EBF2;
-  }
-  .status {
-    background-color: #C5CAE9;
-  }
-  .coords {
-    background-color: #F0F4C3;
-  }
-  .distance {
-    background-color: #99CCCC;
-  }
-  .start_point {
-    background-color: rgb(220, 237, 200);
-  }
-  .end_point {
-    background-color: rgb(200, 230, 201);
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background: rgba(77, 77, 77, 0.1);
+      }
+    }
   }
 </style>
