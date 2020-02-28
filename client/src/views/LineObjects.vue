@@ -276,7 +276,7 @@
                 searchNumberPointTwo: null,
                 selectNumberContract: '',
                 searchNumberContract: null,
-                loader: true,
+                loader: false,
                 search: '',
                 dialogAdd: false,
                 dialogEditWindow: false,

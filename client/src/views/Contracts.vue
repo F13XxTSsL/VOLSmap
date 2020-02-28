@@ -416,7 +416,7 @@
         responsibleNames: [],
         editResponsibleNames: '',
         editItemsPlacement: '',
-        loader: true
+        loader: false
       }
     },
     mounted() {

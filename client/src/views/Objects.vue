@@ -525,7 +525,7 @@
         numberContract: [],
         selectedTypeObjects: '',
         selectedStatusObjects: '',
-        loader: true,
+        loader: false,
         countAverage: '0.00'
       }
     },
