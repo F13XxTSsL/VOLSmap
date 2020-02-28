@@ -138,5 +138,42 @@ export default {
       sumCoordLatLng = newArrCoordLatLng.reduce((total, amount) => total + amount)
     }
    return sumCoordLatLng
+  },
+  iconType(status, type) {
+    if (type === 'BTS' && status === 'active') {
+      return {
+        url: require('../assets/bs.svg'),
+        size: {width: 40, height: 40, f: 'px', b: 'px'},
+        scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
+      }
+    }
+    if (type === 'BTS' && status === 'construction') {
+      return {
+        url: require('../assets/bs_construction.svg'),
+        size: {width: 40, height: 40, f: 'px', b: 'px'},
+        scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
+      }
+    }
+    if (type === 'BTS' && status === 'error') {
+      return {
+        url: require('../assets/bs_error.svg'),
+        size: {width: 40, height: 40, f: 'px', b: 'px'},
+        scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
+      }
+    }
+    if (type === 'Switch') {
+      return {
+        url: require('../assets/commutator.svg'),
+        size: {width: 30, height: 30, f: 'px', b: 'px'},
+        scaledSize: {width: 30, height: 30, f: 'px', b: 'px',}
+      }
+    }
+    if (type === 'Controller') {
+      return {
+        url: require('../assets/controller.svg'),
+        size: {width: 35, height: 35, f: 'px', b: 'px'},
+        scaledSize: {width: 35, height: 35, f: 'px', b: 'px',}
+      }
+    }
   }
 }

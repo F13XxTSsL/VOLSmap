@@ -36,7 +36,6 @@ router.get("/line_objects_all_object", (req, res) => {
 })
 
 router.post("/line_objects_all", (req, res) => {
-  console.log(req.body)
   if(!req.body) {
     res.status(400)
     res.json({

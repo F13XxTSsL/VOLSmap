@@ -71,4 +71,23 @@ export default {
       }
     }
   }
+  .v-dialog__content {
+    .map__wrapper {
+      .help__wrapper {
+        display: none;
+      }
+      .title_volsmap {
+        display: none;
+      }
+      .close {
+        display: none;
+      }
+      .theme--dark.v-data-table {
+        display: none;
+        .leftTableStatic {
+          display: none;
+        }
+      }
+    }
+  }
 </style>
