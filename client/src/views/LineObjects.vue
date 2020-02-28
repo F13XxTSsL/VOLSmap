@@ -281,7 +281,7 @@
                 dialogAdd: false,
                 dialogEditWindow: false,
                 itemsPlacement: [
-                    {id: 'indoor', text: 'В помещении'},
+                    {id: 'indoor', text: 'Кровля'},
                     {id: 'sewage', text: 'В канализации'},
                     {id: 'prop', text: 'На опорах'},
                     {id: 'roof', text: 'По земле'}

@@ -361,21 +361,21 @@
         dialogAdd: false,
         dialogEditWindow: false,
         itemsPlacement: [
-          {id: 'indoor', text: 'В помещении'},
+          {id: 'indoor', text: 'Кровля'},
           {id: 'sewage', text: 'В канализации'},
           {id: 'prop', text: 'На опорах'},
           {id: 'roof', text: 'По земле'}
         ],
         headers: [
-          {text: 'Номер договора', sortable: false, value: 'id_contract', class: 'id_cell', align: 'center'},
-          {text: 'Дата', sortable: false, value: 'data', class: 'name_partner', align: 'center'},
-          {text: 'Наименование контрагента', value: 'id_partner', sortable: false, class: 'inn_partner', align: 'center'},
-          {text: 'Ссылки', value: 'links', sortable: false, class: 'links', align: 'center'},
-          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments', align: 'center'},
-          {text: 'Оплата', value: 'rent', sortable: false, class: 'rent_cell', align: 'center'},
-          {text: 'Cпособ прокладки', value: 'placement', sortable: false, class: 'placement', align: 'center'},
-          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible', align: 'center'},
-          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell', align: 'center'}
+          {text: '№', sortable: false, value: 'id_contract', class: 'id_cell'},
+          {text: 'Дата', sortable: false, value: 'data', class: 'name_partner'},
+          {text: 'Наименование контрагента', value: 'id_partner', sortable: false, class: 'inn_partner'},
+          {text: 'Ссылки', value: 'links', sortable: false, class: 'links'},
+          {text: 'Комментарии', value: 'comments', sortable: false, class: 'comments'},
+          {text: 'Оплата', value: 'rent', sortable: false, class: 'rent_cell'},
+          {text: 'Cпособ прокладки', value: 'placement', sortable: false, class: 'placement'},
+          {text: 'Ответственный', value: 'responsible', sortable: false, class: 'responsible'},
+          {text: 'Действия', value: 'action', sortable: false, class: 'action_cell'}
         ],
         rows: [],
         addIndex: -1,

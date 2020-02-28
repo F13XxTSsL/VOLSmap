@@ -1,7 +1,7 @@
 export default {
   typeDefinion(type) {
     if (type === 'indoor') {
-      return type = 'В помещении'
+      return type = 'Кровля'
     }
     if (type === 'sewage') {
       return type = 'В канализации'
@@ -14,7 +14,7 @@ export default {
     }
   },
   revertTypeDefinion(type) {
-    if (type === 'В помещении') {
+    if (type === 'Кровля') {
       return type = 'indoor'
     }
     if (type === 'В канализации') {

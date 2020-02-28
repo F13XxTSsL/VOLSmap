@@ -272,7 +272,7 @@
         dialogAdd: false,
         dialogEditWindow: false,
         headers: [
-          {text: 'Номер контрагента', sortable: false, value: 'id_partner', class: 'id_cell'},
+          {text: '№', sortable: false, value: 'id_partner', class: 'id_cell'},
           {text: 'Наименование', sortable: false, value: 'name', class: 'name_partner'},
           {text: 'ИНН', value: 'INN', sortable: false, class: 'inn_partner'},
           {text: 'Контакты', value: 'contacts', sortable: false, class: 'contacts_partner'},
@@ -399,7 +399,7 @@
           comments: this.addItem.comments,
           links: this.addItem.links
         }).then((res) => {
-          this.addItem.id_partner = this.editedItem.id_partner,
+          this.addItem.id_partner = this.editItem.id_partner,
             this.addItem.name = '',
             this.addItem.INN = 0,
             this.addItem.contacts = '',

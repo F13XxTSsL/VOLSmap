@@ -52,6 +52,9 @@
         &::-webkit-scrollbar { width: 5px; height: 3px;}
         &::-webkit-scrollbar-track {  background: rgba(255, 255, 255, 0.48);}
         &::-webkit-scrollbar-thumb { height: 10px; background-color: rgba(0, 0, 0, 0.77); border: none;}
+        thead tr {
+            background-color: inherit;
+        }
     }
 
     .leftTableStatic .v-icon.notranslate.fas.fa-times.theme--dark {
