@@ -12,13 +12,10 @@
             :hide-default-footer="true"
     ></v-data-table>
 </template>
-
 <script>
     export default {
         props: {
-            rows: {
-                type: Array
-            },
+            rows: {type: Array},
         },
         data() {
             return {

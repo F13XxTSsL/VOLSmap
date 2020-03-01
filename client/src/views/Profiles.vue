@@ -353,8 +353,8 @@
                     {text: 'ФИО', value: 'fio', sortable: false, class:'responsible'},
                     {text: 'Телефон', value: 'phone_number', sortable: false, class:'name_partner'},
                     {text: 'Почта', value: 'email', sortable: false, class:'action_cell'},
-                    {text: 'Позиция', value: 'position', sortable: false, class:'placement'},
-                    {text: 'Отделение', value: 'subdivision', sortable: false, class:'type'},
+                    {text: 'Должность', value: 'position', sortable: false, class:'placement'},
+                    {text: 'Подразделение', value: 'subdivision', sortable: false, class:'type'},
                     {text: 'Действия', value: 'action', sortable: false, class:'action_cell'}
                 ],
                 rows: [],

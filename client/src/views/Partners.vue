@@ -53,108 +53,50 @@
                 vertical
               />
               <v-spacer/>
-              <v-dialog
-                v-model="dialogAdd"
-                max-width="500px"
-              >
+              <v-dialog v-model="dialogAdd" max-width="500px">
                 <template v-slot:activator="{ on }">
-                  <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
+                  <v-btn color="primary" dark class="mb-2"
                     v-on="on"
                   >
                     Добавить
                   </v-btn>
                 </template>
+
                 <v-card>
+
                   <v-card-title>
                     <span class="headline">Добавление контрагента</span>
                   </v-card-title>
-
                   <v-card-text>
                     <v-container>
                       <v-row>
-                        <v-col
-                          cols="12"
-                          sm="6"
-                          md="6"
-                        >
-                          <v-text-field
-                            v-model="addItem.id_partner"
-                            label="Номер контрагента"
-                          />
+                        <v-col cols="12" sm="6" md="6">
+                          <v-text-field v-model="addItem.id_partner" label="Номер контрагента"/>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          sm="6"
-                          md="6"
-                        >
-                          <v-text-field
-                            v-model="addItem.name"
-                            label="Наименование"
-                          />
+                        <v-col cols="12" sm="6" md="6">
+                          <v-text-field v-model="addItem.name" label="Наименование"/>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          sm="12"
-                          md="12"
-                        >
-                          <v-text-field
-                            v-model="addItem.INN"
-                            label="ИНН"
-                          />
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field v-model="addItem.INN" label="ИНН"/>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          sm="12"
-                          md="12"
-                        >
-                          <v-text-field
-                            v-model="addItem.contacts"
-                            label="Контакты"
-                          />
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field v-model="addItem.contacts" label="Контакты"/>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          sm="12"
-                          md="12"
-                        >
-                          <v-text-field
-                            v-model="addItem.comments"
-                            label="Комментарии"
-                          />
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field v-model="addItem.comments" label="Комментарии"/>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          sm="12"
-                          md="12"
-                        >
-                          <v-text-field
-                            v-model="addItem.links"
-                            label="Ссылки"
-                          />
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field v-model="addItem.links" label="Ссылки"/>
                         </v-col>
                       </v-row>
                     </v-container>
+
                   </v-card-text>
 
                   <v-card-actions>
                     <v-spacer/>
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="close"
-                    >
-                      Назад
-                    </v-btn>
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="saveAdd"
-                    >
-                      Добавить
-                    </v-btn>
+                    <v-btn color="blue darken-1" text @click="close">Назад</v-btn>
+                    <v-btn color="blue darken-1" text @click="saveAdd">Добавить</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -380,7 +322,6 @@
         if (result) {
           axios.delete(`http://localhost:3000/partners/${item.id_partner}`)
         }
-
       },
       close() {
         this.dialogAdd = false

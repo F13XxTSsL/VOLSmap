@@ -2,65 +2,35 @@
   <div class="login">
     <v-app id="inspire">
       <v-content>
-        <v-container
-          class="fill-height"
-          fluid
-        >
+        <v-container class="fill-height" fluid>
+
           <v-dialog class="error" v-model="dialogError" width="350px">
             <v-alert type="error">
               {{ textError }}
             </v-alert>
           </v-dialog>
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-col
-              cols="12"
-              sm="8"
-              md="4"
-            >
+
+          <v-row align="center" justify="center">
+            <v-col cols="12" sm="8" md="4">
+
               <v-card class="elevation-12">
-                <v-toolbar
-                  color="darken-3"
-                  dark
-                  flat
-                >
+                <v-toolbar color="darken-3" dark flat>
                   <v-toolbar-title>Форма входа</v-toolbar-title>
                   <v-spacer/>
                 </v-toolbar>
                 <v-card-text>
                   <v-form @submit.prevent="loginIn">
-                    <v-text-field
-                      label="Ваш логин"
-                      name="login"
-                      v-model="login"
-                      type="text"
-                      prepend-icon="fas fa-user-alt"
-                    />
-
-                    <v-text-field
-                      id="password"
-                      label="Ваш пароль"
-                      v-model="password"
-                      name="password"
-                      type="password"
-                      prepend-icon="fas fa-key"
-                    />
+                    <v-text-field label="Ваш логин" name="login" v-model="login" type="text" prepend-icon="fas fa-user-alt"/>
+                    <v-text-field id="password" label="Ваш пароль" v-model="password" name="password" type="password" prepend-icon="fas fa-key"/>
                     <v-card-actions>
                       <v-spacer/>
-                      <v-btn
-                        type="submit"
-                        color="darken-3"
-                        class="btn__login"
-                      >
-                        <v-icon class="icon fas fa-sign-in-alt"></v-icon>
-                        Войти
-                      </v-btn>
+                      <v-btn type="submit" color="darken-3" class="btn__login">
+                        <v-icon class="icon fas fa-sign-in-alt"></v-icon>Войти</v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card-text>
               </v-card>
+
             </v-col>
           </v-row>
         </v-container>
@@ -68,6 +38,8 @@
     </v-app>
   </div>
 </template>
+
+
 
 <script>
   import axios from 'axios'

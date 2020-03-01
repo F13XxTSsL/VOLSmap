@@ -23,13 +23,15 @@
             />
           </v-card-title>
         </v-card>
+        <div id="exportable">
         <v-data-table
           :headers="headers"
           :items="rows"
           class="elevation-1"
           :search="search"
           hide-default-footer
-          id="exportable"
+          disable-pagination
+
         >
           <template #item="rows">
             <tr>
@@ -426,6 +428,7 @@
             {{ countAverage }} руб.
           </div>
         </div>
+        </div>
       </div>
     </v-container>
   </div>
@@ -465,7 +468,6 @@
             value: 'data_for_exploitation',
             sortable: false,
             class: 'data_cell',
-            align: 'center'
           },
           {text: '№ договора', value: 'id_obj_contract', sortable: false, class: 'id_cell'},
           {text: 'Арендная плата', value: 'rent', sortable: false, class: 'rent_cell'},
@@ -535,6 +537,7 @@
       },
     },
     mounted() {
+      this.loader = true
       axios.get('http://localhost:3000/objects_contract').then(response => {
         response.data.forEach(item => {
           this.numberContract.push(item.id_contract)
@@ -551,8 +554,8 @@
       initialize(data) {
         let rentItems = []
         this.countAverage = 0
+        this.rows = []
         data.map((item, i) => {
-          this.rows = []
           if (item.type === 'BTS' || item.type === 'Controller' || item.type === 'Switch') {
             axios.get(`http://localhost:3000/objects_contract/${item.id_obj_contract}`).then(contract => {
               axios.get(`http://localhost:3000/objects_responsible/${contract.data.responsible}`).then(responsible => {
@@ -560,7 +563,7 @@
                   id_object: item.id_object,
                   type: Helper.typeObjectItems(item.type),
                   coordinates: Helper.disclosureCoordinates(item.coordinates),
-                  id_obj_contract: item.id_obj_contract,
+                  id_obj_contract: item.id_obj_contract ? item.id_obj_contract: null,
                   rent: contract.data.rent + ' руб.',
                   comments: item.comments,
                   status: Helper.typeObject(item.status),
@@ -578,10 +581,9 @@
                 let sumRentCount = rentItems.length
                 let resultAverage = sumRentValue / sumRentCount
                 this.countAverage = resultAverage.toFixed(2)
-                this.loader = false
               })
             })
-          } else {
+          } if( item.type === 'Coupling' && item.id_object) {
             this.rows.push({
               id_object: item.id_object,
               type: Helper.typeObjectItems(item.type),
@@ -591,7 +593,7 @@
               adress: item.adress
             })
           }
-
+            this.loader = false
         })
       },
       atSelectedType(event) {
@@ -629,7 +631,7 @@
               type: "Point",
               coordinates: [this.editItem.coordinate_lat, this.editItem.coordinate_lng]
             },
-            id_obj_contract: this.selectedNumberContract ? this.selectedNumberContract : this.editItem.id_obj_contract || null,
+            id_obj_contract: this.selectedNumberContract ? this.selectedNumberContract : this.editItem.id_obj_contract || '',
             comments: this.editItem.comments,
             rent: this.editItem.rent,
             status: this.selectedSpacer2 ? this.selectedSpacer2 : this.editItem.status,
@@ -711,7 +713,7 @@
         FileSaver.saveAs(new Blob([doc], {
           encoding: 'UTF-8',
           type: 'application/octet-stream'
-        }), `line_objects.xls`)
+        }), `objects.xls`)
       },
     },
   }
@@ -719,8 +721,16 @@
 <style>
   .container {
     position: relative;
+    margin-bottom: 45px;
   }
 
+  .footer-table {
+    position: fixed;
+    bottom: 5px;
+    width: 764px;
+    padding-right: 29px;
+    background-color: #fff;
+  }
   .v-progress-circular {
     position: absolute;
     z-index: 50;

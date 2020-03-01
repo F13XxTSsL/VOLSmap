@@ -25,7 +25,6 @@
             >
                 <div v-html="infoContent"/>
             </gmap-info-window>
-
             <div
                     :key="index[items]"
                     v-for="(items, index) in lineMarkers"
@@ -34,15 +33,16 @@
                         :key="item.id"
                         v-for="item in items"
                         :path.sync="item.position"
-                        :options="item.placement === 'sewage' ? {strokeColor: '#42A5F5', strokeWeight: 4} :
-            item.placement === 'prop' ? {strokeColor: '#FFD600', strokeWeight: 4} :
-            item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 4} :
-            {strokeColor: '#388E3C', strokeWeight: 4}"
+                        :options="item.placement === 'sewage' ? {strokeColor: '#00ACC1', strokeWeight: 5} :
+                                  item.placement === 'prop' ? {strokeColor: '#FF9100', strokeWeight: 5} :
+                                  item.placement === 'roof' ? {strokeColor: '#8D6E63', strokeWeight: 5} :
+                                  {strokeColor: '#689F38', strokeWeight: 5}"
                         :clickable="true"
                         @click="getLineInfoClick(item)"
                 />
             </div>
         </gmap-map>
+
         <transition name="slide-fade">
             <LeftStatisticTable
                     :rows="rows"
@@ -50,6 +50,7 @@
                     class="LeftToolbar"
             />
         </transition>
+
         <transition name="slide-fade">
             <div
                     v-show="closeLeftToolBar"
@@ -83,7 +84,7 @@
             return {
                 loading: false,
                 optionsMap: {
-                    zoom: 14,
+                    zoom: 17,
                     mapTypeId: 'roadmap',
                     zoomControl: false,
                     mapTypeControl: false,
@@ -198,8 +199,8 @@
                     ]
                 },
                 centerMap: {
-                    lat: 45.055399,
-                    lng: 38.967545
+                    lat: 45.056575,
+                    lng: 38.967578
                 },
                 markers: [],
                 lineMarkers: [],
@@ -368,11 +369,6 @@
                             data: Helper.typeObjectItems(item.type)
                         },
                         {
-                            name: 'Дата ввода в эксплуатацию :',
-                            Категория: 'Объект',
-                            data: item.data_for_exploitation
-                        },
-                        {
                             name: 'Адрес :',
                             Категория: 'Объект',
                             data: item.adress
@@ -392,31 +388,18 @@
                 coordinates.then(items => {
                     let coords = []
                     items.forEach(obj => {
-                        coords.push({
-                            id_line_object: obj.id_line_object,
-                            name: obj.name,
-                            id_contract: obj.id_contract,
-                            position: obj.coordinates.coordinates,
-                            placement: '',
-                            status: obj.status
+                        axios.get(`http://localhost:3000/line_objects_contract/${obj.id_contract}`).then(placement => {
+                            coords.push({
+                                id_line_object: obj.id_line_object,
+                                name: obj.name,
+                                id_contract: obj.id_contract,
+                                position: Helper.translateCoordinatesArray(obj.coordinates.coordinates),
+                                placement: placement.data.placement,
+                                status: obj.status
+                            })
                         })
                     })
-                    coords.forEach(arr => {
-                        let coords2 = [{
-                            id_line_object: arr.id_line_object,
-                            name: arr.name,
-                            id_contract: arr.id_contract,
-                            placement: arr.placement,
-                            status: arr.status,
-                            position: []
-                        }]
-                        arr.position.map(item => {
-                            for (let i in coords2) {
-                                coords2[i].position.push({lat: item[0], lng: item[1]})
-                            }
-                        })
-                        this.lineMarkers.push(coords2)
-                    })
+                    this.lineMarkers.push(coords)
                 })
             },
             getLineInfoClick(item) {
@@ -540,8 +523,8 @@
                     arrayItems.push(distance)
                     distanceSum = arrayItems.reduce((total, amount) => total + amount)
                 }
-                this.infoWindowPos.lat = item.position[0].lat
-                this.infoWindowPos.lng = item.position[0].lng
+                this.infoWindowPos.lat = item.position[1].lat
+                this.infoWindowPos.lng = item.position[1].lng
                 this.infoContent = `
                             <div> ${Helper.typeDefinion(item.placement)}</div>
                             <div class="info__window-text"> ${item.name}</div>
@@ -615,4 +598,5 @@
         font-size: 14px;
         padding-bottom: 5px;
     }
+
 </style>

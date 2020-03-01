@@ -97,7 +97,7 @@ export default {
     return coordinates.coordinates
   },
   getDistancePoint(p1, p2) {
-    const R = 6378137; // Earth’s mean radius in meter
+    const R = 6378137;
     const dLat = this.rad(p2.lat() - p1.lat());
     const dLong = this.rad(p2.lng() - p1.lng());
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -105,7 +105,7 @@ export default {
       Math.sin(dLong / 2) * Math.sin(dLong / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
-    return d; // returns the distance in meter
+    return d;
   },
   rad(x) {
     return x * Math.PI / 180;
@@ -126,6 +126,13 @@ export default {
   deg2rad(deg) {
     return deg * Math.PI / 180;
   },
+  translateCoordinatesArray(array) {
+    let coords = []
+    array.forEach(item => {
+      coords.push({lat: item[0], lng: item[1]})
+    })
+    return coords
+  },
   translateCoordinates(data) {
     let arrCoordLatLng = []
     data.forEach(item => [
@@ -142,7 +149,7 @@ export default {
   iconType(status, type) {
     if (type === 'BTS' && status === 'active') {
       return {
-        url: require('../assets/bs.svg'),
+        url: require('../assets/bs_active.svg'),
         size: {width: 40, height: 40, f: 'px', b: 'px'},
         scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
       }
@@ -164,8 +171,8 @@ export default {
     if (type === 'Switch') {
       return {
         url: require('../assets/commutator.svg'),
-        size: {width: 30, height: 30, f: 'px', b: 'px'},
-        scaledSize: {width: 30, height: 30, f: 'px', b: 'px',}
+        size: {width: 40, height: 40, f: 'px', b: 'px'},
+        scaledSize: {width: 40, height: 40, f: 'px', b: 'px',}
       }
     }
     if (type === 'Controller') {
@@ -173,6 +180,13 @@ export default {
         url: require('../assets/controller.svg'),
         size: {width: 35, height: 35, f: 'px', b: 'px'},
         scaledSize: {width: 35, height: 35, f: 'px', b: 'px',}
+      }
+    }
+    if (type === 'Coupling') {
+      return {
+        url: require('../assets/mufta.svg'),
+        size: {width: 15, height: 15, f: 'px', b: 'px'},
+        scaledSize: {width: 15, height: 15, f: 'px', b: 'px',}
       }
     }
   }
