@@ -69,5 +69,44 @@
     .theme--dark.v-data-table tbody tr {
         transition: all 0.3s;
     }
+    @media (max-width: 940px) {
+        .leftTableStatic {
+            width: 320px!important;
+        }
+        .close {
+            left: 320px!important;
+            top: 350px!important;
+        }
+        .helper_description {
+            font-size: 14px;
+            display: flex;
+            justify-content: flex-end;
+            .button {
+                display: flex;
+                align-items: flex-end;
+            }
+            .description {
+                width: 240px!important;
+            }
+        }
+
+    }
+    @media (max-width: 770px) {
+        .leftTableStatic {
+            top: 55px;
+        }
+        .help__wrapper {
+            top: 60px!important;
+            right: 0px!important;
+        }
+    }
+    @media (max-width: 350px) {
+        .leftTableStatic {
+            width: 280px!important;
+        }
+        .close {
+            left: 280px!important;
+        }
+    }
 
 </style>

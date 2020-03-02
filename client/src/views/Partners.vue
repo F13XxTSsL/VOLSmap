@@ -26,6 +26,7 @@
           :items="rows"
           class="elevation-1"
           :search="search"
+          :mobile-breakpoint="320"
         >
           <template #item="rows">
             <tr>
@@ -55,8 +56,8 @@
               <v-spacer/>
               <v-dialog v-model="dialogAdd" max-width="500px">
                 <template v-slot:activator="{ on }">
-                  <v-btn color="primary" dark class="mb-2"
-                    v-on="on"
+                  <v-btn style="background-color: rgba(73, 138, 184, 0.8);" dark class="mb-2"
+                         v-on="on"
                   >
                     Добавить
                   </v-btn>
@@ -259,15 +260,8 @@
     },
     mounted() {
       this.getPartners()
-      this.onIdPartner()
     },
     methods: {
-      onIdPartner () {
-        this.search = ''
-        EventBus.$on('emitIdPartner', (id) => {
-          this.search = id
-        })
-      },
       getPartners() {
         axios.get('http://localhost:3000/partners').then(response => {
           this.initialize(response.data)

@@ -25,12 +25,13 @@
           :items="rows"
           class="elevation-1"
           :search="search"
+          :mobile-breakpoint="320"
         >
           <template #item="rows">
-            <tr>
+            <tr @click="emitIdPartner(rows.item.id_partner)">
               <td class="table-cell id_cell">{{ rows.item.id_contract }}</td>
               <td class="table-cell name_partner">{{ rows.item.data }}</td>
-              <td class="table-cell inn_partner"><span @click="emitIdPartner(rows.item.id_partner)">{{ rows.item.id_partner }}</span></td>
+              <td class="table-cell inn_partner"><span>{{ rows.item.id_partner }}</span></td>
               <td class="table-cell links">{{ rows.item.links }}</td>
               <td class="table-cell comments">{{ rows.item.comments }}</td>
               <td class="table-cell rent_cell">{{ rows.item.rent }}</td>
@@ -60,7 +61,7 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    color="primary"
+                    style="background-color: rgba(73, 138, 184, 0.8);"
                     dark
                     class="mb-2"
                     v-on="on"
@@ -433,10 +434,6 @@
       })
     },
     methods: {
-      emitIdPartner(id) {
-        EventBus.$emit('emitIdPartner', id)
-        router.push({name: 'partners'})
-      },
       getPartners() {
         axios.get('http://localhost:3000/contracts').then(response => {
           this.initialize(response.data)
@@ -575,13 +572,5 @@
     align-self: center;
     width: 100%;
     top: 40%;
-  }
-
-  .inn_partner {
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba(240, 244, 195, 0.6);
-    }
   }
 </style>

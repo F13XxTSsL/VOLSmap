@@ -7,6 +7,15 @@
                 :clickable="true"
                 @click="clickMap($event)"
         >
+            <gmap-info-window
+              class="info__window"
+              :options="infoOptionsClickCoords"
+              :position="infoWindowPosClickCoords"
+              :opened="infoWinOpenClickCoords"
+              @closeclick="infoWinOpenClose"
+            >
+                <div v-html="infoContentClickCoords"/>
+            </gmap-info-window>
             <gmap-marker
                     :key="item.id_object"
                     v-for="item in markers"
@@ -211,13 +220,17 @@
                 showLeftBar: false,
                 closeLeftToolBar: false,
                 infoWinOpen: false,
+                infoWinOpenClickCoords: false,
                 infoContent: '',
                 infoWindowPos: {
                     lat: 45.055399,
                     lng: 38.967545
                 },
                 infoOptions: {},
-                distance: 0.0
+                distance: 0.0,
+                infoContentClickCoords: '',
+                infoWindowPosClickCoords: {},
+                infoOptionsClickCoords: {}
             }
         },
         components: {
@@ -233,7 +246,23 @@
         },
         methods: {
             clickMap(event) {
+                this.infoWinOpen = false
+                this.showLeftBar = false
+                this.closeLeftToolBar = false
                 EventBus.$emit('Location', event.latLng)
+                let lat = event.latLng.lat()
+                let lng = event.latLng.lng()
+                this.infoWindowPosClickCoords = {lat: lat, lng: lng}
+                this.infoContentClickCoords = `<div style="display: flex; flex-direction: column;">
+                                                  <div class="info__window-text">${lat.toFixed(8)}</div>
+                                                <div class="info__window-text">${lng.toFixed(8)}</div></div>`
+                this.infoWinOpenClickCoords = {
+                    pixelOffset: {
+                        width: 0,
+                        height: -35
+                    }
+                }
+                this.infoWinOpenClickCoords = true
             },
             typeIcon(status, type) {
                 return Helper.iconType(status, type)
@@ -249,6 +278,7 @@
                 }
             },
             getPointInfoClick(item) {
+                this.infoWinOpenClickCoords = false
                 if (item.type === 'BTS' || item.type === 'Switch' || item.type === 'Controller') {
                     this.rows = []
                     this.rows.push(
@@ -404,6 +434,7 @@
             },
             getLineInfoClick(item) {
                 this.infoWinOpen = false
+                this.infoWinOpenClickCoords = false
                 this.rows = []
                 this.rows.push(
                     {

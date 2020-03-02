@@ -25,6 +25,7 @@
                     :items="rows"
                     class="elevation-1"
                     :search="search"
+                    :mobile-breakpoint="320"
             >
                 <template #item="rows">
                     <tr>
@@ -61,7 +62,7 @@
                         >
                             <template v-slot:activator="{ on }">
                                 <v-btn
-                                        color="primary"
+                                  style="background-color: rgba(73, 138, 184, 0.8);"
                                         dark
                                         class="mb-2"
                                         v-on="on"

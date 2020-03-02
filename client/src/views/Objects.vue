@@ -31,6 +31,7 @@
           :search="search"
           hide-default-footer
           disable-pagination
+          :mobile-breakpoint="320"
 
         >
           <template #item="rows">
@@ -69,9 +70,10 @@
                 v-model="dialogAdd"
                 max-width="500px"
               >
+                <Map/>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    color="primary"
+                    style="background-color: rgba(73, 138, 184, 0.8);"
                     dark
                     class="mb-2"
                     v-on="on"
@@ -90,13 +92,13 @@
                     Экспорт
                   </v-btn>
                 </template>
-                <v-card>
+                <v-card style="padding-bottom: 20px;">
                   <v-card-title>
                     <span class="headline">Добавление объекта</span>
                   </v-card-title>
 
                   <v-card-text>
-                    <v-container>
+                    <v-container style="margin-bottom: 0px;">
                       <v-row>
                         <v-col
                           class="d-flex"
@@ -435,6 +437,7 @@
 </template>
 <script>
   import axios from 'axios'
+  import Map from "../components/Map";
   import Helper from "../api/Helper";
   import FileSaver from "file-saver";
 
@@ -530,6 +533,9 @@
         loader: false,
         countAverage: '0.00'
       }
+    },
+    components: {
+      Map
     },
     watch: {
       dialog(val) {
@@ -718,7 +724,7 @@
     },
   }
 </script>
-<style>
+<style lang="scss" scoped>
   .container {
     position: relative;
     margin-bottom: 45px;
@@ -739,6 +745,7 @@
     width: 100%;
     top: 40%;
   }
+
 </style>
 
 
