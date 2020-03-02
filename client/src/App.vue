@@ -80,6 +80,18 @@
       }
     }
   }
+  .line_objects {
+    .v-data-table__wrapper {
+      max-height: 695px!important;
+      overflow-y: auto;
+    }
+  }
+  .objects {
+    .v-data-table__wrapper {
+      max-height: 695px!important;
+      overflow-y: auto;
+    }
+  }
 
   .v-dialog__content {
 

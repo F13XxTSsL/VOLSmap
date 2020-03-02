@@ -29,6 +29,7 @@
             hide-default-footer
             disable-pagination
             :mobile-breakpoint="320"
+            :dense="dense"
           >
             <template #item="rows">
               <tr>
@@ -46,9 +47,6 @@
                 <td class="table-cell placement">{{ rows.item.placement }}</td>
                 <td class="table-cell responsible">{{ rows.item.responsible }}</td>
                 <td class="table-cell action_cell">
-                  <v-icon class="mr-2" small @click="dialogEdit(rows.item)">{{ rows.item.action }}
-                    mdi-pencil
-                  </v-icon>
                   <v-icon small @click="deleteItem(rows.item)">{{ rows.item.action }} mdi-delete
                   </v-icon>
                 </td>
@@ -65,6 +63,16 @@
                   inset
                   vertical
                 />
+                <v-btn
+                  color="#FF9800"
+                  dark
+                  left
+                  class="mb-2"
+                  @click="clickDense($event)"
+                  style="margin-right: 20px"
+                >
+                  Упростить
+                </v-btn>
                 <v-spacer/>
 
                 <v-dialog
@@ -371,7 +379,8 @@
         itemCoords: [],
         itemCoordLat: 0,
         itemCoordLng: 0,
-        countAverage: '0.00'
+        countAverage: '0.00',
+        dense: false
       }
     },
     watch: {
@@ -380,6 +389,7 @@
       },
     },
     mounted() {
+      this.loader = true
       this.getObjects()
       axios.get('http://localhost:3000/line_objects_all_contract').then(response => {
         response.data.forEach(item => {
@@ -404,6 +414,14 @@
       })
     },
     methods: {
+      clickDense (event) {
+          if (event && this.dense === false) {
+            this.dense = true
+          }
+          else if (event && this.dense === true) {
+            this.dense = false
+          }
+      },
       atSelectedType(event) {
         this.selectedSpacer = event
       },
@@ -530,6 +548,7 @@
   }
 </script>
 <style lang="scss" scoped>
+
   .container {
     position: relative;
     margin-bottom: 45px;
@@ -551,7 +570,7 @@
   .footer-table {
     position: fixed;
     bottom: 5px;
-    width: 583px;
+    width: 581px;
     padding-right: 29px;
     background-color: #fff;
   }

@@ -413,7 +413,6 @@
             initialize(data) {
                 this.rows = []
                 data.map(item => {
-                    console.log(item)
                     this.rows.push({
                         id_user: item.id_user,
                         login: item.login,

@@ -32,6 +32,7 @@
           hide-default-footer
           disable-pagination
           :mobile-breakpoint="320"
+          :dense="dense"
 
         >
           <template #item="rows">
@@ -65,6 +66,16 @@
                 inset
                 vertical
               />
+              <v-btn
+                color="#FF9800"
+                dark
+                left
+                class="mb-2"
+                @click="clickDense($event)"
+                style="margin-right: 20px"
+              >
+                Упростить
+              </v-btn>
               <v-spacer/>
               <v-dialog
                 v-model="dialogAdd"
@@ -446,6 +457,7 @@
       return {
         showExc: true,
         showAdd: true,
+        dense: false,
         selectNumberContract: '',
         searchNumberContract: null,
         search: '',
@@ -530,8 +542,9 @@
         numberContract: [],
         selectedTypeObjects: '',
         selectedStatusObjects: '',
-        loader: false,
-        countAverage: '0.00'
+        loader: true,
+        countAverage: '0.00',
+        loadingTable: true
       }
     },
     components: {
@@ -552,6 +565,14 @@
       this.getObjects()
     },
     methods: {
+      clickDense (event) {
+        if (event && this.dense === false) {
+          this.dense = true
+        }
+        else if (event && this.dense === true) {
+          this.dense = false
+        }
+      },
       getObjects() {
         axios.get('http://localhost:3000/objects').then(response => {
           this.initialize(response.data)
@@ -600,6 +621,7 @@
             })
           }
             this.loader = false
+          this.loadingTable = false
         })
       },
       atSelectedType(event) {
@@ -725,26 +747,29 @@
   }
 </script>
 <style lang="scss" scoped>
-  .container {
-    position: relative;
-    margin-bottom: 45px;
+  .objects {
+    .container {
+      position: relative;
+      margin-bottom: 45px;
+    }
+
+    .footer-table {
+      position: fixed;
+      bottom: 5px;
+      width: 800px;
+      padding-right: 29px;
+      background-color: #fff;
+    }
+    .v-progress-circular {
+      position: absolute;
+      z-index: 50;
+      display: flex;
+      align-self: center;
+      width: 100%;
+      top: 40%;
+    }
   }
 
-  .footer-table {
-    position: fixed;
-    bottom: 5px;
-    width: 764px;
-    padding-right: 29px;
-    background-color: #fff;
-  }
-  .v-progress-circular {
-    position: absolute;
-    z-index: 50;
-    display: flex;
-    align-self: center;
-    width: 100%;
-    top: 40%;
-  }
 
 </style>
 
