@@ -19,6 +19,7 @@
               hide-details
             />
           </v-card-title>
+          {{ allContracts }}
         </v-card>
         <v-data-table
           :headers="headers"
@@ -347,9 +348,8 @@
 </template>
 <script>
   import axios from 'axios'
-  import Helper from "../api/Helper";
-  import EventBus from "../components/EventBus";
-  import router from "../router";
+  import Helper from '../api/Helper'
+  import { mapGetters } from 'vuex'
 
   export default {
     data() {
@@ -433,6 +433,7 @@
         })
       })
     },
+    computed: mapGetters(['allContracts']),
     methods: {
       getPartners() {
         axios.get('http://localhost:3000/contracts').then(response => {
